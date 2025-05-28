@@ -2,76 +2,77 @@
 
 {% block title %}Features - FLUENT{% endblock %}
 
+{% block content_hero %}
+<section class="features-header-hero py-5 text-center bg-light">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Powerful Features to <span class="text-primary">Elevate</span> Your Skills</h1>
+        <p class="lead text-muted col-lg-8 mx-auto">FLUENT provides comprehensive, AI-driven analysis to help you shine in any interview scenario, focusing on what truly matters.</p>
+    </div>
+</section>
+{% endblock %}
+
 {% block content %}
-<section class="features-header">
+<section class="features-list py-5">
     <div class="container">
-        <h1>Powerful Features to <span>Elevate</span> Your Interview Skills</h1>
-        <p>FLUENT provides comprehensive analysis to help you shine in any interview scenario.</p>
-    </div>
-</section>
-
-<section class="features-list">
-    <div class="container">
-        <div class="row feature-item align-items-center">
-            <div class="col-lg-6">
-                <!-- UBAH INI: Pastikan path static benar -->
-                <img src="{{ url_for('web.web_serve_static', filename='images/2.png') }}" alt="Emotion Analysis" class="img-fluid">
+        <div class="row feature-item align-items-center mb-5 pb-lg-5">
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('web.web_serve_static', filename='images/2.png') }}" alt="Emotion Analysis" class="img-fluid rounded shadow-lg" style="max-width: 450px;">
             </div>
-            <div class="col-lg-6">
-                <h2>Emotion Detection</h2>
-                <p>Our advanced AI detects your emotional state during the interview, helping you maintain the right level of confidence and composure.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Real-time emotion tracking</li>
-                    <li><i class="fas fa-check-circle"></i> Nervousness detection</li>
-                    <li><i class="fas fa-check-circle"></i> Confidence level analysis</li>
+            <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
+                <h2 class="fw-semibold h1 mb-3"><i class="fas fa-smile-beam text-primary me-2"></i>Emotion Detection</h2>
+                <p class="text-muted mb-4">Our advanced AI detects your emotional state during the interview, helping you maintain the right level of confidence and composure for impactful communication.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Real-time emotion tracking</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Nervousness detection & feedback</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Confidence level analysis</li>
                 </ul>
             </div>
         </div>
 
-        <div class="row feature-item align-items-center">
-            <div class="col-lg-6 order-lg-2">
-                <!-- UBAH INI: Pastikan path static benar -->
-                <img src="{{ url_for('web.web_serve_static', filename='images/3.png') }}" alt="Speech Analysis" class="img-fluid">
+        <hr class="my-5 d-lg-none">
+
+        <div class="row feature-item align-items-center mb-5 pb-lg-5">
+            <div class="col-lg-6 order-lg-2 text-center">
+                <img src="{{ url_for('web.web_serve_static', filename='images/3.png') }}" alt="Speech Analysis" class="img-fluid rounded shadow-lg" style="max-width: 450px;">
             </div>
-            <div class="col-lg-6 order-lg-1">
-                <h2>Speech Analysis</h2>
-                <p>Get detailed feedback on your speech patterns, including pace, clarity, and filler word usage.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Words-per-minute tracking</li>
-                    <li><i class="fas fa-check-circle"></i> Filler word detection</li>
-                    <li><i class="fas fa-check-circle"></i> Speech clarity scoring</li>
+            <div class="col-lg-6 order-lg-1 pe-lg-5 mt-4 mt-lg-0">
+                <h2 class="fw-semibold h1 mb-3"><i class="fas fa-microphone-alt text-primary me-2"></i>Speech Analysis</h2>
+                <p class="text-muted mb-4">Get detailed feedback on your speech patterns, including pace, clarity, and filler word usage, ensuring your message is delivered effectively.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Words-per-minute tracking</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Filler word detection & reduction tips</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Speech clarity and conciseness scoring</li>
                 </ul>
             </div>
         </div>
 
+        <hr class="my-5 d-lg-none">
+
         <div class="row feature-item align-items-center">
-            <div class="col-lg-6">
-                <!-- UBAH INI: Pastikan path static benar -->
-                <img src="{{ url_for('web.web_serve_static', filename='images/4.png') }}" alt="Pose Analysis" class="img-fluid">
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('web.web_serve_static', filename='images/4.png') }}" alt="Pose Analysis" class="img-fluid rounded shadow-lg" style="max-width: 450px;">
             </div>
-            <div class="col-lg-6">
-                <h2>Body Language Analysis</h2>
-                <p>Improve your nonverbal communication with our posture and gesture analysis.</p>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> Posture evaluation</li>
-                    <li><i class="fas fa-check-circle"></i> Head tilt detection</li>
-                    <li><i class="fas fa-check-circle"></i> Eye contact monitoring</li>
+            <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
+                <h2 class="fw-semibold h1 mb-3"><i class="fas fa-male text-primary me-2"></i>Body Language Analysis</h2>
+                <p class="text-muted mb-4">Improve your nonverbal communication with our posture and gesture analysis. Make your presence felt positively.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Posture evaluation (e.g., upright, slouching)</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Head movement and engagement cues</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Eye contact monitoring (simulated)</li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-<section class="cta-section">
-    <div class="container text-center">
-        <h2>Ready to Transform Your Interview Skills?</h2>
-        <p>Join thousands of users who have improved their interview performance with FLUENT.</p>
-        <!-- UBAH INI: Arahkan ke registrasi jika belum login -->
+<section class="cta-section py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h2 class="fw-bold h1 mb-3">Ready to Transform Your Interview Skills?</h2>
+        <p class="lead mb-4 col-lg-8 mx-auto">Join thousands of users who have unlocked their potential and aced their interviews with FLUENT.</p>
         {% if not session.is_web_user and not session.is_admin %}
-            <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-primary btn-lg">Start Your Free Trial</a>
+            <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-light btn-lg px-5 text-primary fw-semibold">Start Your Journey</a>
         {% else %}
-            <!-- Jika sudah login, mungkin tombol ini tidak perlu atau arahkan ke fitur premium/dashboard -->
-             <a href="#" class="btn btn-primary btn-lg disabled" aria-disabled="true">Start Your Free Trial (Logged In)</a>
+             <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-light btn-lg px-5 text-primary fw-semibold">View Your Profile</a>
         {% endif %}
     </div>
 </section>

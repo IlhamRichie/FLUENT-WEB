@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- ... (meta, title, links css sama seperti sebelumnya) ... -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FLUENT - {% block title %}{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FLUENT - {% block title %}{% endblock %}</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -27,15 +26,17 @@
       rel="shortcut icon"
       href="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}"
     />
+    {% block head_extra %}{% endblock %}
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark fluent-navbar fixed-top">
-      <div class="container"> <!-- Navbar content tetap di dalam .container agar tidak terlalu lebar -->
-        <a class="navbar-brand" href="{{ url_for('web.index_route') }}">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('web.index_route') }}">
           <img
             src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}"
             alt="FLUENT Logo"
-            height="40"
+            height="36" 
+            class="me-2"
           />
           FLUENT
         </a>
@@ -51,7 +52,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
+          <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('web.index_route') }}">Home</a>
             </li>
@@ -70,7 +71,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link btn-cta" href="{{ url_for('web.web_logout_route') }}"
+              <a class="nav-link btn btn-outline-light btn-sm nav-btn-cta" href="{{ url_for('web.web_logout_route') }}"
                 >Logout</a
               >
             </li>
@@ -79,11 +80,11 @@
                 <a class="nav-link" href="{{ url_for('admin.admin_dashboard_route') }}">Admin Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn-cta" href="{{ url_for('admin.admin_logout_route') }}">Admin Logout</a>
+                <a class="nav-link btn btn-outline-light btn-sm nav-btn-cta" href="{{ url_for('admin.admin_logout_route') }}">Admin Logout</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link btn-cta" href="{{ url_for('web.web_login_route') }}"
+              <a class="nav-link btn btn-primary btn-sm nav-btn-cta" href="{{ url_for('web.web_login_route') }}"
                 >Login</a
               >
             </li>
@@ -96,47 +97,46 @@
       </div>
     </nav>
 
-    <!-- Pembungkus utama untuk konten, TIDAK menggunakan .container di sini jika ingin beberapa section full-width -->
     <main role="main" class="main-content-wrapper">
     {% block main_content_wrapper_start %}{% endblock %}
     {% block content_hero %}{% endblock %}
-    <div class="container page-content-container mt-4 mb-4">
+    
+    <div class="container page-content-container py-5"> {# Added py-5 for default padding #}
         {% block content %}{% endblock %}
     </div>
     {% block main_content_wrapper_end %}{% endblock %}
     </main>
 
-    <footer class="fluent-footer py-5"> <!-- Footer bisa full-width atau di dalam .container, tergantung desain -->
+    <footer class="fluent-footer py-5 bg-light border-top">
       <div class="container">
-        <!-- ... (konten footer sama) ... -->
         <div class="row">
-          <div class="col-md-4 mb-3 mb-md-0">
-            <h5>FLUENT</h5>
-            <p>
+          <div class="col-md-4 mb-4 mb-md-0">
+            <h5 class="fw-semibold">FLUENT</h5>
+            <p class="small text-muted">
               Revolutionizing interview preparation with AI-powered analysis.
             </p>
           </div>
-          <div class="col-md-4 mb-3 mb-md-0">
-            <h5>Quick Links</h5>
+          <div class="col-md-4 mb-4 mb-md-0">
+            <h5 class="fw-semibold">Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="{{ url_for('web.index_route') }}" class="text-decoration-none">Home</a></li>
-              <li><a href="{{ url_for('web.features_route') }}" class="text-decoration-none">Features</a></li>
-              <li><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+              <li><a href="{{ url_for('web.index_route') }}" class="text-decoration-none text-muted small">Home</a></li>
+              <li><a href="{{ url_for('web.features_route') }}" class="text-decoration-none text-muted small">Features</a></li>
+              <li><a href="#" class="text-decoration-none text-muted small">Privacy Policy</a></li>
             </ul>
           </div>
           <div class="col-md-4">
-            <h5>Contact</h5>
-            <p><i class="fas fa-envelope me-2"></i>contact@fluentapp.com</p>
+            <h5 class="fw-semibold">Contact</h5>
+            <p class="small text-muted"><i class="fas fa-envelope me-2"></i>contact@fluentapp.com</p>
             <div class="social-icons mt-2">
-              <a href="#" class="text-decoration-none me-2"><i class="fab fa-twitter fa-lg"></i></a>
-              <a href="#" class="text-decoration-none me-2"><i class="fab fa-linkedin fa-lg"></i></a>
-              <a href="#" class="text-decoration-none"><i class="fab fa-github fa-lg"></i></a>
+              <a href="#" class="text-decoration-none text-muted me-3"><i class="fab fa-twitter fa-lg"></i></a>
+              <a href="#" class="text-decoration-none text-muted me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+              <a href="#" class="text-decoration-none text-muted"><i class="fab fa-github fa-lg"></i></a>
             </div>
           </div>
         </div>
         <hr class="my-4" />
         <div class="text-center">
-          <p>© {% if now %}{{ now.year }}{% else %}2024{% endif %} FLUENT. All rights reserved.</p>
+          <p class="small text-muted">&copy; {% if now %}{{ now.year }}{% else %}2024{% endif %} FLUENT. All rights reserved.</p>
         </div>
       </div>
     </footer>
@@ -145,10 +145,9 @@
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         const navbar = document.querySelector('.fluent-navbar');
-        const mainContentWrapper = document.querySelector('.main-content-wrapper'); // Ambil wrapper konten utama
+        const mainContentWrapper = document.querySelector('.main-content-wrapper'); 
 
         if (navbar) {
-          // Set initial padding-top untuk main-content-wrapper
           if (mainContentWrapper) {
             mainContentWrapper.style.paddingTop = navbar.offsetHeight + 'px';
           }
@@ -163,5 +162,6 @@
         }
       });
     </script>
+    {% block scripts_extra %}{% endblock %}
   </body>
 </html>
