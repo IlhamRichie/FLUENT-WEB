@@ -1,76 +1,71 @@
 {% extends "base.html" %}
 
-{% block title %}Daftar - FLUENT{% endblock %}
+{% block title %}Register - FLUENT{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mb-5" style="min-height: 60vh;">
+<div class="container my-5 auth-page-container">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4 fluent-red-text">Daftar Akun Baru</h2>
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-lg border-0 fluent-card auth-card rounded-3">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="text-center mb-4">
+                        <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
+                        <h2 class="card-title h3 fw-bold mb-1">Create Your Account</h2>
+                        <p class="text-muted small">Join FLUENT and start improving today.</p>
+                    </div>
+
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show small py-2" role="alert">
                                 {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
                     
-                    <!-- UBAH ACTION FORM -->
                     <form method="POST" action="{{ url_for('web.web_register_submit_route') }}">
-                        {{ csrf_token if csrf_token else '' }} <!-- Flask-WTF atau Flask-SeaSurf akan mengisi ini -->
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                        {{ csrf_token if csrf_token else '' }}
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
+                            <label for="username">Username</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Alamat Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                            <label for="email">Email Address</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required minlength="6">
+                            <label for="password">Password</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Konfirmasi Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                            <label for="confirm_password">Confirm Password</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Gender (Opsional)</label> <!-- Tambahkan (Opsional) -->
+                        <div class="form-floating mb-3">
                             <select class="form-select" id="gender" name="gender">
-                                <option value="">Pilih Gender</option>
-                                <option value="Male">Laki-laki</option>
-                                <option value="Female">Perempuan</option>
-                                <option value="Not specified">Tidak ingin menyebutkan</option>
+                                <option value="" selected>Select Gender (Optional)</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Not specified">Prefer not to say</option>
                             </select>
+                            <label for="gender">Gender</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="occupation" class="form-label">Pekerjaan (Opsional)</label> <!-- Tambahkan (Opsional) -->
-                            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Contoh: Pelajar, Software Engineer">
+                        <div class="form-floating mb-4">
+                            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="e.g., Student, Engineer">
+                            <label for="occupation">Occupation (Optional)</label>
                         </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Daftar</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">Register</button>
                         </div>
                     </form>
-                    <hr>
-                    <p class="text-center small">
-                        <!-- UBAH LINK LOGIN -->
-                        Sudah punya akun? <a href="{{ url_for('web.web_login_route') }}">Login di sini</a>.
+                    <p class="text-center small text-muted mt-4">
+                        Already have an account? <a href="{{ url_for('web.web_login_route') }}" class="fw-semibold text-decoration-none text-primary">Login here</a>.
                     </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<style>
-.fluent-red-text {
-    /* Ganti dengan variabel CSS Anda atau warna langsung jika tidak menggunakan variabel */
-    /* color: var(--primary-dark, #e74c3c); Contoh dengan fallback */
-    color: #dc3545; /* Contoh warna merah standar bootstrap */
-}
-</style>
 {% endblock %}
