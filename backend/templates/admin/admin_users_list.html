@@ -1,39 +1,293 @@
-<!-- FLUENTSERVICE/backend/templates/admin/admin_users_list.html -->
 {% extends "base.html" %}
-
-{% block title %}Admin - Users List{% endblock %}
+{% block title %}User Management - Admin{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1>Users List (Admin Panel)</h1>
-    <p>Page: {{ page }}</p>
-    <p>Total Pages: {{ total_pages }}</p>
-    <p>Search Query: {{ search_query }}</p>
+<div class="admin-content-page container-fluid py-4 px-lg-4">
+    <div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">User Management</h1>
+        <div class="d-flex align-items-center">
+            {# <button class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="bi bi-plus-lg me-1"></i> Add New User</button> #}
+            <a href="{{ url_for('admin.admin_dashboard_route') }}" class="btn btn-sm btn-outline-secondary mt-2 mt-md-0">
+                <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
 
-    {% if users %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <!-- Tambahkan kolom lain jika perlu -->
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user._id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ 'Active' if user.is_active else 'Inactive' }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
+    <div class="card border-0 shadow-sm fluent-dashboard-card mb-4">
+        <div class="card-body p-3">
+            <form method="GET" action="{{ url_for('admin.admin_users_list_route') }}">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-light"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search_query" class="form-control form-control-lg border-light" placeholder="Search by Username, Email, or ID..." value="{{ search_query or '' }}">
+                    <button class="btn btn-primary px-4" type="submit">Search</button>
+                    {% if search_query %}
+                        <a href="{{ url_for('admin.admin_users_list_route') }}" class="btn btn-outline-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm fluent-dashboard-card">
+        <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex flex-wrap justify-content-between align-items-center">
+            <h3 class="h5 mb-0 fw-semibold">All Users</h3>
+             {% if total_pages and total_pages > 0 %}
+            <small class="text-muted mt-2 mt-md-0">Page {{ page }} of {{ total_pages }}</small>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 admin-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3">#</th>
+                            <th class="py-3">User</th>
+                            <th class="py-3">Email</th>
+                            <th class="py-3">Gender</th>
+                            <th class="py-3">Occupation</th>
+                            <th class="py-3">Joined</th>
+                            <th class="py-3">Last Login</th>
+                            <th class="py-3">Auth Provider</th>
+                            <th class="py-3">Status</th>
+                            <th class="pe-4 py-3 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if users and users|length > 0 %}
+                        {% set per_page = 10 %} {# Define per_page or pass it from backend #}
+                        {% for user in users %}
+                        <tr>
+                            <td class="ps-4 text-muted">{{ loop.index + ( (page - 1) * per_page ) }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm me-3">
+                                        {# Use profile picture if available, otherwise initials #}
+                                        {% if user.profile_picture %}
+                                            <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="avatar-title rounded-circle" style="width: 36px; height: 36px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center">
+                                                {{ user.username[0]|upper if user.username else 'U' }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="fw-medium">{{ user.username }}</div>
+                                        <small class="text-muted text-monospace">ID: {{ user._id|string|truncate(8, True, '') }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.gender|default('N/A', True) }}</td>
+                            <td>{{ user.occupation|default('N/A', True)|truncate(20, True) }}</td>
+                            <td>
+                                <div class="fw-medium">{{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</div>
+                                <small class="text-muted">{{ user.created_at.strftime('%H:%M') if user.created_at else '' }}</small>
+                            </td>
+                            <td>
+                                {% if user.last_login %}
+                                <div class="fw-medium">{{ user.last_login.strftime('%d %b %Y') }}</div>
+                                <small class="text-muted">{{ user.last_login.strftime('%H:%M') }}</small>
+                                {% else %}
+                                <span class="text-muted small">Never</span>
+                                {% endif %}
+                            </td>
+                             <td>
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis">
+                                    {{ user.auth_provider|default('Local', True)|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis">
+                                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                                </span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <button class="btn btn-sm btn-outline-secondary btn-icon me-1" data-bs-toggle="modal" data-bs-target="#userDetailsModal-{{ user._id }}" title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                {# Example Action Buttons (functionality to be implemented) #}
+                                {# <button class="btn btn-sm btn-outline-info btn-icon me-1" title="Edit User"><i class="bi bi-pencil-square"></i></button>
+                                <form action="{{ url_for('admin.admin_toggle_user_status_route', user_id=user._id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if user.is_active else 'success' }} btn-icon" title="{{ 'Deactivate' if user.is_active else 'Activate' }} User">
+                                        <i class="bi bi-{{ 'slash-circle' if user.is_active else 'check-circle' }}"></i>
+                                    </button>
+                                </form> #}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="10" class="text-center text-muted p-5">
+                               <i class="bi bi-people-fill fs-1 d-block mb-2"></i>
+                                No users found matching your criteria.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if total_pages and total_pages > 1 %}
+        <div class="card-footer bg-transparent border-top-0 py-3">
+            <nav aria-label="User list navigation">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=page-1, search_query=search_query) if page > 1 else '#' }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                    </li>
+                    {# Improved Pagination Logic #}
+                    {% set window = 2 %}
+                    {% set start_page = [1, page - window]|max %}
+                    {% set end_page = [total_pages, page + window]|min %}
+
+                    {% if start_page > 1 %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=1, search_query=search_query) }}">1</a></li>
+                        {% if start_page > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                    {% endif %}
+
+                    {% for p in range(start_page, end_page + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=p, search_query=search_query) }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if end_page < total_pages %}
+                        {% if end_page < total_pages - 1 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=total_pages, search_query=search_query) }}">{{ total_pages }}</a></li>
+                    {% endif %}
+                    <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=page+1, search_query=search_query) if page < total_pages else '#' }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
 </div>
+
+{% if users %}
+{% for user in users %}
+<div class="modal fade" id="userDetailsModal-{{ user._id }}" tabindex="-1" aria-labelledby="userDetailsModalLabel-{{ user._id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-light border-bottom-0">
+                <div class="d-flex align-items-center">
+                     {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                    {% else %}
+                        <div class="avatar-sm me-2">
+                            <div class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1rem;">
+                                {{ user.username[0]|upper if user.username else 'U' }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <h5 class="modal-title fw-semibold mb-0" id="userDetailsModalLabel-{{ user._id }}">{{ user.username }}</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">User ID</small>
+                        <span class="fw-medium text-monospace">{{ user._id }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Email Address</small>
+                        <span class="fw-medium">{{ user.email }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Status</small>
+                        <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis">
+                            {% if user.is_active %}Active Account{% else %}Inactive Account{% endif %}
+                        </span>
+                         {% if user.is_admin %}<span class="badge rounded-pill fs-xs fw-semibold bg-danger-subtle text-danger-emphasis ms-1">Admin</span>{% endif %}
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Authentication Provider</small>
+                        <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis">
+                            {{ user.auth_provider|default('Local', True)|title }}
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Gender</small>
+                        <span class="fw-medium">{{ user.gender|default('Not specified', True) }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Occupation</small>
+                        <span class="fw-medium">{{ user.occupation|default('Not specified', True) }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Registered On</small>
+                        <span class="fw-medium">{{ user.created_at.strftime('%d %B %Y, %H:%M') if user.created_at else 'N/A' }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Last Login</small>
+                        <span class="fw-medium">{{ user.last_login.strftime('%d %B %Y, %H:%M') if user.last_login else 'Never logged in' }}</span>
+                    </div>
+                </div>
+                {# Placeholder for recent activity or sessions related to this user #}
+                {# <hr>
+                <h6 class="fw-semibold">Recent Activity:</h6>
+                <p class="text-muted small">No activity to display.</p> #}
+            </div>
+            <div class="modal-footer bg-light border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                {# <button type="button" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i> Edit User</button> #}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{# Example Add User Modal (functionality and form fields to be defined)
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-light border-0">
+                <h5 class="modal-title fw-semibold" id="addUserModalLabel">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ url_for('admin.admin_add_user_route') }}" method="POST"> {# Example route #}
+                {# {{ csrf_token() }} #} {# If using Flask-WTF #}
+                {# <div class="modal-body p-4">
+                    <p class="small text-muted">Fill in the details for the new user account.</p>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="new_username" class="form-label small">Username</label>
+                            <input type="text" class="form-control form-control-sm" id="new_username" name="username" required>
+                        </div>
+                         <div class="col-md-6 mb-3">
+                            <label for="new_email" class="form-label small">Email</label>
+                            <input type="email" class="form-control form-control-sm" id="new_email" name="email" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="new_password" class="form-label small">Password</label>
+                            <input type="password" class="form-control form-control-sm" id="new_password" name="password" required>
+                        </div>
+                         <div class="col-md-6 mb-3 form-check mt-4 pt-2">
+                            <input type="checkbox" class="form-check-input" id="new_is_admin" name="is_admin">
+                            <label class="form-check-label small" for="new_is_admin">Set as Administrator</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create User</button>
+                </div> #}
+            {# </form>
+        </div>
+    </div>
+</div>
+#}
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+});
+</script>
 {% endblock %}

@@ -1,99 +1,108 @@
 {% extends "base.html" %}
 {% block title %}Interview Sessions - Admin{% endblock %}
+
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 fw-bold">Interview Sessions</h1>
-        <!-- UBAH INI -->
-        <a href="{{ url_for('admin.admin_dashboard_route') }}" class="btn btn-outline-primary">
-            <i class="bi bi-arrow-left"></i> Back to Dashboard
+<div class="admin-content-page container-fluid py-4 px-lg-4">
+    <div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">Interview Sessions</h1>
+        <a href="{{ url_for('admin.admin_dashboard_route') }}" class="btn btn-sm btn-outline-secondary mt-2 mt-md-0">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
         </a>
     </div>
 
-    <!-- Form Pencarian -->
-    <form method="GET" action="{{ url_for('admin.admin_sessions_route') }}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search_email" class="form-control" placeholder="Search by User Email..." value="{{ search_email or '' }}">
-            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Search</button>
-            {% if search_email %}
-                <a href="{{ url_for('admin.admin_sessions_route') }}" class="btn btn-outline-secondary">Clear</a>
-            {% endif %}
+    <div class="card border-0 shadow-sm fluent-dashboard-card mb-4">
+        <div class="card-body p-3">
+            <form method="GET" action="{{ url_for('admin.admin_sessions_route') }}">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-light"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search_email" class="form-control form-control-lg border-light" placeholder="Search by User Email or Username..." value="{{ search_email or '' }}">
+                    <button class="btn btn-primary px-4" type="submit">Search</button>
+                    {% if search_email %}
+                        <a href="{{ url_for('admin.admin_sessions_route') }}" class="btn btn-outline-secondary">Clear</a>
+                    {% endif %}
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 
-    <!-- Sessions Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 py-3">
-            <h3 class="h5 mb-0 fw-bold">All Interview Sessions</h3>
+    <div class="card border-0 shadow-sm fluent-dashboard-card">
+        <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex flex-wrap justify-content-between align-items-center">
+            <h3 class="h5 mb-0 fw-semibold">All Interview Sessions</h3>
+            {% if total_pages and total_pages > 0 %}
+            <small class="text-muted mt-2 mt-md-0">Page {{ page }} of {{ total_pages }}</small>
+            {% endif %}
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 admin-table">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3">#</th>
-                            <th>User Email</th>
-                            <th>Username</th>
-                            <th>Category</th>
-                            <th>Start Time (UTC)</th>
-                            <th>End Time (UTC)</th>
-                            <th>Status</th>
-                            <th>Score</th>
-                            <th class="pe-3 text-end">Actions</th>
+                            <th class="ps-4 py-3">#</th>
+                            <th class="py-3">User</th>
+                            <th class="py-3">Category</th>
+                            <th class="py-3">Start Time (UTC)</th>
+                            <th class="py-3">End Time (UTC)</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Score</th>
+                            <th class="pe-4 py-3 text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% if sessions and sessions|length > 0 %}
-                        {% for session_doc in sessions %} <!-- Nama variabel diubah agar konsisten dengan backend -->
+                        {% set per_page = 10 %} {# Define per_page or pass it from backend #}
+                        {% for session_doc in sessions %}
                         <tr>
-                            <td class="ps-3">{{ loop.index + ( (page - 1) * 10 ) }}</td> <!-- Nomor urut dengan pagination -->
-                            <td>{{ session_doc.user_email }}</td>
+                            <td class="ps-4 text-muted">{{ loop.index + ( (page - 1) * per_page ) }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-sm me-2">
-                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle">
+                                    <div class="avatar-sm me-3">
+                                        <div class="avatar-title bg-primary-subtle text-primary rounded-circle fw-semibold d-flex align-items-center justify-content-center">
                                             {{ session_doc.username[0]|upper if session_doc.username else 'U' }}
                                         </div>
                                     </div>
-                                    {{ session_doc.username }}
+                                    <div>
+                                        <div class="fw-medium">{{ session_doc.username }}</div>
+                                        <small class="text-muted">{{ session_doc.user_email }}</small>
+                                    </div>
                                 </div>
                             </td>
-                            <td><span class="badge bg-info bg-opacity-10 text-info">{{ session_doc.category|title }}</span></td>
+                            <td><span class="badge rounded-pill fs-xs fw-semibold bg-info-subtle text-info-emphasis">{{ session_doc.category|title }}</span></td>
                             <td>
-                                <div class="fw-medium">{{ session_doc.start_time.strftime('%b %d, %Y') if session_doc.start_time else 'N/A' }}</div>
+                                <div class="fw-medium">{{ session_doc.start_time.strftime('%d %b %Y') if session_doc.start_time else 'N/A' }}</div>
                                 <small class="text-muted">{{ session_doc.start_time.strftime('%H:%M:%S') if session_doc.start_time else '' }}</small>
                             </td>
                              <td>
-                                <div class="fw-medium">{{ session_doc.end_time.strftime('%b %d, %Y') if session_doc.end_time else 'N/A' }}</div>
+                                <div class="fw-medium">{{ session_doc.end_time.strftime('%d %b %Y') if session_doc.end_time else 'N/A' }}</div>
                                 <small class="text-muted">{{ session_doc.end_time.strftime('%H:%M:%S') if session_doc.end_time else '' }}</small>
                             </td>
                             <td>
-                                <span class="badge bg-{% if session_doc.status == 'completed' %}success{% elif session_doc.status == 'ongoing' %}warning{% else %}secondary{% endif %}-subtle text-{% if session_doc.status == 'completed' %}success{% elif session_doc.status == 'ongoing' %}warning{% else %}secondary{% endif %}">
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if session_doc.status == 'completed' else ('warning' if session_doc.status == 'ongoing' else 'secondary') }}-subtle text-{{ 'success' if session_doc.status == 'completed' else ('warning' if session_doc.status == 'ongoing' else 'secondary') }}-emphasis">
                                     {{ session_doc.status|title }}
                                 </span>
                             </td>
-                            <td>
-                                {% if session_doc.overall_score != "N/A (Not Completed)" and session_doc.overall_score is not none %}
-                                    {{ "%.2f"|format(session_doc.overall_score) }}%
+                            <td class="fw-medium">
+                                {% if session_doc.status == 'completed' and session_doc.overall_score is not none and session_doc.overall_score != "N/A (Not Completed)" %}
+                                    {{ "%.1f"|format(session_doc.overall_score) }}%
                                 {% else %}
-                                    N/A
+                                    <span class="text-muted">-</span>
                                 {% endif %}
                             </td>
-                            <td class="pe-3 text-end">
-                                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#sessionModal-{{ session_doc._id }}" title="View Details">
+                            <td class="pe-4 text-end">
+                                <button class="btn btn-sm btn-outline-primary btn-icon" data-bs-toggle="modal" data-bs-target="#sessionModal-{{ session_doc._id }}" title="View Details">
                                     <i class="bi bi-eye"></i>
                                 </button>
-                                <!-- Tombol Delete (fungsionalitas perlu diimplementasikan) -->
-                                <!-- <button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete Session (Not Implemented)">
+                                {# Placeholder for other actions like delete
+                                <button class="btn btn-sm btn-outline-danger btn-icon ms-1" title="Delete Session">
                                     <i class="bi bi-trash"></i>
-                                </button> -->
+                                </button> #}
                             </td>
                         </tr>
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4"> <!-- Sesuaikan colspan -->
-                                No interview sessions found.
+                            <td colspan="8" class="text-center text-muted p-5">
+                                <i class="bi bi-folder-x fs-1 d-block mb-2"></i>
+                                No interview sessions found matching your criteria.
                             </td>
                         </tr>
                         {% endif %}
@@ -102,19 +111,35 @@
             </div>
         </div>
         {% if total_pages and total_pages > 1 %}
-        <div class="card-footer bg-white border-0 py-3">
+        <div class="card-footer bg-transparent border-top-0 py-3">
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center mb-0">
                     <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=page-1, search_email=search_email) if page > 1 else '#' }}" tabindex="-1">Previous</a>
+                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=page-1, search_email=search_email) if page > 1 else '#' }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
                     </li>
-                    {% for i in range(1, total_pages + 1) %}
-                    <li class="page-item {% if i == page %}active{% endif %}">
-                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=i, search_email=search_email) }}">{{ i }}</a>
+                    {# Improved Pagination Logic #}
+                    {% set window = 2 %}
+                    {% set start_page = [1, page - window]|max %}
+                    {% set end_page = [total_pages, page + window]|min %}
+
+                    {% if start_page > 1 %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=1, search_email=search_email) }}">1</a></li>
+                        {% if start_page > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                    {% endif %}
+
+                    {% for p in range(start_page, end_page + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=p, search_email=search_email) }}">{{ p }}</a>
                     </li>
                     {% endfor %}
+
+                    {% if end_page < total_pages %}
+                        {% if end_page < total_pages - 1 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=total_pages, search_email=search_email) }}">{{ total_pages }}</a></li>
+                    {% endif %}
+
                     <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=page+1, search_email=search_email) if page < total_pages else '#' }}">Next</a>
+                        <a class="page-link" href="{{ url_for('admin.admin_sessions_route', page=page+1, search_email=search_email) if page < total_pages else '#' }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
                     </li>
                 </ul>
             </nav>
@@ -123,57 +148,95 @@
     </div>
 </div>
 
-<!-- Modals for session details -->
 {% if sessions %}
 {% for session_doc in sessions %}
 <div class="modal fade" id="sessionModal-{{ session_doc._id }}" tabindex="-1" aria-labelledby="sessionModalLabel-{{ session_doc._id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sessionModalLabel-{{ session_doc._id }}">Session Details: {{ session_doc._id }}</h5>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered"> {# Changed to modal-xl #}
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-light border-bottom-0">
+                <h5 class="modal-title fw-semibold" id="sessionModalLabel-{{ session_doc._id }}">Interview Session Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <h6>User: {{ session_doc.username }} ({{ session_doc.user_email }})</h6>
-                <h6>Category: {{ session_doc.category|title }}</h6>
-                <h6>Status: <span class="badge bg-{% if session_doc.status == 'completed' %}success{% elif session_doc.status == 'ongoing' %}warning{% else %}secondary{% endif %}">{{ session_doc.status|title }}</span></h6>
-                {% if session_doc.overall_score != "N/A (Not Completed)" and session_doc.overall_score is not none %}
-                    <h6>Overall Score: {{ "%.2f"|format(session_doc.overall_score) }}%</h6>
-                {% endif %}
-                <hr>
-                <h5>Questions & Answers:</h5>
+            <div class="modal-body p-4">
+                <div class="row mb-3 pb-3 border-bottom">
+                    <div class="col-md-4">
+                        <small class="text-muted d-block">User</small>
+                        <span class="fw-medium">{{ session_doc.username }}</span> ({{ session_doc.user_email }})
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Category</small>
+                        <span class="fw-medium">{{ session_doc.category|title }}</span>
+                    </div>
+                    <div class="col-md-2">
+                         <small class="text-muted d-block">Status</small>
+                         <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if session_doc.status == 'completed' else ('warning' if session_doc.status == 'ongoing' else 'secondary') }}-subtle text-{{ 'success' if session_doc.status == 'completed' else ('warning' if session_doc.status == 'ongoing' else 'secondary') }}-emphasis">{{ session_doc.status|title }}</span>
+                    </div>
+                     {% if session_doc.status == 'completed' and session_doc.overall_score is not none and session_doc.overall_score != "N/A (Not Completed)" %}
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Overall Score</small>
+                        <span class="fw-bold fs-5 text-primary">{{ "%.1f"|format(session_doc.overall_score) }}%</span>
+                    </div>
+                    {% endif %}
+                </div>
+                 <div class="row mb-3">
+                     <div class="col-md-6">
+                        <small class="text-muted d-block">Session ID</small>
+                        <span class="text-monospace small">{{ session_doc._id }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <small class="text-muted d-block">Session Time (UTC)</small>
+                        <span class="small">{{ session_doc.start_time.strftime('%d %b %Y, %H:%M') if session_doc.start_time else 'N/A' }} - {{ session_doc.end_time.strftime('%H:%M') if session_doc.end_time else 'N/A' }}</span>
+                    </div>
+                </div>
+
+                <h6 class="fw-semibold mt-4 mb-3">Questions & Analysis:</h6>
                 {% if session_doc.questions and session_doc.questions|length > 0 %}
                     {% for q_item in session_doc.questions %}
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <strong>Q: {{ q_item.question_text }}</strong>
+                        <div class="card mb-3 border shadow-sm">
+                            <div class="card-header bg-light py-2 px-3">
+                                <small class="fw-semibold text-dark">Q{{ loop.index }}: {{ q_item.question_text }}</small>
                             </div>
-                            <div class="card-body">
-                                <p><strong>User Answer:</strong><br> {{ q_item.user_answer if q_item.user_answer else "<em class='text-muted'>No answer provided.</em>" }}</p>
+                            <div class="card-body p-3">
+                                <div class="mb-2">
+                                    <strong class="small text-muted d-block">User's Answer:</strong>
+                                    <p class="mb-0 small">{{ q_item.user_answer if q_item.user_answer else "<em class='text-muted'>No answer provided.</em>" }}</p>
+                                </div>
                                 {% if q_item.evaluation %}
-                                    <p class="mb-1"><strong>Evaluation Score:</strong> {{ "%.2f"|format(q_item.evaluation.score) }}%</p>
-                                    <p class="mb-1"><strong>Feedback:</strong> {{ q_item.evaluation.feedback }}</p>
-                                    <p class="mb-0"><strong>Matched Keywords:</strong>
-                                        {% if q_item.evaluation.matched_keywords and q_item.evaluation.matched_keywords|length > 0 %}
-                                            {% for kw in q_item.evaluation.matched_keywords %}
-                                                <span class="badge bg-primary">{{ kw }}</span>
-                                            {% endfor %}
-                                        {% else %}
-                                            <em class="text-muted">None</em>
-                                        {% endif %}
-                                    </p>
+                                    <hr class="my-2">
+                                    <div class="evaluation-details">
+                                        <div class="row gx-2">
+                                            <div class="col-auto">
+                                                <p class="mb-1 small"><strong class="text-muted">Score:</strong> <span class="fw-semibold">{{ "%.1f"|format(q_item.evaluation.score) }}%</span></p>
+                                            </div>
+                                            <div class="col">
+                                                <p class="mb-1 small"><strong class="text-muted">Feedback:</strong> {{ q_item.evaluation.feedback }}</p>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0 small mt-1"><strong class="text-muted">Matched Keywords:</strong>
+                                            {% if q_item.evaluation.matched_keywords and q_item.evaluation.matched_keywords|length > 0 %}
+                                                {% for kw in q_item.evaluation.matched_keywords %}
+                                                    <span class="badge bg-primary-subtle text-primary-emphasis fw-medium me-1">{{ kw }}</span>
+                                                {% endfor %}
+                                            {% else %}
+                                                <em class="text-muted">None</em>
+                                            {% endif %}
+                                        </p>
+                                    </div>
                                 {% else %}
-                                    <p class="text-muted"><em>Not evaluated yet.</em></p>
+                                    <p class="text-muted small mt-2"><em>This answer has not been evaluated yet.</em></p>
                                 {% endif %}
                             </div>
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p class="text-muted">No questions found in this session.</p>
+                    <div class="text-center text-muted p-4">
+                        <i class="bi bi-card-text fs-2 d-block mb-2"></i>
+                        No questions or answers found in this session.
+                    </div>
                 {% endif %}
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer bg-light border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -181,11 +244,16 @@
 {% endfor %}
 {% endif %}
 
-<style>
-    /* ... (style Anda sebelumnya) ... */
-</style>
+{% endblock %}
 
+{% block scripts_extra %}
 <script>
-    // ... (script Anda sebelumnya untuk tooltips) ...
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Bootstrap tooltips if you use them for delete buttons etc.
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+});
 </script>
 {% endblock %}
