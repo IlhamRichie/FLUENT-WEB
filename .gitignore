@@ -1,0 +1,6 @@
+# .gitignore
+.env
+__pycache__/
+*.pyc
+instance/
+# file atau folder lain yang tidak ingin di-commit

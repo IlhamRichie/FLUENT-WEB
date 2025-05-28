@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP - FLUENT App{% endblock %}
+
+{% block content %}
+<div class="auth-form-container"> {# Gunakan kelas yang sama untuk styling konsisten #}
+    <div class="card">
+        <div class="card-header">
+            <h2>Verify OTP</h2>
+        </div>
+        <div class="card-body p-4">
+            {% if email_for_verification %}
+            <p class="text-center mb-3">
+                An OTP has been sent to <strong>{{ email_for_verification }}</strong>.
+                <br>Please enter it below.
+            </p>
+            {% else %}
+            <p class="alert alert-warning">Email for verification not found in session.</p>
+            {% endif %}
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- UBAH ACTION FORM DI SINI -->
+            <form method="POST" action="{{ url_for('web.web_verify_otp_submit_route') }}">
+                <div class="mb-3">
+                    <label for="otp" class="form-label">OTP Code</label>
+                    <input type="text" class="form-control" id="otp" name="otp" 
+                           required autofocus 
+                           pattern="[0-9]{6}" title="Enter 6-digit OTP"
+                           inputmode="numeric" autocomplete="one-time-code">
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Verify OTP</button>
+                </div>
+            </form>
+            <hr>
+            <p class="mt-3 text-center">
+                Didn't receive the OTP? 
+                <!-- UBAH LINK RESEND OTP JUGA -->
+                <a href="{{ url_for('web.web_resend_otp_route') }}">Resend OTP</a>
+            </p>
+            <p class="mt-1 text-center">
+                <!-- UBAH LINK BACK TO LOGIN JUGA -->
+                <a href="{{ url_for('web.web_login_route') }}">Back to Login</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,706 @@
+/* style.css */
+
+/* === GLOBAL STYLES & VARIABLES === */
+:root {
+  --fluent-primary-red: #e53935; /* Merah utama yang lebih cerah dan modern */
+  --fluent-primary-red-dark: #c62828; /* Merah lebih gelap untuk hover/aksen */
+  --fluent-secondary-red: #ffcdd2; /* Merah muda untuk background lembut */
+  --fluent-text-dark: #212529; /* Warna teks gelap standar */
+  --fluent-text-light: #f8f9fa; /* Warna teks terang */
+  --fluent-text-muted: #6c757d; /* Warna teks muted */
+  --fluent-bg-light: #ffffff;
+  --fluent-bg-medium: #f8f9fa; /* Mirip default Bootstrap light */
+  --fluent-bg-dark: #343a40; /* Mirip default Bootstrap dark */
+  --fluent-border-color: #dee2e6;
+  --fluent-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  --fluent-border-radius: 0.375rem; /* Default Bootstrap 5 */
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--fluent-text-dark);
+  background-color: var(--fluent-bg-light);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600; /* Sedikit lebih tebal untuk judul */
+  color: var(--fluent-text-dark);
+}
+
+h1 span,
+.features-header h1 span {
+  /* Untuk span di judul utama */
+  color: var(--fluent-primary-red);
+  font-weight: 700;
+}
+
+a {
+  color: var(--fluent-primary-red);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--fluent-primary-red-dark);
+  text-decoration: underline;
+}
+
+.btn-primary {
+  background-color: var(--fluent-primary-red);
+  border-color: var(--fluent-primary-red);
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--fluent-primary-red-dark);
+  border-color: var(--fluent-primary-red-dark);
+  box-shadow: 0 0 0 0.2rem rgba(229, 57, 53, 0.3); /* Shadow merah transparan */
+}
+
+.btn-outline-light {
+  color: var(--fluent-text-light);
+  border-color: var(--fluent-text-light);
+}
+.btn-outline-light:hover {
+  background-color: var(--fluent-text-light);
+  color: var(--fluent-primary-red);
+}
+
+.btn-outline-primary {
+    border-color: var(--fluent-primary-red);
+    color: var(--fluent-primary-red);
+}
+.btn-outline-primary:hover {
+    background-color: var(--fluent-primary-red);
+    color: var(--fluent-text-light);
+}
+
+.btn-cta {
+  /* Styling khusus untuk tombol CTA di navbar jika diperlukan */
+  font-weight: 600;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--fluent-border-radius); /* Sedikit rounded corner untuk gambar */
+}
+
+.card {
+  border: 1px solid var(--fluent-border-color);
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+  border-radius: var(--fluent-border-radius);
+}
+
+.card-header {
+  background-color: var(--fluent-bg-medium);
+  border-bottom: 1px solid var(--fluent-border-color);
+  font-weight: 600;
+}
+
+/* === NAVBAR === */
+.fluent-navbar {
+  background-color: var(--fluent-bg-dark);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  /* Hapus box-shadow dari sini jika ingin hanya muncul saat scroll */
+  /* box-shadow: var(--fluent-box-shadow); */
+  transition: background-color 0.3s ease-in-out, padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Transisi untuk animasi */
+  /* position: fixed;  Sudah ditambahkan via class fixed-top di HTML */
+  /* top: 0; */
+  /* width: 100%; */
+  /* z-index: 1030; */ /* Bootstrap z-index untuk fixed navbar */
+}
+
+/* Style Navbar Saat Di-scroll */
+.fluent-navbar.scrolled {
+  background-color: rgba(44, 62, 80, 0.95); /* Warna lebih gelap atau sedikit transparan saat scroll */
+  padding-top: 0.75rem; /* Sedikit lebih kecil paddingnya */
+  padding-bottom: 0.75rem;
+  box-shadow: var(--fluent-box-shadow); /* Tambahkan shadow saat scroll */
+}
+
+.fluent-navbar.scrolled .navbar-brand {
+    font-size: 1.35rem; /* Sedikit kecilkan brand saat scroll */
+    transition: font-size 0.3s ease-in-out;
+}
+.fluent-navbar.scrolled .navbar-brand img {
+    height: 35px; /* Kecilkan logo sedikit */
+    transition: height 0.3s ease-in-out;
+}
+
+
+/* === NAVBAR === */
+.fluent-navbar {
+  background-color: var(--fluent-bg-dark); /* Navbar gelap */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-shadow: var(--fluent-box-shadow);
+}
+
+.fluent-navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--fluent-text-light);
+  display: flex;
+  align-items: center;
+}
+.fluent-navbar .navbar-brand img {
+  margin-right: 0.5rem;
+}
+
+.fluent-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.75); /* Warna link navbar sedikit transparan */
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.fluent-navbar .nav-link:hover,
+.fluent-navbar .nav-link.active {
+  color: var(--fluent-text-light);
+}
+
+.fluent-navbar .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.fluent-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.fluent-navbar .btn-cta {
+  background-color: var(--fluent-primary-red);
+  color: var(--fluent-text-light) !important; /* Paksa warna teks */
+  border-radius: var(--fluent-border-radius);
+  padding: 0.5rem 1rem;
+}
+.fluent-navbar .btn-cta:hover {
+  background-color: var(--fluent-primary-red-dark);
+  color: var(--fluent-text-light) !important;
+}
+
+/* === FOOTER === */
+.fluent-footer {
+  background-color: var(--fluent-bg-dark);
+  color: rgba(255, 255, 255, 0.7);
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.fluent-footer h5 {
+  color: var(--fluent-text-light);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.fluent-footer p {
+  font-size: 0.9rem;
+}
+
+.fluent-footer ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.fluent-footer ul li a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.fluent-footer ul li a:hover {
+  color: var(--fluent-primary-red);
+}
+
+.fluent-footer .social-icons a {
+  color: rgba(255, 255, 255, 0.7);
+  margin-right: 1rem;
+  font-size: 1.2rem; /* Ukuran ikon sosial */
+  transition: color 0.2s ease;
+}
+
+.fluent-footer .social-icons a:hover {
+  color: var(--fluent-primary-red);
+}
+
+.fluent-footer hr {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* === HERO SECTION (index.html) === */
+.hero-section {
+  background: linear-gradient(
+      rgba(33, 37, 41, 0.7),
+      rgba(33, 37, 41, 0.85)
+    ),
+    
+}
+@media (max-width: 991.98px) { /* lg breakpoint */
+    .hero-section {
+        text-align: center; /* Pusatkan teks pada layar kecil */
+        padding: 4rem 0;
+    }
+    .hero-section .cta-buttons {
+        justify-content: center;
+    }
+}
+
+
+.hero-section h1 {
+  font-size: 2.8rem; /* Ukuran font disesuaikan */
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--fluent-text-light);
+}
+
+.hero-section .lead {
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-section .cta-buttons a {
+  margin-right: 1rem;
+  margin-bottom: 1rem; /* Untuk mobile */
+}
+.hero-section .cta-buttons .btn-primary {
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
+}
+
+.hero-section img {
+    max-height: 450px; /* Batasi tinggi gambar hero */
+    object-fit: contain;
+}
+
+/* === STATS SECTION (index.html) === */
+.stats-section {
+  padding: 4rem 0;
+  background-color: var(--fluent-bg-medium);
+}
+
+.stats-section h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--fluent-primary-red);
+  margin-bottom: 0.5rem;
+}
+
+.stats-section p {
+  font-size: 1rem;
+  color: var(--fluent-text-muted);
+}
+
+/* === HOW IT WORKS SECTION (index.html) === */
+.how-it-works {
+  padding: 4rem 0;
+}
+
+.how-it-works h2.text-center {
+  margin-bottom: 3rem;
+  font-weight: 700;
+}
+
+.step-card {
+  background-color: var(--fluent-bg-light);
+  border: 1px solid var(--fluent-border-color);
+  border-radius: var(--fluent-border-radius);
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: var(--fluent-box-shadow);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.1);
+}
+
+.step-card .step-number {
+  background-color: var(--fluent-primary-red);
+  color: var(--fluent-text-light);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 auto 1.5rem auto;
+}
+
+.step-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--fluent-text-dark);
+}
+
+/* === FEATURES PAGE (features.html) === */
+.features-header {
+  background-color: var(--fluent-secondary-red); /* Warna background header lembut */
+  padding: 4rem 0;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.features-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.features-list .feature-item {
+  margin-bottom: 4rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--fluent-border-color);
+}
+.features-list .feature-item:last-child {
+    border-bottom: none;
+}
+
+.features-list .feature-item img {
+    border-radius: var(--fluent-border-radius);
+    box-shadow: var(--fluent-box-shadow);
+}
+
+.features-list h2 {
+  font-size: 1.8rem;
+  color: var(--fluent-primary-red);
+  margin-bottom: 1rem;
+}
+
+.features-list ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.features-list ul li {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.features-list ul li .fa-check-circle {
+  color: var(--fluent-primary-red);
+  margin-right: 0.5rem;
+}
+
+.cta-section {
+  background-color: var(--fluent-bg-dark);
+  color: var(--fluent-text-light);
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--fluent-text-light);
+}
+.cta-section p {
+    margin-bottom: 2rem;
+    color: rgba(255,255,255,0.8);
+}
+
+/* === API DOCS PAGE (api_docs.html) === */
+.api-docs .card {
+  margin-bottom: 1.5rem;
+}
+.api-docs .card-header {
+    font-family: 'Courier New', Courier, monospace; /* Font berbeda untuk path API */
+    font-size: 0.95rem;
+}
+.api-docs .card-header.bg-primary { background-color: var(--fluent-primary-red) !important; }
+.api-docs .card-header.bg-warning { background-color: #fd7e14 !important; color: var(--fluent-text-light) !important; } /* Orange untuk user */
+.api-docs .card-header.bg-success { background-color: #198754 !important; } /* Hijau untuk interview */
+.api-docs .card-header.bg-info   { background-color: #0dcaf0 !important; color: var(--fluent-text-dark) !important; } /* Cyan untuk analysis */
+.api-docs .card-header.bg-dark   { background-color: var(--fluent-bg-dark) !important; }
+
+
+.api-docs pre {
+  background-color: #e9ecef; /* Warna background pre yang sedikit lebih gelap dari default */
+  padding: 1rem;
+  border-radius: var(--fluent-border-radius);
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-size: 0.875rem; /* Ukuran font lebih kecil untuk kode */
+  border: 1px solid #ced4da;
+}
+
+.api-docs h2 {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--fluent-primary-red);
+}
+
+#api-nav .list-group-item.active {
+  background-color: var(--fluent-primary-red);
+  border-color: var(--fluent-primary-red);
+  color: white;
+}
+#api-nav .list-group-item {
+    border-radius: 0;
+    font-weight: 500;
+}
+
+/* === PROFILE PAGE (profile_web.html) === */
+.bg-primary-dark {
+  background-color: var(--fluent-bg-dark) !important; /* Atau var(--fluent-primary-red-dark) jika ingin merah */
+  color: var(--fluent-text-light) !important;
+}
+
+.fluent-red-text {
+  color: var(--fluent-primary-red) !important;
+}
+
+.profile-web .card {
+    min-height: 100%; /* Agar card di row sama tinggi */
+}
+
+.profile-web .avatar-title {
+  width: 150px;
+  height: 150px;
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  background-color: var(--fluent-primary-red); /* Avatar dengan warna merah */
+  color: var(--fluent-text-light);
+  font-weight: 600;
+}
+
+.profile-web .list-group-item {
+    background-color: transparent; /* Agar tidak ada background putih pada list item */
+    border-left: 0;
+    border-right: 0;
+}
+.profile-web .list-group-item:first-child {
+    border-top:0;
+}
+.profile-web .list-group-item:last-child {
+    border-bottom:0;
+}
+.profile-web .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.7em;
+}
+.profile-web .text-bg-primary { /* Jika menggunakan helper Bootstrap untuk badge */
+    background-color: var(--fluent-primary-red) !important;
+}
+
+/* === AUTH FORMS (login_web.html, register_web.html, etc.) === */
+.auth-form-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+.auth-form-container .card {
+    width: 100%;
+    max-width: 450px; /* Batasi lebar form */
+    box-shadow: var(--fluent-box-shadow);
+}
+.auth-form-container .card-header {
+    background-color: var(--fluent-primary-red);
+    color: var(--fluent-text-light);
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+.auth-form-container .card-header h2 {
+    margin-bottom: 0;
+    color: var(--fluent-text-light);
+}
+.auth-form-container .form-control:focus {
+    border-color: var(--fluent-primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(229, 57, 53, 0.25);
+}
+.auth-form-container .btn-danger { /* Untuk tombol Google */
+    background-color: #DB4437; /* Warna Google Merah */
+    border-color: #DB4437;
+}
+.auth-form-container .btn-danger:hover {
+    background-color: #C33D2E;
+    border-color: #B7362A;
+}
+
+
+/* === ADMIN PANEL STYLING (opsional, bisa dipisah jika sangat kompleks) === */
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--fluent-text-dark);
+  background-color: var(--fluent-bg-light);
+  line-height: 1.6;
+  /* Pastikan tidak ada margin default pada body yang menyebabkan space putih */
+  margin: 0;
+  padding: 0;
+}
+
+/* Wrapper untuk konten utama di bawah navbar fixed */
+.main-content-wrapper {
+  /* padding-top akan di-set oleh JavaScript */
+  min-height: calc(100vh - 120px); /* Perkiraan tinggi footer, sesuaikan */
+}
+
+/* Jika Anda ingin beberapa section tertentu (selain hero) full-width,
+   Anda bisa membuat kelas khusus dan tidak membungkusnya dengan .container
+   di template masing-masing. */
+
+/* === HERO SECTION (index.html) === */
+.hero-section {
+  /* ... (style background Anda sama) ... */
+  background: linear-gradient(
+      rgba(33, 37, 41, 0.75), /* Sedikit lebih gelap untuk kontras teks */
+      rgba(33, 37, 41, 0.9)
+    ),
+}
+
+@media (max-width: 991.98px) { /* lg breakpoint */
+    .hero-section {
+        padding: 3rem 0;
+        text-align: center; /* Konten teks terpusat di mobile */
+    }
+    .hero-section .row > div { /* Pusatkan kolom di mobile */
+        margin-bottom: 1.5rem;
+    }
+    .hero-section .cta-buttons {
+        justify-content: center; /* Pusatkan tombol */
+        display: flex;
+        flex-direction: column; /* Tombol bertumpuk di mobile */
+        align-items: center;
+    }
+    .hero-section .cta-buttons a {
+        width: 80%; /* Lebar tombol di mobile */
+        max-width: 300px;
+        margin-right: 0; /* Hapus margin kanan */
+    }
+    .hero-image-custom {
+        margin-top: 2rem; /* Beri jarak atas untuk gambar di mobile */
+        max-width: 80% !important; /* Kecilkan gambar di mobile */
+    }
+}
+
+.hero-image-custom {
+    max-height: 400px; /* Sesuaikan */
+    border-radius: 12px; /* Rounded corner lebih besar */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+
+/* === ADMIN LOGIN PAGE (dari screenshot) === */
+.admin-login-page-background {
+    /* background-color: #4A90E2;
+    /* Atau gunakan gradient jika diinginkan */
+    /* background: linear-gradient(135deg, #5D9CEC 0%, #4A90E2 100%); */
+    min-height: calc(100vh - 80px); /* 80px adalah perkiraan tinggi navbar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem; /* Padding agar form tidak menempel di tepi */
+}
+
+.admin-login-form-container {
+    background-color: var(--fluent-bg-light);
+    padding: 2.5rem 2rem; /* Padding lebih besar */
+    border-radius: 12px; /* Rounded corner lebih besar */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 420px; /* Lebar maksimal form */
+    text-align: center;
+}
+
+.admin-login-form-container img.logo {
+    height: 50px; /* Sesuaikan ukuran logo */
+    margin-bottom: 1rem;
+}
+
+.admin-login-form-container h2 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--fluent-text-dark);
+}
+.admin-login-form-container .text-muted {
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+.admin-login-form-container .form-label {
+    font-weight: 500;
+    text-align: left;
+    display: block; /* Agar label full width */
+    margin-bottom: 0.3rem;
+}
+
+.admin-login-form-container .form-control {
+    border-radius: var(--fluent-border-radius);
+    padding: 0.75rem 1rem; /* Padding input lebih besar */
+    border: 1px solid #ced4da;
+}
+.admin-login-form-container .form-control:focus {
+    border-color: var(--fluent-primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(229, 57, 53, 0.25);
+}
+
+.admin-login-form-container .btn-login {
+    background-color: var(--fluent-primary-red);
+    border-color: var(--fluent-primary-red);
+    color: var(--fluent-text-light);
+    font-weight: 600;
+    padding: 0.75rem;
+    width: 100%; /* Tombol login full width */
+    margin-top: 1rem;
+    transition: background-color 0.2s ease;
+}
+.admin-login-form-container .btn-login:hover {
+    background-color: var(--fluent-primary-red-dark);
+    border-color: var(--fluent-primary-red-dark);
+}
+
+.admin-login-form-container .restricted-access {
+    font-size: 0.8rem;
+    color: var(--fluent-text-muted);
+    margin-top: 1.5rem;
+}
+
+
+/* Contoh sederhana untuk admin */
+.admin-dashboard .card-header {
+    font-weight: bold;
+}
+.admin-dashboard .bg-primary { background-color: var(--fluent-primary-red) !important; }
+/* Tambahkan styling lain untuk tabel admin, dll. */
+
+
+/* === UTILITIES === */
+.text-primary { color: var(--fluent-primary-red) !important; }
+.bg-primary { background-color: var(--fluent-primary-red) !important; }
+
+.container {
+    max-width: 1140px; /* Default container width Bootstrap */
+}
+
+/* Responsif tambahan jika diperlukan */
+@media (max-width: 767.98px) { /* md breakpoint */
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+    .features-list .feature-item {
+        text-align: center;
+    }
+    .features-list .feature-item img {
+        margin-bottom: 1.5rem;
+    }
+    .features-list .order-lg-2, .features-list .order-lg-1 {
+        order: 0 !important; /* Reset order untuk mobile */
+    }
+}

@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+{% block title %}API Documentation - FLUENT{% endblock %}
+{% block content %}
+<div class="container api-docs my-5">
+    <h1 class="mb-4">FLUENT API Documentation</h1>
+    <p>Untuk mencoba endpoint secara langsung, silakan klik tombol di bawah ini:</p>
+    <!-- UBAH INI: Endpoint Swagger UI sudah benar jika didaftarkan di root atau /api/docs/swagger -->
+    <!-- Jika Swagger UI didaftarkan dengan nama endpoint 'swagger_ui.show' (default dari flask_swagger_ui) -->
+    <a href="{{ url_for('swagger_ui.show') }}" class="btn btn-primary btn-lg">Go to Interactive API Docs (Try it out)</a>
+    <p></p>
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-md-3">
+            <div class="list-group" id="api-nav">
+                <a class="list-group-item list-group-item-action active" href="#auth">Authentication</a>
+                <a class="list-group-item list-group-item-action" href="#users">Users</a>
+                <a class="list-group-item list-group-item-action" href="#interview">Interview</a>
+                <a class="list-group-item list-group-item-action" href="#analysis">Analysis</a>
+                <a class="list-group-item list-group-item-action" href="#admin">Admin</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Authentication Section -->
+            <section id="auth" class="mb-5">
+                <h2 class="border-bottom pb-2">Authentication</h2>
+                <p class="text-muted">Base URL: <code>/auth</code> (Misalnya: <code>POST /auth/login</code>)</p>
+
+                <!-- Login -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        POST /auth/login  <!-- Perbaiki path agar jelas, atau gunakan path lengkap dari root -->
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">User Login</h5>
+                        <p class="text-muted">Authenticate and receive access tokens.</p>
+                        <pre><code>{
+  "email": "string",
+  "password": "string"
+}</code></pre>
+                        <h6>Response (Success):</h6>
+                        <pre><code>{
+  "status": "success",
+  "access_token": "string",
+  "refresh_token": "string",
+  "user": {
+    "id": "string", <!-- Tambahkan ID user -->
+    "username": "string",
+    "email": "string",
+    "gender": "string",
+    "occupation": "string",
+    "is_active": true,
+    "profile_picture": "string" <!-- Tambahkan profile_picture -->
+  }
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: Missing email or password</li>
+                            <li>401: Invalid credentials / Please login using Google OAuth</li>
+                            <li>403: Account is inactive</li>
+                            <li>404: User not found</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Register -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        POST /auth/register
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">User Registration</h5>
+                        <pre><code>{
+  "email": "string",
+  "username": "string",
+  "password": "string",
+  "gender": "string",      // Optional, default "Not specified"
+  "occupation": "string"  // Optional, default "Not specified"
+}</code></pre>
+                        <h6>Response (Success 201):</h6>
+                        <pre><code>{
+  "status": "success",
+  "message": "User registered successfully",
+  "user": {
+    "id": "string",
+    "username": "string",
+    "email": "string"
+  }
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: Incomplete data (Email, username, password required)</li>
+                            <li>400: Username or email already exists</li>
+                            <li>500: Registration failed due to an internal error</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Refresh Token -->
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        POST /auth/refresh
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Refresh Access Token</h5>
+                        <pre><code>{
+  "refresh_token": "string"
+}</code></pre>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "access_token": "string"
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>401: Refresh token is missing / Invalid refresh token / Refresh token has expired</li>
+                            <li>403: Account is inactive</li>
+                            <li>404: User not found for token</li>
+                            <li>500: Token processing error</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Google Login API Start -->
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        GET /auth/google/login/api
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Start Google Login (for API/Mobile)</h5>
+                        <p class="text-muted">Initiates Google OAuth flow. Redirects to Google's authentication page. After successful authentication, Google redirects to <code>/auth/google/callback/api</code>.</p>
+                    </div>
+                </div>
+
+                <!-- Google Callback API -->
+                <div class="card mb-3">
+                    <div class="card-header bg-danger text-white">
+                        GET /auth/google/callback/api
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Google OAuth Callback (for API/Mobile)</h5>
+                        <p class="text-muted">Handles the callback from Google. On success, redirects to the Flutter app scheme (e.g., <code>fluentai://oauthcallback?status=success&...</code>) with tokens and user data. On error, redirects with <code>status=error&message=...</code>.</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="mb-5">
+                <h2 class="border-bottom pb-2">Users</h2>
+                <p class="text-muted">Base URL: <code>/api/users</code> (Requires Bearer Token)</p>
+                <!-- Update User -->
+                <div class="card mb-3">
+                    <div class="card-header bg-warning text-dark"> <!-- Ganti text-white jadi text-dark jika bg-warning terlalu terang -->
+                        PUT /api/users/update
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Update User Profile</h5>
+                        <p class="text-muted">Requires authentication (Bearer Token).</p>
+                        <pre><code>{
+  "username": "string",   // optional
+  "occupation": "string", // optional
+  "gender": "string"      // optional
+}</code></pre>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "message": "User data updated successfully",
+  "user": {
+    "id": "string",
+    "username": "string",
+    "email": "string",
+    "gender": "string",
+    "occupation": "string",
+    "profile_picture": "string"
+  }
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: No valid fields to update / Username already taken</li>
+                            <li>500: Failed to update user data</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Get User Profile -->
+                 <div class="card mb-3">
+                    <div class="card-header bg-warning text-dark">
+                        GET /api/users/profile
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Get Current User Profile</h5>
+                        <p class="text-muted">Requires authentication (Bearer Token).</p>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "user": {
+    "id": "string",
+    "username": "string",
+    "email": "string",
+    "gender": "string",
+    "occupation": "string",
+    "is_active": true,
+    "auth_provider": "local|google",
+    "created_at": "iso_datetime_string",
+    "last_login": "iso_datetime_string",
+    "profile_picture": "string"
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interview Section -->
+            <section id="interview" class="mb-5">
+                <h2 class="border-bottom pb-2">Interview</h2>
+                <p class="text-muted">Base URL: <code>/api/interview</code> (Requires Bearer Token)</p>
+
+                <!-- Start Interview -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        POST /api/interview/start
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Start New Interview Session</h5>
+                        <p class="text-muted">Requires authentication.</p>
+                        <pre><code>{
+  "category": "general",  // optional, default "general"
+  "num_questions": 5      // optional, default 5
+}</code></pre>
+                        <h6>Response (Success 201):</h6>
+                        <pre><code>{
+  "status": "success",
+  "session_id": "string",
+  "current_question": "string",
+  "current_question_id": "string",
+  "total_questions": 5
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>404: No questions available for category</li>
+                            <li>500: Failed to start interview session</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Submit Answer -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        POST /api/interview/submit
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Submit Interview Answer</h5>
+                        <p class="text-muted">Requires authentication.</p>
+                        <pre><code>{
+  "session_id": "string",
+  "answer_text": "string"
+  // "audio_answer" tidak lagi digunakan di backend ini, gunakan /api/analysis/speech
+}</code></pre>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>// If interview not completed:
+{
+  "status": "success",
+  "evaluation": { /* ... evaluation object ... */ },
+  "interview_completed": false,
+  "next_question": "string",
+  "next_question_id": "string",
+  "current_question_index": integer
+}
+
+// If interview completed:
+{
+  "status": "success",
+  "evaluation": { /* ... evaluation object ... */ },
+  "interview_completed": true,
+  "overall_score": float
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: Missing session_id or answer_text / Invalid session_id format</li>
+                            <li>404: Session not found or access denied</li>
+                            <li>400: Interview already completed / All questions answered</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Get Results -->
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        GET /api/interview/results/<session_id_str>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Get Interview Results</h5>
+                        <p class="text-muted">Requires authentication.</p>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "results": {
+    "session_id": "string",
+    "user_id": "string",
+    "start_time": "iso_datetime_string",
+    "end_time": "iso_datetime_string",
+    "questions": [
+      {
+        "question_id": "string",
+        "question_text": "string",
+        "ideal_keywords": ["string"],
+        "user_answer": "string",
+        "evaluation": {
+          "matched_keywords": ["string"],
+          "score": float,
+          "feedback": "string"
+        }
+      }
+    ],
+    "overall_score": float,
+    "category": "string"
+  }
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: Invalid session_id format / Results not available, interview not completed</li>
+                            <li>404: Session not found or access denied</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Section -->
+            <section id="analysis" class="mb-5">
+                <h2 class="border-bottom pb-2">Analysis</h2>
+                <p class="text-muted">Base URL: <code>/api/analysis</code> (Requires Bearer Token)</p>
+
+                <!-- Realtime Video Analysis -->
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        POST /api/analysis/realtime
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Real-time Video Frame Analysis</h5>
+                        <p class="text-muted">Analyzes emotion, mouth movement, and pose from a single video frame. Requires authentication.</p>
+                        <pre><code>{
+  "frame": "base64_encoded_image_string"
+}</code></pre>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "results": {
+    "emotion": {"status": "success", "detected_emotion": "happy", "confidence": 0.85},
+    "mouth": {"status": "success", "mouth_status": "mouth_closed"},
+    "pose": {"status": "success", "pose_status": "upright"}
+  }
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: Frame data not provided / Invalid base64 string / Invalid image data</li>
+                            <li>500: Analysis error</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Speech Analysis -->
+                <div class="card mb-3">
+                    <div class="card-header bg-info text-white">
+                        POST /api/analysis/speech
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Speech-to-Text & Analysis</h5>
+                        <p class="text-muted">Upload audio file (e.g., WAV, MP3 - server will attempt to process). Form-data with 'audio' field. Requires authentication.</p>
+                        <h6>Response (Success 200):</h6>
+                        <pre><code>{
+  "status": "success",
+  "transcript": "string",
+  "word_count": integer,
+  "words_per_minute": integer,
+  "language": "id-ID",
+  "duration_seconds": float
+}</code></pre>
+                        <h6>Error Responses:</h6>
+                        <ul>
+                            <li>400: No audio file provided / No selected audio file</li>
+                            <li>500: Speech recognition error</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Section (Dokumentasi Web, bukan API JSON untuk interaksi langsung) -->
+            <section id="admin" class="mb-5">
+                <h2 class="border-bottom pb-2">Admin (Web Panel)</h2>
+                <p class="text-muted">Admin functionalities are accessed via web pages, not direct JSON APIs for external clients.</p>
+
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        GET /admin/login
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Admin Login Page</h5>
+                        <p>Renders the admin login HTML page.</p>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        POST /admin/login
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Process Admin Login</h5>
+                        <p>Accepts form data: <code>email</code>, <code>password</code>.</p>
+                        <p>On success, sets admin session and redirects to <code>/admin/dashboard</code>. On failure, re-renders login page with error flash.</p>
+                    </div>
+                </div>
+                 <!-- ... (Tambahkan dokumentasi untuk route admin lainnya jika perlu, fokus pada apa yang dilakukan halaman tersebut) ... -->
+            </section>
+        </div>
+    </div>
+</div>
+<style>
+.api-docs pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    white-space: pre-wrap; /* Agar teks panjang di pre bisa wrap */
+    word-break: break-all; /* Memastikan kata panjang tidak overflow */
+}
+.card-header {
+    font-weight: bold;
+}
+/* Sidebar styling */
+#api-nav .list-group-item {
+    border-radius: 0;
+}
+#api-nav .list-group-item.active {
+    background-color: #007bff; /* Sesuaikan dengan warna tema Anda */
+    border-color: #007bff;
+    color: white;
+}
+</style>
+{% endblock %}

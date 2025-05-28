@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Login - FLUENT{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5" style="min-height: 60vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4 fluent-red-text">Login to FLUENT</h2>
+
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Form Login Email/Password -->
+                    <!-- UBAH ACTION FORM -->
+                    <form method="POST" action="{{ url_for('web.web_login_email_password_route') }}">
+                        {{ csrf_token if csrf_token else '' }}
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Alamat Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="text-end mb-3">
+                            <!-- UBAH LINK LUPA SANDI -->
+                            <a href="{{ url_for('web.web_forgot_password_request_route') }}" class="text-decoration-none small">Lupa Sandi?</a>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Login dengan Email & OTP</button> <!-- Ubah teks tombol -->
+                        </div>
+                    </form>
+                    <!-- Akhir Form Login Email/Password -->
+
+                    <hr class="my-4">
+
+                    <p class="text-center">Atau, login menggunakan akun Google Anda:</p>
+                    <div class="d-grid gap-2">
+                        <!-- UBAH LINK GOOGLE LOGIN & PROFILE -->
+                        <a href="{{ url_for('web.google_login_web_start', next=url_for('web.web_profile_route')) }}" class="btn btn-danger btn-lg">
+                            <i class="fab fa-google me-2"></i> Login dengan Google
+                        </a>
+                    </div>
+                    <hr>
+                    <p class="text-center small">
+                        <!-- UBAH LINK REGISTER -->
+                        Belum punya akun? <a href="{{ url_for('web.web_register_page_route') }}">Daftar di sini</a>.
+                        <!-- <br>Akun juga akan otomatis dibuat saat pertama kali login dengan Google. -->
+                    </p>
+                    <!--
+                    <p class="text-center small mt-3">
+                        Admin? <a href="{{ url_for('admin.admin_login_route') }}">Login di sini</a>.
+                    </p>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.fluent-red-text {
+    color: #dc3545; /* Contoh warna merah standar bootstrap */
+}
+</style>
+{% endblock %}

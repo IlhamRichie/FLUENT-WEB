@@ -1,0 +1,39 @@
+<!-- FLUENTSERVICE/backend/templates/admin/admin_users_list.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin - Users List{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Users List (Admin Panel)</h1>
+    <p>Page: {{ page }}</p>
+    <p>Total Pages: {{ total_pages }}</p>
+    <p>Search Query: {{ search_query }}</p>
+
+    {% if users %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <!-- Tambahkan kolom lain jika perlu -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user._id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ 'Active' if user.is_active else 'Inactive' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+</div>
+{% endblock %}

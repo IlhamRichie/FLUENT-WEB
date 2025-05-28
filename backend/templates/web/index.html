@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Home - FLUENT{% endblock %}
+
+{# Hero section sekarang masuk ke block content_hero agar bisa full-width #}
+{% block content_hero %}
+<section class="hero-section">
+    <div class="container"> <!-- Konten di dalam hero section tetap di dalam .container -->
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1>Master Your Interview with <span>FLUENT</span></h1>
+                <p class="lead">AI-powered interview analysis to help you perform at your best. Get real-time feedback on your body language, speech patterns, and emotional state.</p>
+                <div class="cta-buttons">
+                    {% if not session.is_web_user and not session.is_admin %}
+                        <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-primary btn-lg">Get Started</a>
+                    {% else %}
+                        <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-primary btn-lg">Go to Profile</a>
+                    {% endif %}
+                    <a href="{{ url_for('web.features_route') }}" class="btn btn-outline-light btn-lg">Learn More</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-end"> <!-- Pusatkan gambar di mobile, align kanan di desktop -->
+                <img src="{{ url_for('web.web_serve_static', filename='images/io.png') }}" alt="Interview Analysis" class="img-fluid hero-image-custom">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{# Konten lainnya masuk ke block content standar yang akan dibungkus .container di base.html #}
+{% block content %}
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-3"> <!-- Tambahkan col-6 dan mb-3 untuk mobile -->
+                <h2>10,000+</h2>
+                <p>Users Trusted</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2>95%</h2>
+                <p>Success Rate</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2>24/7</h2>
+                <p>Available</p>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <h2>5.0</h2>
+                <p>Average Rating</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="text-center">How FLUENT Works</h2>
+        <div class="row">
+            <div class="col-lg-4 mb-4 mb-lg-0"> <!-- mb-4 untuk mobile -->
+                <div class="step-card h-100"> <!-- h-100 agar card sama tinggi -->
+                    <div class="step-number">1</div>
+                    <h3>Record Your Response</h3>
+                    <p>Answer interview questions using your camera and microphone.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="step-card h-100">
+                    <div class="step-number">2</div>
+                    <h3>Real-Time Analysis</h3>
+                    <p>Our AI analyzes your body language, speech, and emotions.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="step-card h-100">
+                    <div class="step-number">3</div>
+                    <h3>Get Detailed Feedback</h3>
+                    <p>Receive actionable insights to improve your performance.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

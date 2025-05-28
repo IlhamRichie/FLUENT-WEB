@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - FLUENT{% endblock %}
+
+{# Hapus semua override block main_content_wrapper_start/end yang sebelumnya #}
+{# Kita akan mendefinisikan ulang block 'content' sepenuhnya untuk halaman ini #}
+
+{% block content %}
+<div class="admin-login-page-background">
+    <div class="admin-login-form-container">
+        <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" class="logo mb-3">
+        {# Judul yang benar adalah Admin Login #}
+        <h2 style="font-weight: 700; margin-bottom: 0.5rem; color: var(--fluent-text-dark);">Admin Login</h2>
+        <p class="text-muted">Secure access to the administration panel.</p>
+
+        {# Tampilkan flash messages di sini jika ada #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('admin.admin_login_route') }}" class="mt-4">
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ request.form.email if request.form else '' }}" required autofocus>
+            </div>
+            <div class="mb-3 text-start">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-login">Login</button>
+        </form>
+        <p class="restricted-access">Restricted access to authorized personnel only.</p>
+    </div>
+</div>
+{% endblock %}
+
+{# Kosongkan block content_hero agar tidak ada hero section di halaman ini #}
+{% block content_hero %}
+{% endblock %}
