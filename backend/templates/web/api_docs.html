@@ -1,190 +1,316 @@
-{% extends "base.html" %}
-{% block title %}<span class="lang-id">Dokumentasi API</span><span class="lang-en">API Documentation</span> - FLUENT{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}<span class="lang-id"
+  >Dokumentasi API</span
+><span class="lang-en">API Documentation</span> - FLUENT{% endblock %} {% block
+content %}
 <div class="container-fluid api-docs my-5 page-content-container">
-    <div class="text-center mb-5 pb-3">
-        <h1 class="display-5 fw-bold mb-2">
-            <span class="lang-id">Dokumentasi API <span class="text-primary">FLUENT</span></span>
-            <span class="lang-en"><span class="text-primary">FLUENT</span> API Documentation</span>
-        </h1>
-        <p class="lead text-muted col-lg-7 col-md-9 mx-auto">
-            <span class="lang-id">Jelajahi endpoint API kami. Untuk pengujian interaktif dan skema permintaan/respons detail, silakan gunakan Swagger UI kami.</span>
-            <span class="lang-en">Explore our API endpoints. For interactive testing and detailed request/response schemas, please use our Swagger UI.</span>
-        </p>
-        <a href="{{ url_for('swagger_ui.show') }}" class="btn btn-primary btn-lg mt-2">
-            <i class="fas fa-external-link-alt me-2"></i><span class="lang-id">Buka Dok API Interaktif</span><span class="lang-en">Go to Interactive API Docs</span>
-        </a>
+  <div class="text-center mb-5 pb-3">
+    <br />
+    <h1 class="display-5 fw-bold mb-2">
+      <span class="lang-id"
+        >Dokumentasi API <span class="text-primary">FLUENT</span></span
+      >
+      <span class="lang-en"
+        ><span class="text-primary">FLUENT</span> API Documentation</span
+      >
+    </h1>
+    <p class="lead text-muted col-lg-7 col-md-9 mx-auto">
+      <span class="lang-id"
+        >Jelajahi endpoint API kami. Untuk pengujian interaktif dan skema
+        permintaan/respons detail, silakan gunakan Swagger UI kami.</span
+      >
+      <span class="lang-en"
+        >Explore our API endpoints. For interactive testing and detailed
+        request/response schemas, please use our Swagger UI.</span
+      >
+    </p>
+    <a
+      href="{{ url_for('swagger_ui.show') }}"
+      class="btn btn-primary btn-lg mt-2"
+    >
+      <i class="fas fa-external-link-alt me-2"></i
+      ><span class="lang-id">Buka Dok API Interaktif</span
+      ><span class="lang-en">Go to Interactive API Docs</span>
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <nav class="sticky-top pt-3" style="top: 100px; z-index: 1000">
+        {# Adjusted top for potentially taller navbar #}
+        <div
+          class="list-group list-group-flush shadow-sm rounded api-nav-sidebar"
+          id="api-nav"
+        >
+          <h6
+            class="sidebar-heading px-3 mt-2 mb-1 text-muted text-uppercase small"
+          >
+            <span class="lang-id">Bagian</span
+            ><span class="lang-en">Sections</span>
+          </h6>
+          <a class="list-group-item list-group-item-action active" href="#auth">
+            <i class="fas fa-key fa-fw me-2"></i
+            ><span class="lang-id">Autentikasi</span
+            ><span class="lang-en">Authentication</span>
+          </a>
+          <a class="list-group-item list-group-item-action" href="#users">
+            <i class="fas fa-users fa-fw me-2"></i
+            ><span class="lang-id">Pengguna</span
+            ><span class="lang-en">Users</span>
+          </a>
+          <a class="list-group-item list-group-item-action" href="#interview">
+            <i class="fas fa-microphone-alt fa-fw me-2"></i
+            ><span class="lang-id">Wawancara</span
+            ><span class="lang-en">Interview</span>
+          </a>
+          <a class="list-group-item list-group-item-action" href="#analysis">
+            <i class="fas fa-chart-line fa-fw me-2"></i
+            ><span class="lang-id">Analisis</span
+            ><span class="lang-en">Analysis</span>
+          </a>
+          <a class="list-group-item list-group-item-action" href="#admin">
+            <i class="fas fa-shield-alt fa-fw me-2"></i>Admin
+          </a>
+        </div>
+      </nav>
     </div>
 
-    <div class="row">
-        <div class="col-md-3">
-            <nav class="sticky-top pt-3" style="top: 100px; z-index: 1000;"> {# Adjusted top for potentially taller navbar #}
-                <div class="list-group list-group-flush shadow-sm rounded api-nav-sidebar" id="api-nav">
-                    <h6 class="sidebar-heading px-3 mt-2 mb-1 text-muted text-uppercase small">
-                        <span class="lang-id">Bagian</span><span class="lang-en">Sections</span>
-                    </h6>
-                    <a class="list-group-item list-group-item-action active" href="#auth">
-                        <i class="fas fa-key fa-fw me-2"></i><span class="lang-id">Autentikasi</span><span class="lang-en">Authentication</span>
-                    </a>
-                    <a class="list-group-item list-group-item-action" href="#users">
-                        <i class="fas fa-users fa-fw me-2"></i><span class="lang-id">Pengguna</span><span class="lang-en">Users</span>
-                    </a>
-                    <a class="list-group-item list-group-item-action" href="#interview">
-                        <i class="fas fa-microphone-alt fa-fw me-2"></i><span class="lang-id">Wawancara</span><span class="lang-en">Interview</span>
-                    </a>
-                    <a class="list-group-item list-group-item-action" href="#analysis">
-                        <i class="fas fa-chart-line fa-fw me-2"></i><span class="lang-id">Analisis</span><span class="lang-en">Analysis</span>
-                    </a>
-                    <a class="list-group-item list-group-item-action" href="#admin">
-                        <i class="fas fa-shield-alt fa-fw me-2"></i>Admin
-                    </a>
-                </div>
-            </nav>
-        </div>
+    <div class="col-md-9 api-content">
+      <section id="auth" class="mb-5 pt-3 api-section">
+        <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">
+          <span class="lang-id">Autentikasi</span
+          ><span class="lang-en">Authentication</span>
+        </h2>
+        <p class="text-muted mb-4">
+          Base URL:
+          <code class="p-1 bg-light rounded border">/auth</code> (e.g.,
+          <code>POST /auth/login</code>)
+        </p>
 
-        <div class="col-md-9 api-content">
-            <section id="auth" class="mb-5 pt-3 api-section">
-                <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4"><span class="lang-id">Autentikasi</span><span class="lang-en">Authentication</span></h2>
-                <p class="text-muted mb-4">Base URL: <code class="p-1 bg-light rounded border">/auth</code> (e.g., <code>POST /auth/login</code>)</p>
-
-                <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-primary me-2 http-method">POST</span>
-                        <code class="fs-6 fw-semibold">/auth/login</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">User Login</h5>
-                    </div>
-                    <div class="card-body px-3 pb-3">
-                        <p class="text-muted small mb-2">Authenticate and receive access tokens.</p>
-                        <h6 class="small text-uppercase text-muted fw-semibold">Request Body:</h6>
-                        <pre class="code-block bg-light p-3 rounded small"><code>{
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-primary me-2 http-method">POST</span>
+            <code class="fs-6 fw-semibold">/auth/login</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">User Login</h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small mb-2">
+              Authenticate and receive access tokens.
+            </p>
+            <h6 class="small text-uppercase text-muted fw-semibold">
+              Request Body:
+            </h6>
+            <pre class="code-block bg-light p-3 rounded small"><code>{
   "email": "string",
   "password": "string"
 }</code></pre>
-                        <h6 class="small text-uppercase text-muted fw-semibold mt-3">Response (Success 200):</h6>
-                        <pre class="code-block bg-light p-3 rounded small"><code>{
+            <h6 class="small text-uppercase text-muted fw-semibold mt-3">
+              Response (Success 200):
+            </h6>
+            <pre class="code-block bg-light p-3 rounded small"><code>{
   "status": "success",
   "access_token": "string",
   "refresh_token": "string",
   "user": { /* ... user object ... */ }
 }</code></pre>
-                        <h6 class="small text-uppercase text-muted fw-semibold mt-3">Error Responses:</h6>
-                        <ul class="error-list list-unstyled small">
-                            <li><span class="badge bg-danger-subtle text-danger-emphasis me-1">400</span> Missing email or password</li>
-                            <li><span class="badge bg-danger-subtle text-danger-emphasis me-1">401</span> Invalid credentials / Google OAuth required</li>
-                        </ul>
-                    </div>
-                </div>
+            <h6 class="small text-uppercase text-muted fw-semibold mt-3">
+              Error Responses:
+            </h6>
+            <ul class="error-list list-unstyled small">
+              <li>
+                <span class="badge bg-danger-subtle text-danger-emphasis me-1"
+                  >400</span
+                >
+                Missing email or password
+              </li>
+              <li>
+                <span class="badge bg-danger-subtle text-danger-emphasis me-1"
+                  >401</span
+                >
+                Invalid credentials / Google OAuth required
+              </li>
+            </ul>
+          </div>
+        </div>
 
-                <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-primary me-2 http-method">POST</span>
-                        <code class="fs-6 fw-semibold">/auth/register</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">User Registration</h5>
-                    </div>
-                    <div class="card-body px-3 pb-3">
-                        <p class="text-muted small mb-2">Register a new user account.</p>
-                        <h6 class="small text-uppercase text-muted fw-semibold">Request Body:</h6>
-                        <pre class="code-block bg-light p-3 rounded small"><code>{
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-primary me-2 http-method">POST</span>
+            <code class="fs-6 fw-semibold">/auth/register</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              User Registration
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small mb-2">Register a new user account.</p>
+            <h6 class="small text-uppercase text-muted fw-semibold">
+              Request Body:
+            </h6>
+            <pre class="code-block bg-light p-3 rounded small"><code>{
   "email": "string",
   "username": "string",
   "password": "string",
   "gender": "string (optional)",
   "occupation": "string (optional)"
 }</code></pre>
-                        <h6 class="small text-uppercase text-muted fw-semibold mt-3">Response (Success 201):</h6>
-                        <pre class="code-block bg-light p-3 rounded small"><code>{
+            <h6 class="small text-uppercase text-muted fw-semibold mt-3">
+              Response (Success 201):
+            </h6>
+            <pre class="code-block bg-light p-3 rounded small"><code>{
   "status": "success",
   "message": "User registered successfully",
   "user": { /* ... user id, username, email ... */ }
 }</code></pre>
-                    </div>
-                </div>
+          </div>
+        </div>
 
-                <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-info text-dark me-2 http-method">GET</span>
-                        <code class="fs-6 fw-semibold">/auth/google/login/api</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">Start Google Login (API/Mobile)</h5>
-                    </div>
-                    <div class="card-body px-3 pb-3">
-                        <p class="text-muted small">Initiates Google OAuth. Redirects to Google, then to <code>/auth/google/callback/api</code>.</p>
-                    </div>
-                </div>
-            </section>
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-info text-dark me-2 http-method">GET</span>
+            <code class="fs-6 fw-semibold">/auth/google/login/api</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              Start Google Login (API/Mobile)
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small">
+              Initiates Google OAuth. Redirects to Google, then to
+              <code>/auth/google/callback/api</code>.
+            </p>
+          </div>
+        </div>
+      </section>
 
-            <section id="users" class="mb-5 pt-3 api-section">
-                <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4"><span class="lang-id">Pengguna</span><span class="lang-en">Users</span></h2>
-                <p class="text-muted mb-4">Base URL: <code class="p-1 bg-light rounded border">/api/users</code> (Requires Bearer Token)</p>
-                <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-warning text-dark me-2 http-method">PUT</span>
-                        <code class="fs-6 fw-semibold">/api/users/update</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">Update User Profile</h5>
-                    </div>
-                    <div class="card-body px-3 pb-3">
-                        <p class="text-muted small">Requires authentication (Bearer Token).</p>
-                         <h6 class="small text-uppercase text-muted fw-semibold">Request Body:</h6>
-                        <pre class="code-block bg-light p-3 rounded small"><code>{
+      <section id="users" class="mb-5 pt-3 api-section">
+        <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">
+          <span class="lang-id">Pengguna</span
+          ><span class="lang-en">Users</span>
+        </h2>
+        <p class="text-muted mb-4">
+          Base URL:
+          <code class="p-1 bg-light rounded border">/api/users</code> (Requires
+          Bearer Token)
+        </p>
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-warning text-dark me-2 http-method">PUT</span>
+            <code class="fs-6 fw-semibold">/api/users/update</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              Update User Profile
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small">
+              Requires authentication (Bearer Token).
+            </p>
+            <h6 class="small text-uppercase text-muted fw-semibold">
+              Request Body:
+            </h6>
+            <pre class="code-block bg-light p-3 rounded small"><code>{
   "username": "string (optional)",
   "occupation": "string (optional)",
   "gender": "string (optional)"
 }</code></pre>
-                    </div>
-                </div>
-            </section>
-
-            <section id="interview" class="mb-5 pt-3 api-section">
-                <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4"><span class="lang-id">Wawancara</span><span class="lang-en">Interview</span></h2>
-                 <p class="text-muted mb-4">Base URL: <code class="p-1 bg-light rounded border">/api/interview</code> (Requires Bearer Token)</p>
-                 <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-success me-2 http-method">POST</span>
-                        <code class="fs-6 fw-semibold">/api/interview/start</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">Start New Interview Session</h5>
-                    </div>
-                     <div class="card-body px-3 pb-3">
-                        <p class="text-muted small"><span class="lang-id">Endpoint untuk memulai sesi wawancara baru. Akan mengembalikan ID sesi dan pertanyaan pertama jika ada.</span><span class="lang-en">Endpoint to start a new interview session. Will return a session ID and the first question if applicable.</span></p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="analysis" class="mb-5 pt-3 api-section">
-                <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4"><span class="lang-id">Analisis</span><span class="lang-en">Analysis</span></h2>
-                <p class="text-muted mb-4">Base URL: <code class="p-1 bg-light rounded border">/api/analysis</code> (Requires Bearer Token)</p>
-                 <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                    <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-info text-dark me-2 http-method">POST</span>
-                        <code class="fs-6 fw-semibold">/api/analysis/realtime</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">Real-time Video Frame Analysis</h5>
-                    </div>
-                    <div class="card-body px-3 pb-3">
-                        <p class="text-muted small"><span class="lang-id">Mengirim frame video untuk dianalisis secara real-time (emosi, bahasa tubuh). Membutuhkan sesi wawancara yang aktif.</span><span class="lang-en">Sends a video frame for real-time analysis (emotion, body language). Requires an active interview session.</span></p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="admin" class="mb-5 pt-3 api-section">
-                <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">Admin (Web Panel)</h2>
-                <p class="text-muted mb-4">
-                    <span class="lang-id">Fungsionalitas admin diakses melalui halaman web, bukan API JSON langsung untuk klien eksternal.</span>
-                    <span class="lang-en">Admin functionalities are via web pages, not direct JSON APIs for external clients.</span>
-                </p>
-                <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
-                     <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
-                        <span class="badge bg-secondary me-2 http-method">GET</span>
-                        <code class="fs-6 fw-semibold">/admin/login</code>
-                        <h5 class="card-title d-inline-block ms-2 mb-0">Admin Login Page</h5>
-                    </div>
-                     <div class="card-body px-3 pb-3">
-                        <p class="text-muted small">
-                            <span class="lang-id">Merender halaman login HTML untuk admin.</span>
-                            <span class="lang-en">Renders the admin login HTML page.</span>
-                        </p>
-                    </div>
-                </div>
-            </section>
+          </div>
         </div>
+      </section>
+
+      <section id="interview" class="mb-5 pt-3 api-section">
+        <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">
+          <span class="lang-id">Wawancara</span
+          ><span class="lang-en">Interview</span>
+        </h2>
+        <p class="text-muted mb-4">
+          Base URL:
+          <code class="p-1 bg-light rounded border">/api/interview</code>
+          (Requires Bearer Token)
+        </p>
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-success me-2 http-method">POST</span>
+            <code class="fs-6 fw-semibold">/api/interview/start</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              Start New Interview Session
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small">
+              <span class="lang-id"
+                >Endpoint untuk memulai sesi wawancara baru. Akan mengembalikan
+                ID sesi dan pertanyaan pertama jika ada.</span
+              ><span class="lang-en"
+                >Endpoint to start a new interview session. Will return a
+                session ID and the first question if applicable.</span
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="analysis" class="mb-5 pt-3 api-section">
+        <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">
+          <span class="lang-id">Analisis</span
+          ><span class="lang-en">Analysis</span>
+        </h2>
+        <p class="text-muted mb-4">
+          Base URL:
+          <code class="p-1 bg-light rounded border">/api/analysis</code>
+          (Requires Bearer Token)
+        </p>
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-info text-dark me-2 http-method">POST</span>
+            <code class="fs-6 fw-semibold">/api/analysis/realtime</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              Real-time Video Frame Analysis
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small">
+              <span class="lang-id"
+                >Mengirim frame video untuk dianalisis secara real-time (emosi,
+                bahasa tubuh). Membutuhkan sesi wawancara yang aktif.</span
+              ><span class="lang-en"
+                >Sends a video frame for real-time analysis (emotion, body
+                language). Requires an active interview session.</span
+              >
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="mb-5 pt-3 api-section">
+        <h2 class="display-6 fw-semibold border-bottom pb-2 mb-4">
+          Admin (Web Panel)
+        </h2>
+        <p class="text-muted mb-4">
+          <span class="lang-id"
+            >Fungsionalitas admin diakses melalui halaman web, bukan API JSON
+            langsung untuk klien eksternal.</span
+          >
+          <span class="lang-en"
+            >Admin functionalities are via web pages, not direct JSON APIs for
+            external clients.</span
+          >
+        </p>
+        <div class="card mb-4 fluent-card api-endpoint-card shadow-sm border-0">
+          <div class="card-header bg-transparent border-bottom-0 pt-3 px-3">
+            <span class="badge bg-secondary me-2 http-method">GET</span>
+            <code class="fs-6 fw-semibold">/admin/login</code>
+            <h5 class="card-title d-inline-block ms-2 mb-0">
+              Admin Login Page
+            </h5>
+          </div>
+          <div class="card-body px-3 pb-3">
+            <p class="text-muted small">
+              <span class="lang-id"
+                >Merender halaman login HTML untuk admin.</span
+              >
+              <span class="lang-en">Renders the admin login HTML page.</span>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
+  </div>
 </div>
 {% endblock %}

@@ -44,7 +44,7 @@
   --hero-gradient-mid: var(
     --brand-red-light
   ); /* Titik tengah gradasi untuk efek mengkilap */
-  --hero-gradient-end: var(--gradient-white-end);
+  --hero-gradient-end: var(--brand-red-dark);
 
   --font-primary: "Inter", sans-serif;
 
@@ -58,6 +58,8 @@
   --navbar-outer-padding-bottom-mobile-scrolled: 0.5rem;
   --navbar-scrolled-outer-padding-vertical-desktop: 0.75rem;
   --navbar-scrolled-outer-padding-vertical-mobile: 0.5rem;
+
+  
 
   --hero-extra-space: 2.5rem;
   --content-extra-space: 2rem;
@@ -327,6 +329,7 @@ h6 {
   padding: 0.5rem 0.9rem;
   font-size: 0.9rem;
   border-radius: 0.3rem;
+  margin: auto;
 }
 .fluent-navbar .navbar-nav .nav-link:hover,
 .fluent-navbar .navbar-nav .nav-link.active {
@@ -337,6 +340,11 @@ h6 {
     var(--fluent-primary-rgb),
     0.08
   ) !important; /* Background hover merah transparan */
+}
+
+.fluent-navbar .navbar-nav.mx-auto {
+    position: relative;
+    left: 90px; /* atau 2%, 30px, dll. Sesuaikan nilainya */
 }
 
 /* Tombol CTA di navbar jika ada yang gelap, biarkan kontras. Jika ada yang primary, akan mengikuti .btn-primary */
@@ -385,12 +393,11 @@ h6 {
   background: linear-gradient(
     135deg,
     var(--hero-gradient-start) 0%,
-    /* Merah utama */ var(--hero-gradient-mid) 35%,
-    /* Merah mengkilap/terang */ var(--hero-gradient-end) 75% /* Putih */
+    var(--hero-gradient-mid) 35%,
+    var(--hero-gradient-end) 75%
   );
-  color: var(
-    --fluent-text-on-primary
-  ); /* Teks default putih di bagian merah gradasi */
+    color: var(--fluent-text-on-primary);
+
   padding-top: calc(
     var(--navbar-outer-padding-top-desktop) +
       var(--navbar-content-wrapper-height-desktop) +
@@ -462,9 +469,9 @@ h6 {
   transform: translateY(-2px);
 }
 .hero-section .hero-image-custom {
-  max-width: 100%;
+  max-width: 150%;
   height: auto;
-  animation: floatImage 6s ease-in-out infinite alternate;
+  animation: floatImage 2s ease-in-out infinite alternate;
 }
 @keyframes floatImage {
   from {
@@ -473,6 +480,22 @@ h6 {
   to {
     transform: translateY(12px);
   }
+}
+
+.hero-section h1 .text-primary { /* Menargetkan span.text-primary di dalam H1 hero */
+  background: linear-gradient(45deg, #c03030, #c03030); /* Contoh gradasi: Putih ke Emas */
+  /* Atau gradasi lain yang Anda inginkan, misalnya: */
+  /* background: linear-gradient(to right, var(--brand-cream), #fff); */
+  /* background: linear-gradient(135deg, #fff, #ffeb99); */
+
+  -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
+  -moz-background-clip: text;    /* Untuk Firefox (meskipun mungkin tidak selalu diperlukan) */
+  background-clip: text;
+  color: transparent; /* Membuat warna teks asli transparan agar background (gradasi) terlihat */
+  -webkit-text-fill-color: transparent; /* Untuk beberapa browser WebKit */
+  /* Pastikan tidak ada text-shadow yang mengganggu gradasi teks ini */
+  text-shadow: none; /* Hapus shadow jika ada yang diwarisi dari h1 */
+  display: inline-block; /* Penting agar background gradasi tidak memenuhi seluruh lebar h1 */
 }
 
 /*--------------------------------------------------------------
@@ -930,6 +953,9 @@ section.reviews-section .review-card-body p {
     padding: 0.65rem 1.6rem;
     font-size: 0.9rem;
   }
+  .features-header-hero.page-content-container {
+  margin-top: var(--features-hero-specific-top-offset);
+}
 }
 
 @media (max-width: 575.98px) {
