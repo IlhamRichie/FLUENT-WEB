@@ -1,448 +1,260 @@
-{% extends "base.html" %} {% block title %}<span class="lang-id"
-  >Manajemen Pengguna</span
-><span class="lang-en">User Management</span> - Admin{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+{% block title %}<span class="lang-id">Manajemen Pengguna</span><span class="lang-en">User Management</span> - Admin{% endblock %}
+
+{% block content %}
 <div class="admin-content-page container-fluid py-4 px-lg-4">
-  <div
-    class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4"
-  >
-    <h1 class="h2 fw-bold mb-0">
-      <span class="lang-id">Manajemen Pengguna</span
-      ><span class="lang-en">User Management</span>
-    </h1>
-    <div class="d-flex align-items-center">
-      <a
-        href="{{ url_for('admin.admin_dashboard_route') }}"
-        class="btn btn-sm btn-outline-secondary mt-2 mt-md-0"
-      >
-        <i class="bi bi-arrow-left me-1"></i>
-        <span class="lang-id">Kembali ke Dasbor</span
-        ><span class="lang-en">Back to Dashboard</span>
-      </a>
-    </div>
-  </div>
-
-  <div class="card border-0 shadow-sm fluent-dashboard-card mb-4">
-    <div class="card-body p-3">
-      <form method="GET" action="{{ url_for('admin.admin_users_list_route') }}">
-        <div class="input-group">
-          <span class="input-group-text bg-light border-light"
-            ><i class="bi bi-search"></i
-          ></span>
-          <input
-            type="text"
-            name="search_query"
-            class="form-control form-control-lg border-light"
-            placeholder="<span class='lang-id'>Cari berdasarkan Username, Email, atau ID...</span><span class='lang-en'>Search by Username, Email, or ID...</span>"
-            value="{{ search_query or '' }}"
-          />
-          <button class="btn btn-primary px-4" type="submit">
-            <span class="lang-id">Cari</span><span class="lang-en">Search</span>
-          </button>
-          {% if search_query %}
-          <a
-            href="{{ url_for('admin.admin_users_list_route') }}"
-            class="btn btn-outline-secondary"
-            ><span class="lang-id">Hapus</span
-            ><span class="lang-en">Clear</span></a
-          >
-          {% endif %}
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="card border-0 shadow-sm fluent-dashboard-card">
-    <div
-      class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex flex-wrap justify-content-between align-items-center"
-    >
-      <h3 class="h5 mb-0 fw-semibold">
-        <span class="lang-id">Semua Pengguna</span
-        ><span class="lang-en">All Users</span>
-      </h3>
-      {% if total_pages and total_pages > 0 %}
-      <small class="text-muted mt-2 mt-md-0">
-        <span class="lang-id">Halaman</span><span class="lang-en">Page</span> {{
-        page }} <span class="lang-id">dari</span
-        ><span class="lang-en">of</span> {{ total_pages }}
-      </small>
-      {% endif %}
-    </div>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 admin-table">
-          <thead class="table-light">
-            <tr>
-              <th class="ps-4 py-3">#</th>
-              <th class="py-3">
-                <span class="lang-id">Pengguna</span
-                ><span class="lang-en">User</span>
-              </th>
-              <th class="py-3">Email</th>
-              <th class="py-3">
-                <span class="lang-id">Gender</span
-                ><span class="lang-en">Gender</span>
-              </th>
-              <th class="py-3">
-                <span class="lang-id">Pekerjaan</span
-                ><span class="lang-en">Occupation</span>
-              </th>
-              <th class="py-3">
-                <span class="lang-id">Bergabung</span
-                ><span class="lang-en">Joined</span>
-              </th>
-              <th class="py-3">
-                <span class="lang-id">Login Terakhir</span
-                ><span class="lang-en">Last Login</span>
-              </th>
-              <th class="py-3">
-                <span class="lang-id">Penyedia Auth</span
-                ><span class="lang-en">Auth Provider</span>
-              </th>
-              <th class="py-3">Status</th>
-              <th class="pe-4 py-3 text-end">
-                <span class="lang-id">Aksi</span
-                ><span class="lang-en">Actions</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {% if users and users|length > 0 %} {% set per_page = 10 %} {% for
-            user in users %}
-            <tr>
-              <td class="ps-4 text-muted">
-                {{ loop.index + ( (page - 1) * per_page ) }}
-              </td>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div class="avatar-sm me-3">
-                    {% if user.profile_picture %}
-                    <img
-                      src="{{ user.profile_picture }}"
-                      alt="{{ user.username }}"
-                      class="avatar-title rounded-circle"
-                      style="width: 36px; height: 36px; object-fit: cover"
-                    />
-                    {% else %}
-                    <div
-                      class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center"
-                    >
-                      {{ user.username[0]|upper if user.username else 'U' }}
-                    </div>
-                    {% endif %}
-                  </div>
-                  <div>
-                    <div class="fw-medium">{{ user.username }}</div>
-                    <small class="text-muted text-monospace"
-                      >ID: {{ user._id|string|truncate(8, True, '') }}</small
-                    >
-                  </div>
-                </div>
-              </td>
-              <td>{{ user.email }}</td>
-              <td>
-                {% if user.gender|lower == 'male' %}<span class="lang-id"
-                  >Pria</span
-                ><span class="lang-en">Male</span> {% elif user.gender|lower ==
-                'female' %}<span class="lang-id">Wanita</span
-                ><span class="lang-en">Female</span> {% elif user.gender %}{{
-                user.gender }} {% else %}<span class="lang-id">N/A</span
-                ><span class="lang-en">N/A</span>
-                {% endif %}
-              </td>
-              <td>
-                {{ user.occupation|default('N/A', True)|truncate(20, True) }}
-              </td>
-              <td>
-                <div class="fw-medium">
-                  {{ user.created_at.strftime('%d %b %Y') if user.created_at
-                  else 'N/A' }}
-                </div>
-                <small class="text-muted"
-                  >{{ user.created_at.strftime('%H:%M') if user.created_at else
-                  '' }}</small
-                >
-              </td>
-              <td>
-                {% if user.last_login %}
-                <div class="fw-medium">
-                  {{ user.last_login.strftime('%d %b %Y') }}
-                </div>
-                <small class="text-muted"
-                  >{{ user.last_login.strftime('%H:%M') }}</small
-                >
-                {% else %}
-                <span class="text-muted small"
-                  ><span class="lang-id">Tidak pernah</span
-                  ><span class="lang-en">Never</span></span
-                >
-                {% endif %}
-              </td>
-              <td>
-                <span
-                  class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis"
-                >
-                  {{ user.auth_provider|default('Local', True)|title }}
-                </span>
-              </td>
-              <td>
-                <span
-                  class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis"
-                >
-                  {% if user.is_active %}<span class="lang-id">Aktif</span
-                  ><span class="lang-en">Active</span>{% else %}<span
-                    class="lang-id"
-                    >Tidak Aktif</span
-                  ><span class="lang-en">Inactive</span>{% endif %}
-                </span>
-              </td>
-              <td class="pe-4 text-end">
-                <button
-                  class="btn btn-sm btn-outline-secondary btn-icon me-1"
-                  data-bs-toggle="modal"
-                  data-bs-target="#userDetailsModal-{{ user._id }}"
-                  title="<span class='lang-id'>Lihat Detail</span><span class='lang-en'>View Details</span>"
-                >
-                  <i class="bi bi-eye"></i>
-                </button>
-              </td>
-            </tr>
-            {% endfor %} {% else %}
-            <tr>
-              <td colspan="10" class="text-center text-muted p-5">
-                <i class="bi bi-people-fill fs-1 d-block mb-2"></i>
-                <span class="lang-id"
-                  >Tidak ada pengguna yang ditemukan sesuai kriteria Anda.</span
-                >
-                <span class="lang-en"
-                  >No users found matching your criteria.</span
-                >
-              </td>
-            </tr>
-            {% endif %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    {% if total_pages and total_pages > 1 %}
-    <div class="card-footer bg-transparent border-top-0 py-3">
-      <nav aria-label="User list navigation">
-        <ul class="pagination justify-content-center mb-0">
-          <li class="page-item {% if page == 1 %}disabled{% endif %}">
-            <a
-              class="page-link"
-              href="{{ url_for('admin.admin_users_list_route', page=page-1, search_query=search_query) if page > 1 else '#' }}"
-              aria-label="<span class='lang-id'>Sebelumnya</span><span class='lang-en'>Previous</span>"
-              ><span aria-hidden="true">&laquo;</span></a
-            >
-          </li>
-          {% set window = 2 %} {% set start_page = [1, page - window]|max %} {%
-          set end_page = [total_pages, page + window]|min %} {% if start_page >
-          1 %}
-          <li class="page-item">
-            <a
-              class="page-link"
-              href="{{ url_for('admin.admin_users_list_route', page=1, search_query=search_query) }}"
-              >1</a
-            >
-          </li>
-          {% if start_page > 2 %}
-          <li class="page-item disabled"><span class="page-link">...</span></li>
-          {% endif %} {% endif %} {% for p in range(start_page, end_page + 1) %}
-          <li class="page-item {% if p == page %}active{% endif %}">
-            <a
-              class="page-link"
-              href="{{ url_for('admin.admin_users_list_route', page=p, search_query=search_query) }}"
-              >{{ p }}</a
-            >
-          </li>
-          {% endfor %} {% if end_page < total_pages %} {% if end_page <
-          total_pages - 1 %}
-          <li class="page-item disabled"><span class="page-link">...</span></li>
-          {% endif %}
-          <li class="page-item">
-            <a
-              class="page-link"
-              href="{{ url_for('admin.admin_users_list_route', page=total_pages, search_query=search_query) }}"
-              >{{ total_pages }}</a
-            >
-          </li>
-          {% endif %}
-          <li class="page-item {% if page == total_pages %}disabled{% endif %}">
-            <a
-              class="page-link"
-              href="{{ url_for('admin.admin_users_list_route', page=page+1, search_query=search_query) if page < total_pages else '#' }}"
-              aria-label="<span class='lang-id'>Berikutnya</span><span class='lang-en'>Next</span>"
-              ><span aria-hidden="true">&raquo;</span></a
-            >
-          </li>
-        </ul>
-      </nav>
-    </div>
-    {% endif %}
-  </div>
-</div>
-
-{% if users %} {% for user in users %}
-<div
-  class="modal fade"
-  id="userDetailsModal-{{ user._id }}"
-  tabindex="-1"
-  aria-labelledby="userDetailsModalLabel-{{ user._id }}"
-  aria-hidden="true"
->
-  <div
-    class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
-  >
-    <div class="modal-content shadow-lg border-0">
-      <div class="modal-header bg-light border-bottom-0">
+    <div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">
+            <span class="lang-id">Manajemen Pengguna</span><span class="lang-en">User Management</span>
+        </h1>
         <div class="d-flex align-items-center">
-          {% if user.profile_picture %}
-          <img
-            src="{{ user.profile_picture }}"
-            alt="{{ user.username }}"
-            class="rounded-circle me-2"
-            style="width: 40px; height: 40px; object-fit: cover"
-          />
-          {% else %}
-          <div class="avatar-sm me-2">
-            <div
-              class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center"
-              style="width: 40px; height: 40px; font-size: 1rem"
-            >
-              {{ user.username[0]|upper if user.username else 'U' }}
-            </div>
-          </div>
-          {% endif %}
-          <h5
-            class="modal-title fw-semibold mb-0"
-            id="userDetailsModalLabel-{{ user._id }}"
-          >
-            {{ user.username }}
-          </h5>
+            <a href="{{ url_for('admin.admin_dashboard_route') }}" class="btn btn-sm btn-outline-secondary mt-2 mt-md-0">
+                <i class="bi bi-arrow-left me-1"></i> <span class="lang-id">Kembali ke Dasbor</span><span class="lang-en">Back to Dashboard</span>
+            </a>
         </div>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body p-4">
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">ID Pengguna</span
-              ><span class="lang-en">User ID</span></small
-            >
-            <span class="fw-medium text-monospace">{{ user._id }}</span>
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Alamat Email</span
-              ><span class="lang-en">Email Address</span></small
-            >
-            <span class="fw-medium">{{ user.email }}</span>
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block">Status</small>
-            <span
-              class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis"
-            >
-              {% if user.is_active %}<span class="lang-id">Akun Aktif</span
-              ><span class="lang-en">Active Account</span>{% else %}<span
-                class="lang-id"
-                >Akun Tidak Aktif</span
-              ><span class="lang-en">Inactive Account</span>{% endif %}
-            </span>
-            {% if user.is_admin %}<span
-              class="badge rounded-pill fs-xs fw-semibold bg-danger-subtle text-danger-emphasis ms-1"
-              >Admin</span
-            >{% endif %}
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Penyedia Autentikasi</span
-              ><span class="lang-en">Authentication Provider</span></small
-            >
-            <span
-              class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis"
-            >
-              {{ user.auth_provider|default('Local', True)|title }}
-            </span>
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Gender</span
-              ><span class="lang-en">Gender</span></small
-            >
-            <span class="fw-medium">
-              {% if user.gender|lower == 'male' %}<span class="lang-id"
-                >Pria</span
-              ><span class="lang-en">Male</span> {% elif user.gender|lower ==
-              'female' %}<span class="lang-id">Wanita</span
-              ><span class="lang-en">Female</span> {% elif user.gender %}{{
-              user.gender }} {% else %}<span class="lang-id"
-                >Tidak disebutkan</span
-              ><span class="lang-en">Not specified</span>
-              {% endif %}
-            </span>
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Pekerjaan</span
-              ><span class="lang-en">Occupation</span></small
-            >
-            <span class="fw-medium"
-              >{{ user.occupation|default("<span class="lang-id"
-                >Tidak disebutkan</span
-              ><span class="lang-en">Not specified</span>"|safe, True) }}</span
-            >
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Terdaftar Pada</span
-              ><span class="lang-en">Registered On</span></small
-            >
-            <span class="fw-medium"
-              >{{ user.created_at.strftime('%d %B %Y, %H:%M') if user.created_at
-              else 'N/A' }}</span
-            >
-          </div>
-          <div class="col-md-6 mb-3">
-            <small class="text-muted d-block"
-              ><span class="lang-id">Login Terakhir</span
-              ><span class="lang-en">Last Login</span></small
-            >
-            <span class="fw-medium"
-              >{{ user.last_login.strftime('%d %B %Y, %H:%M') if user.last_login
-              else "<span class="lang-id">Tidak pernah login</span
-              ><span class="lang-en">Never logged in</span>"|safe }}</span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer bg-light border-top-0">
-        <button
-          type="button"
-          class="btn btn-outline-secondary"
-          data-bs-dismiss="modal"
-        >
-          <span class="lang-id">Tutup</span><span class="lang-en">Close</span>
-        </button>
-      </div>
     </div>
-  </div>
+
+    <div class="card border-0 shadow-sm fluent-dashboard-card mb-4">
+        <div class="card-body p-3">
+            <form method="GET" action="{{ url_for('admin.admin_users_list_route') }}">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-light"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search_query" class="form-control form-control-lg border-light"
+                           placeholder="<span class='lang-id'>Cari berdasarkan Username, Email, atau ID...</span><span class='lang-en'>Search by Username, Email, or ID...</span>"
+                           value="{{ search_query or '' }}">
+                    <button class="btn btn-primary px-4" type="submit"><span class="lang-id">Cari</span><span class="lang-en">Search</span></button>
+                    {% if search_query %}
+                        <a href="{{ url_for('admin.admin_users_list_route') }}" class="btn btn-outline-secondary"><span class="lang-id">Hapus</span><span class="lang-en">Clear</span></a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm fluent-dashboard-card">
+        <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex flex-wrap justify-content-between align-items-center">
+            <h3 class="h5 mb-0 fw-semibold">
+                <span class="lang-id">Semua Pengguna</span><span class="lang-en">All Users</span>
+            </h3>
+             {% if total_pages and total_pages > 0 %}
+            <small class="text-muted mt-2 mt-md-0">
+                <span class="lang-id">Halaman</span><span class="lang-en">Page</span> {{ page }} <span class="lang-id">dari</span><span class="lang-en">of</span> {{ total_pages }}
+            </small>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 admin-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3">#</th>
+                            <th class="py-3"><span class="lang-id">Pengguna</span><span class="lang-en">User</span></th>
+                            <th class="py-3">Email</th>
+                            <th class="py-3"><span class="lang-id">Gender</span><span class="lang-en">Gender</span></th>
+                            <th class="py-3"><span class="lang-id">Pekerjaan</span><span class="lang-en">Occupation</span></th>
+                            <th class="py-3"><span class="lang-id">Bergabung</span><span class="lang-en">Joined</span></th>
+                            <th class="py-3"><span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span></th>
+                            <th class="py-3"><span class="lang-id">Penyedia Auth</span><span class="lang-en">Auth Provider</span></th>
+                            <th class="py-3">Status</th>
+                            <th class="pe-4 py-3 text-end"><span class="lang-id">Aksi</span><span class="lang-en">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if users and users|length > 0 %}
+                        {% set per_page = 10 %}
+                        {% for user in users %}
+                        <tr>
+                            <td class="ps-4 text-muted">{{ loop.index + ( (page - 1) * per_page ) }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm me-3">
+                                        {% if user.profile_picture %}
+                                            <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="avatar-title rounded-circle" style="width: 36px; height: 36px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center">
+                                                {{ user.username[0]|upper if user.username else 'U' }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <div class="fw-medium">{{ user.username }}</div>
+                                        <small class="text-muted text-monospace">ID: {{ user._id|string|truncate(8, True, '') }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.gender|lower == 'male' %}<span class="lang-id">Pria</span><span class="lang-en">Male</span>
+                                {% elif user.gender|lower == 'female' %}<span class="lang-id">Wanita</span><span class="lang-en">Female</span>
+                                {% elif user.gender %}{{ user.gender }}
+                                {% else %}<span class="lang-id">N/A</span><span class="lang-en">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.occupation|default('N/A', True)|truncate(20, True) }}</td>
+                            <td>
+                                <div class="fw-medium">{{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</div>
+                                <small class="text-muted">{{ user.created_at.strftime('%H:%M') if user.created_at else '' }}</small>
+                            </td>
+                            <td>
+                                {% if user.last_login %}
+                                <div class="fw-medium">{{ user.last_login.strftime('%d %b %Y') }}</div>
+                                <small class="text-muted">{{ user.last_login.strftime('%H:%M') }}</small>
+                                {% else %}
+                                <span class="text-muted small"><span class="lang-id">Tidak pernah</span><span class="lang-en">Never</span></span>
+                                {% endif %}
+                            </td>
+                             <td>
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis">
+                                    {{ user.auth_provider|default('Local', True)|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis">
+                                    {% if user.is_active %}<span class="lang-id">Aktif</span><span class="lang-en">Active</span>{% else %}<span class="lang-id">Tidak Aktif</span><span class="lang-en">Inactive</span>{% endif %}
+                                </span>
+                            </td>
+                            <td class="pe-4 text-end">
+                                <button class="btn btn-sm btn-outline-secondary btn-icon me-1" data-bs-toggle="modal" data-bs-target="#userDetailsModal-{{ user._id }}" title="<span class='lang-id'>Lihat Detail</span><span class='lang-en'>View Details</span>">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="10" class="text-center text-muted p-5">
+                               <i class="bi bi-people-fill fs-1 d-block mb-2"></i>
+                                <span class="lang-id">Tidak ada pengguna yang ditemukan sesuai kriteria Anda.</span>
+                                <span class="lang-en">No users found matching your criteria.</span>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if total_pages and total_pages > 1 %}
+        <div class="card-footer bg-transparent border-top-0 py-3">
+            <nav aria-label="User list navigation">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=page-1, search_query=search_query) if page > 1 else '#' }}" aria-label="<span class='lang-id'>Sebelumnya</span><span class='lang-en'>Previous</span>"><span aria-hidden="true">&laquo;</span></a>
+                    </li>
+                    {% set window = 2 %}
+                    {% set start_page = [1, page - window]|max %}
+                    {% set end_page = [total_pages, page + window]|min %}
+
+                    {% if start_page > 1 %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=1, search_query=search_query) }}">1</a></li>
+                        {% if start_page > 2 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                    {% endif %}
+
+                    {% for p in range(start_page, end_page + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=p, search_query=search_query) }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if end_page < total_pages %}
+                        {% if end_page < total_pages - 1 %}<li class="page-item disabled"><span class="page-link">...</span></li>{% endif %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=total_pages, search_query=search_query) }}">{{ total_pages }}</a></li>
+                    {% endif %}
+                    <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('admin.admin_users_list_route', page=page+1, search_query=search_query) if page < total_pages else '#' }}" aria-label="<span class='lang-id'>Berikutnya</span><span class='lang-en'>Next</span>"><span aria-hidden="true">&raquo;</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
 </div>
-{% endfor %} {% endif %} {% endblock %} {% block scripts_extra %}
+
+{% if users %}
+{% for user in users %}
+<div class="modal fade" id="userDetailsModal-{{ user._id }}" tabindex="-1" aria-labelledby="userDetailsModalLabel-{{ user._id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-light border-bottom-0">
+                <div class="d-flex align-items-center">
+                     {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture }}" alt="{{ user.username }}" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                    {% else %}
+                        <div class="avatar-sm me-2">
+                            <div class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1rem;">
+                                {{ user.username[0]|upper if user.username else 'U' }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <h5 class="modal-title fw-semibold mb-0" id="userDetailsModalLabel-{{ user._id }}">{{ user.username }}</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">ID Pengguna</span><span class="lang-en">User ID</span></small>
+                        <span class="fw-medium text-monospace">{{ user._id }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Alamat Email</span><span class="lang-en">Email Address</span></small>
+                        <span class="fw-medium">{{ user.email }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block">Status</small>
+                        <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'danger' }}-subtle text-{{ 'success' if user.is_active else 'danger' }}-emphasis">
+                            {% if user.is_active %}<span class="lang-id">Akun Aktif</span><span class="lang-en">Active Account</span>{% else %}<span class="lang-id">Akun Tidak Aktif</span><span class="lang-en">Inactive Account</span>{% endif %}
+                        </span>
+                         {% if user.is_admin %}<span class="badge rounded-pill fs-xs fw-semibold bg-danger-subtle text-danger-emphasis ms-1">Admin</span>{% endif %}
+                    </div>
+                     <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Penyedia Autentikasi</span><span class="lang-en">Authentication Provider</span></small>
+                        <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis">
+                            {{ user.auth_provider|default('Local', True)|title }}
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Gender</span><span class="lang-en">Gender</span></small>
+                        <span class="fw-medium">
+                            {% if user.gender|lower == 'male' %}<span class="lang-id">Pria</span><span class="lang-en">Male</span>
+                            {% elif user.gender|lower == 'female' %}<span class="lang-id">Wanita</span><span class="lang-en">Female</span>
+                            {% elif user.gender %}{{ user.gender }}
+                            {% else %}<span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Pekerjaan</span><span class="lang-en">Occupation</span></small>
+                        <span class="fw-medium">{{ user.occupation|default("<span class='lang-id'>Tidak disebutkan</span><span class='lang-en'>Not specified</span>"|safe, True) }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Terdaftar Pada</span><span class="lang-en">Registered On</span></small>
+                        <span class="fw-medium">{{ user.created_at.strftime('%d %B %Y, %H:%M') if user.created_at else 'N/A' }}</span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <small class="text-muted d-block"><span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span></small>
+                        <span class="fw-medium">{{ user.last_login.strftime('%d %B %Y, %H:%M') if user.last_login else "<span class='lang-id'>Tidak pernah login</span><span class='lang-en'>Never logged in</span>"|safe }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-top-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <span class="lang-id">Tutup</span><span class="lang-en">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block scripts_extra %}
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  });
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+});
 </script>
 {% endblock %}
