@@ -1,87 +1,220 @@
 {% extends "base.html" %}
-
-{% block title %}Home - FLUENT{% endblock %}
+{% block title %}<span class="lang-id">Beranda</span><span class="lang-en">Home</span> - FLUENT{% endblock %}
 
 {% block content_hero %}
-<section class="hero-section text-white py-5" style="background-color: #2c3e50;"> {# Example dark background for hero #}
-    <div class="container">
-        <div class="row align-items-center py-lg-5">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-3">Master Your Interview with <span class="text-primary">FLUENT</span></h1> {# text-primary or other accent for span #}
-                <p class="lead mb-4">AI-powered interview analysis to help you perform at your best. Get real-time feedback on your body language, speech patterns, and emotional state.</p>
-                <div class="cta-buttons">
-                    {% if not session.is_web_user and not session.is_admin %}
-                        <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-primary btn-lg px-4 me-2">Get Started</a>
-                    {% else %}
-                        <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-primary btn-lg px-4 me-2">Go to Profile</a>
-                    {% endif %}
-                    <a href="{{ url_for('web.features_route') }}" class="btn btn-outline-light btn-lg px-4">Learn More</a>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-end mt-5 mt-lg-0">
-                <img src="{{ url_for('web.web_serve_static', filename='images/io.png') }}" alt="Interview Analysis" class="img-fluid hero-image-custom" style="max-width: 450px;">
-            </div>
+<section class="hero-section text-white py-5">
+  <div class="container">
+    <div class="row align-items-center py-lg-5">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-3">
+          <span class="lang-id">Kuasai Wawancaramu dengan <span class="text-primary">FLUENT</span></span>
+          <span class="lang-en">Master Your Interview with <span class="text-primary">FLUENT</span></span>
+        </h1>
+        <p class="lead mb-4">
+          <span class="lang-id">Analisis wawancara berbasis AI untuk membantumu tampil maksimal. Dapatkan feedback real-time tentang bahasa tubuh, pola bicara, dan kondisi emosionalmu.</span>
+          <span class="lang-en">AI-powered interview analysis to help you perform at your best. Get real-time feedback on your body language, speech patterns, and emotional state.</span>
+        </p>
+        <div class="cta-buttons">
+          {% if not session.is_web_user and not session.is_admin %}
+          <a
+            href="{{ url_for('web.web_register_page_route') }}"
+            class="btn btn-primary btn-lg px-4 me-md-2 mb-2 mb-md-0"
+            ><span class="lang-id">Mulai Sekarang</span><span class="lang-en">Get Started</span></a
+          >
+          {% else %}
+          <a
+            href="{{ url_for('web.web_profile_route') }}"
+            class="btn btn-primary btn-lg px-4 me-md-2 mb-2 mb-md-0"
+            ><span class="lang-id">Buka Profil</span><span class="lang-en">Go to Profile</span></a
+          >
+          {% endif %}
+          <a
+            href="{{ url_for('web.features_route') }}"
+            class="btn btn-outline-light btn-lg px-4"
+            ><span class="lang-id">Pelajari Lebih Lanjut</span><span class="lang-en">Learn More</span></a
+          >
         </div>
+      </div>
+      <div class="col-lg-6 text-center text-lg-end mt-5 mt-lg-0">
+        <img
+          src="{{ url_for('web.web_serve_static', filename='images/io.png') }}"
+          alt="Interview Analysis"
+          class="img-fluid hero-image-custom rounded shadow-lg"
+          style="max-width: 450px"
+        />
+      </div>
     </div>
+  </div>
 </section>
 {% endblock %}
 
 {% block content %}
 <section class="stats-section py-5 bg-light">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 col-6 mb-4 mb-md-0">
-                <h2 class="display-5 fw-bold text-primary mb-1">10K+</h2>
-                <p class="text-muted">Users Trusted</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4 mb-md-0">
-                <h2 class="display-5 fw-bold text-primary mb-1">95%</h2>
-                <p class="text-muted">Success Rate</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4 mb-md-0">
-                <h2 class="display-5 fw-bold text-primary mb-1">24/7</h2>
-                <p class="text-muted">Available</p>
-            </div>
-            <div class="col-md-3 col-6 mb-4 mb-md-0">
-                <h2 class="display-5 fw-bold text-primary mb-1">5.0</h2>
-                <p class="text-muted">Average Rating</p>
-            </div>
-        </div>
+  <div class="container">
+    <div class="row text-center gy-4">
+      <div class="col-md-3 col-6">
+        <h2 class="display-5 fw-bold text-primary mb-1">10K+</h2>
+        <p class="text-muted"><span class="lang-id">Pengguna Terpercaya</span><span class="lang-en">Users Trusted</span></p>
+      </div>
+      <div class="col-md-3 col-6">
+        <h2 class="display-5 fw-bold text-primary mb-1">95%</h2>
+        <p class="text-muted"><span class="lang-id">Tingkat Keberhasilan</span><span class="lang-en">Success Rate</span></p>
+      </div>
+      <div class="col-md-3 col-6">
+        <h2 class="display-5 fw-bold text-primary mb-1">24/7</h2>
+        <p class="text-muted"><span class="lang-id">Tersedia</span><span class="lang-en">Available</span></p>
+      </div>
+      <div class="col-md-3 col-6">
+        <h2 class="display-5 fw-bold text-primary mb-1">4.8 <i class="fas fa-star text-warning"></i></h2>
+        <p class="text-muted"><span class="lang-id">Rating Rata-rata</span><span class="lang-en">Average Rating</span></p>
+      </div>
     </div>
+  </div>
 </section>
 
 <section class="how-it-works py-5">
-    <div class="container">
-        <h2 class="text-center fw-bold display-6 mb-5">How FLUENT Works</h2>
-        <div class="row gy-4">
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
-                    <div class="mb-3">
-                        <span class="display-3 fw-bold text-primary">1</span>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2">Record Your Response</h3>
-                    <p class="small text-muted">Answer interview questions using your camera and microphone. Our platform guides you through.</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
-                     <div class="mb-3">
-                        <span class="display-3 fw-bold text-primary">2</span>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2">Real-Time Analysis</h3>
-                    <p class="small text-muted">Our AI meticulously analyzes your body language, speech nuances, and emotional state.</p>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
-                    <div class="mb-3">
-                        <span class="display-3 fw-bold text-primary">3</span>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2">Get Detailed Feedback</h3>
-                    <p class="small text-muted">Receive comprehensive, actionable insights to elevate your interview performance.</p>
-                </div>
-            </div>
+  <div class="container">
+    <h2 class="text-center fw-bold display-6 mb-5">
+        <span class="lang-id">Bagaimana <span class="text-primary">FLUENT</span> Bekerja</span>
+        <span class="lang-en">How <span class="text-primary">FLUENT</span> Works</span>
+    </h2>
+    <div class="row gy-4">
+      <div class="col-lg-4">
+        <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
+          <div class="mb-3">
+            <span class="display-1 fw-bold text-primary-light">1</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Rekam Jawabanmu</span><span class="lang-en">Record Your Response</span></h3>
+          <p class="small text-muted">
+            <span class="lang-id">Jawab pertanyaan wawancara pakai kamera dan mikrofonmu. Platform kami akan memandumu.</span>
+            <span class="lang-en">Answer interview questions using your camera and microphone. Our platform guides you through.</span>
+          </p>
         </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
+          <div class="mb-3">
+            <span class="display-1 fw-bold text-primary-light">2</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Analisis Real-Time</span><span class="lang-en">Real-Time Analysis</span></h3>
+          <p class="small text-muted">
+            <span class="lang-id">AI kami menganalisis bahasa tubuh, nuansa bicara, dan kondisi emosionalmu dengan cermat.</span>
+            <span class="lang-en">Our AI meticulously analyzes your body language, speech nuances, and emotional state.</span>
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift">
+          <div class="mb-3">
+            <span class="display-1 fw-bold text-primary-light">3</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Dapatkan Feedback Detail</span><span class="lang-en">Get Detailed Feedback</span></h3>
+          <p class="small text-muted">
+            <span class="lang-id">Terima wawasan komprehensif yang bisa langsung diterapkan untuk meningkatkan performa wawancaramu.</span>
+            <span class="lang-en">Receive comprehensive, actionable insights to elevate your interview performance.</span>
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
+
+<section class="reviews-section py-5 bg-dark text-light">
+  <div class="container">
+    <div class="row mb-5 align-items-end">
+      <div class="col-lg-7">
+        <button class="btn btn-outline-light btn-sm mb-3 review-section-tag" disabled>
+          <span class="lang-id">Kata Mereka</span><span class="lang-en">What People Say?</span>
+        </button>
+        <h2 class="display-5 fw-bold mb-0">
+          <span class="lang-id">Simak Pendapat Pengguna Tentang Manfaat <span class="text-primary">FLUENT</span></span>
+          <span class="lang-en">Explore User Insights on <span class="text-primary">FLUENT</span>'s Benefits</span>
+        </h2>
+      </div>
+      <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+        <p class="lead-sm text-light opacity-75">
+          <span class="lang-id">Cari tahu apa kata pengguna kami tentang pengalaman mereka dengan FLUENT, dan lihat bagaimana FLUENT membantu persiapan wawancara mereka.</span>
+          <span class="lang-en">Discover what our users say about their experience with FLUENT, and see how it has improved their interview preparation.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="review-card h-100">
+          <div class="review-card-header">
+            <img
+              src="{{ url_for('static', filename='images/avatars/avatar1.png') }}"
+              alt="User Avatar"
+              class="avatar"
+            />
+            <div class="user-info">
+              <h5 class="username mb-0">Ariana Putri</h5>
+              <div class="rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span class="rating-text ms-1">5/5</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-card-body">
+            <p>
+              <span class="lang-id">"FLUENT bener-bener ngebantu aku jadi lebih PD pas wawancara. Fitur analisis emosinya keren banget!"</span>
+              <span class="lang-en">"FLUENT really helped me become more confident during interviews. The emotion analysis feature is amazing!"</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="review-card h-100">
+          <div class="review-card-header">
+            <img
+              src="{{ url_for('static', filename='images/avatars/avatar2.png') }}"
+              alt="User Avatar"
+              class="avatar"
+            />
+            <div class="user-info">
+              <h5 class="username mb-0">Budi Santoso</h5>
+              <div class="rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                <span class="rating-text ms-1">4.5/5</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-card-body">
+            <p>
+              <span class="lang-id">"Analisis kecepatan bicara dan kata pengisi sangat berguna. Aku jadi sadar kekuranganku."</span>
+              <span class="lang-en">"The speech pace and filler word analysis were very helpful. I became aware of my weaknesses."</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6">
+        <div class="review-card h-100">
+          <div class="review-card-header">
+            <img
+              src="{{ url_for('static', filename='images/avatars/avatar3.png') }}"
+              alt="User Avatar"
+              class="avatar"
+            />
+            <div class="user-info">
+              <h5 class="username mb-0">Citra Lestari</h5>
+              <div class="rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <span class="rating-text ms-1">5/5</span>
+              </div>
+            </div>
+          </div>
+          <div class="review-card-body">
+            <p>
+              <span class="lang-id">"Awalnya ragu, tapi setelah coba, feedback bahasa tubuhnya detail banget. Recommended!"</span>
+              <span class="lang-en">"I was hesitant at first, but after trying it, the body language feedback is very detailed. Recommended!"</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

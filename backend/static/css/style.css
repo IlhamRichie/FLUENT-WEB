@@ -4,60 +4,126 @@
 # Variabel Global & Reset Dasar
 --------------------------------------------------------------*/
 :root {
-  --fluent-primary: #0d6efd; /* Bootstrap Primary - bisa diganti dengan warna utama Fluent Anda */
-  --fluent-primary-dark: #0a58ca; /* Varian lebih gelap dari primary */
-  --fluent-secondary: #6c757d; /* Bootstrap Secondary */
-  --fluent-light: #f8f9fa;   /* Bootstrap Light */
-  --fluent-dark: #212529;    /* Bootstrap Dark */
-  --fluent-text-dark: #202124; /* Mirip Google Text Dark */
-  --fluent-text-light: #5f6368; /* Mirip Google Text Light/Secondary */
-  --fluent-background: #ffffff;
-  --fluent-body-bg: #f4f7f6; /* Background body yang lebih netral dan terang */
-  --fluent-border-color: #dee2e6; /* Bootstrap Border Color */
-  --fluent-card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.075); /* Shadow yang lebih lembut */
-  --fluent-card-radius: 0.5rem; /* Radius border card yang sedikit lebih besar */
-  --fluent-red: #D84040; /* Warna merah brand Anda */
+  /* Brand Colors from Logo */
+  --brand-red: #d84040; /* Main red from your logo */
+  --brand-red-dark: #c03030; /* Darker shade for hovers/accents */
+  --brand-cream: #f5f0e1; /* Cream from logo - for potential subtle accents */
+  --brand-gradient-end-tint: #fff3f3; /* Very light red for hero gradient end */
 
-  --font-primary: 'Inter', sans-serif;
+  /* UI Colors */
+  --fluent-primary: #0d6efd; /* Bootstrap Primary - kept for general UI elements */
+  --fluent-primary-dark: #0a58ca;
+  --fluent-secondary: #6c757d;
+  --fluent-light: #f8f9fa;
+  --fluent-dark: #212529;
+  --fluent-text-dark: #202124;
+  --fluent-text-light: #5f6368;
+  --fluent-background: #ffffff;
+  --fluent-body-bg: #f4f7f6; /* Light grey for body background */
+  --fluent-border-color: #eaedf1; /* Softened border color */
+  --fluent-card-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05); /* Softer card shadow */
+  --fluent-card-radius: 0.6rem; /* Slightly larger card radius */
+
+  /* Aliasing brand red for existing --fluent-red usage */
+  --fluent-red: var(--brand-red);
+  --fluent-gradient-start: var(--brand-red);
+  --fluent-gradient-end: var(--brand-gradient-end-tint);
+
+  --font-primary: "Inter", sans-serif;
+
+  /* Navbar Dimensions (CRITICAL - ensure these are accurate for your design) */
+  --navbar-content-wrapper-height-desktop: 60px; /* Height of the white pill part */
+  --navbar-content-wrapper-height-mobile: 56px; /* Estimated height for mobile pill part */
+
+  --navbar-outer-padding-top-desktop: 1.5rem; /* Space above the pill on desktop */
+  --navbar-outer-padding-bottom-desktop: 0.5rem; /* Space below the pill on desktop */
+
+  --navbar-outer-padding-top-mobile: 1rem; /* Space above the pill on mobile */
+  --navbar-outer-padding-bottom-mobile-not-scrolled: 0.25rem; /* Space below pill on mobile, not scrolled */
+  --navbar-outer-padding-bottom-mobile-scrolled: 0.5rem; /* Space below pill on mobile, scrolled */
+
+  --navbar-scrolled-outer-padding-vertical-desktop: 0.75rem; /* Top & Bottom padding of .fluent-navbar.scrolled */
+  --navbar-scrolled-outer-padding-vertical-mobile: 0.5rem; /* Top & Bottom padding of .fluent-navbar.scrolled on mobile */
+
+  --hero-extra-space: 2.5rem; /* Extra space between navbar and hero content */
+  --content-extra-space: 2rem; /* Extra space between navbar and regular page content */
+
+  /* Calculated total navbar heights for easier use (conceptual, not directly used in calc everywhere to show steps) */
+  /* --total-navbar-height-desktop: calc(var(--navbar-outer-padding-top-desktop) + var(--navbar-content-wrapper-height-desktop) + var(--navbar-outer-padding-bottom-desktop)); */
+  /* --total-navbar-height-mobile: calc(var(--navbar-outer-padding-top-mobile) + var(--navbar-content-wrapper-height-mobile) + var(--navbar-outer-padding-bottom-mobile-not-scrolled)); */
 }
 
 body {
   font-family: var(--font-primary);
   background-color: var(--fluent-body-bg);
   color: var(--fluent-text-dark);
-  line-height: 1.6;
+  line-height: 1.65; /* Slightly increased for readability */
   font-weight: 400;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 a {
   color: var(--fluent-primary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease, transform 0.2s ease;
 }
-
 a:hover {
   color: var(--fluent-primary-dark);
-  text-decoration: none; /* Umumnya tidak ada underline di hover untuk modern look */
+  text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600; /* Sedikit lebih bold untuk heading */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
   color: var(--fluent-text-dark);
+  margin-top: 0;
+  margin-bottom: 0.85rem; /* Consistent bottom margin */
+  line-height: 1.3;
+}
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.875rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.25rem;
+}
+h5 {
+  font-size: 1.125rem;
+}
+h6 {
+  font-size: 1rem;
 }
 
-.fw-bold { font-weight: 700 !important; }
-.fw-semibold { font-weight: 600 !important; }
-.fw-medium { font-weight: 500 !important; }
+.fw-bold {
+  font-weight: 700 !important;
+}
+.fw-semibold {
+  font-weight: 600 !important;
+}
+.fw-medium {
+  font-weight: 500 !important;
+}
 
-/* Custom Scrollbar (Opsional, untuk browser WebKit) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--fluent-light);
+  background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
   background: #ced4da;
@@ -67,731 +133,679 @@ h1, h2, h3, h4, h5, h6 {
   background: #adb5bd;
 }
 
-
 /*--------------------------------------------------------------
 # Utilitas & Helper Classes
 --------------------------------------------------------------*/
 .fluent-card {
   background-color: var(--fluent-background);
-  border: 1px solid var(--fluent-border-color) !important; /* Override Bootstrap's border-0 if used */
+  border: 1px solid var(--fluent-border-color) !important;
   border-radius: var(--fluent-card-radius) !important;
   box-shadow: var(--fluent-card-shadow) !important;
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
 }
-
 .fluent-card.hover-lift:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 1rem 1.5rem rgba(0,0,0,0.1) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.07) !important;
 }
-
 .fluent-card-header {
   background-color: transparent !important;
   border-bottom: 1px solid var(--fluent-border-color) !important;
   padding: 1rem 1.5rem;
   font-weight: 600;
 }
-
 .btn {
-  border-radius: 0.25rem; /* Radius tombol yang sedikit lebih kecil dari default BS */
+  border-radius: 0.375rem; /* Slightly more rounded */
   padding: 0.6rem 1.2rem;
   font-weight: 500;
   transition: all 0.2s ease-in-out;
+  letter-spacing: 0.25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+.btn:active {
+  transform: translateY(1px);
 }
 .btn-lg {
   padding: 0.75rem 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 .btn-sm {
-  padding: 0.35rem 0.8rem;
+  padding: 0.4rem 0.9rem;
   font-size: 0.8rem;
 }
 
 .btn-primary {
   background-color: var(--fluent-primary);
   border-color: var(--fluent-primary);
+  color: #fff;
 }
 .btn-primary:hover {
   background-color: var(--fluent-primary-dark);
   border-color: var(--fluent-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 7px rgba(var(--bs-primary-rgb), 0.2);
 }
 
-.btn-outline-primary {
-    border-color: var(--fluent-primary);
-    color: var(--fluent-primary);
+/* Brand colored button variant */
+.btn-brand {
+  background-color: var(--brand-red);
+  border-color: var(--brand-red);
+  color: #fff;
 }
-.btn-outline-primary:hover {
-    background-color: var(--fluent-primary);
-    color: #fff;
-}
-
-.btn-outline-light {
-    border-color: rgba(255,255,255,0.75);
-    color: rgba(255,255,255,0.75);
-}
-.btn-outline-light:hover {
-    border-color: #fff;
-    color: var(--fluent-text-dark); /* Agar terbaca di background putih saat hover */
-    background-color: #fff;
+.btn-brand:hover {
+  background-color: var(--brand-red-dark);
+  border-color: var(--brand-red-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 7px rgba(216, 64, 64, 0.2); /* Using actual RGB of brand-red */
 }
 
-
-.form-control, .form-select {
-  border-radius: 0.25rem;
-  border-color: #ced4da; /* Warna border yang sedikit lebih lembut */
-  padding: 0.6rem 0.85rem;
+.form-control,
+.form-select {
+  border-radius: 0.375rem;
+  border: 1px solid var(--fluent-border-color);
+  padding: 0.7rem 0.95rem;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  background-color: var(
+    --fluent-background
+  ); /* Ensure form fields are not transparent */
 }
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: var(--fluent-primary);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25); /* Gunakan var BS jika tersedia, atau custom */
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.2);
+}
+/* ... (form-floating styles remain same) ... */
+
+.text-primary {
+  color: var(--fluent-primary) !important;
+}
+.text-muted {
+  color: var(--fluent-text-light) !important;
+}
+.fluent-red-text {
+  color: var(--brand-red) !important;
 }
 
-/* Form Floating Label Customization */
-.form-floating > .form-control,
-.form-floating > .form-select {
-  height: calc(3.5rem + 2px);
-  line-height: 1.25;
-  padding: 1rem 0.85rem;
-}
-.form-floating > label {
-  padding: 1rem 0.85rem;
-}
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select ~ label { /* Pastikan label naik untuk select juga */
-  opacity: .65;
-  transform: scale(.85) translateY(-.5rem) translateX(.15rem);
-  color: var(--fluent-primary); /* Warna label saat focus/filled */
+.main-content-wrapper {
+  padding-top: 0 !important; /* Hero/page specific padding will handle this */
 }
 
-
-.text-primary { color: var(--fluent-primary) !important; }
-.text-muted { color: var(--fluent-text-light) !important; }
-.fluent-red-text { color: var(--fluent-red) !important; }
-
+/* Padding for regular pages (non-hero) */
+.page-content-container {
+  padding-top: calc(
+    var(--navbar-outer-padding-top-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-outer-padding-bottom-desktop) + var(--content-extra-space)
+  );
+  padding-bottom: 3rem;
+}
+.fluent-navbar.scrolled + .main-content-wrapper .page-content-container {
+  padding-top: calc(
+    var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      /* Top padding of scrolled navbar */
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      /* Bottom padding of scrolled navbar */ var(--content-extra-space)
+  );
+}
 
 /*--------------------------------------------------------------
-# Navbar (base.html)
+# Navbar Styling
 --------------------------------------------------------------*/
 .fluent-navbar {
-  background-color: var(--fluent-dark); /* Navbar awal gelap */
-  padding: 0.8rem 0;
-  transition: background-color 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+  background: transparent !important;
+  padding-top: var(--navbar-outer-padding-top-desktop) !important;
+  padding-bottom: var(--navbar-outer-padding-bottom-desktop) !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030;
+  transition: padding 0.3s ease, background-color 0.4s ease-out;
+  box-shadow: none !important;
+}
+
+.navbar-content-wrapper {
+  background-color: var(--fluent-background);
+  border-radius: 50px; /* Pill shape */
+  padding: 0.75rem 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  width: 100%; /* Handled by container */
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease,
+    padding 0.3s ease;
 }
 
 .fluent-navbar .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
+  color: var(--fluent-text-dark) !important;
+  font-size: 1.35rem;
+  font-weight: 600; /* Slightly bolder brand */
 }
 .fluent-navbar .navbar-brand img {
+  max-height: 32px; /* Adjust if logo is taller */
+  vertical-align: -0.2em;
   transition: transform 0.3s ease;
 }
-.fluent-navbar:hover .navbar-brand img {
-    transform: rotate(-5deg) scale(1.05);
-}
 
-.fluent-navbar .nav-link {
-  color: rgba(255, 255, 255, 0.8);
+.fluent-navbar .navbar-nav .nav-link {
+  color: var(--fluent-text-light) !important;
   font-weight: 500;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  padding: 0.6rem 0.8rem;
-  border-radius: 0.25rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.9rem;
+  border-radius: 0.3rem;
+}
+.fluent-navbar .navbar-nav .nav-link:hover,
+.fluent-navbar .navbar-nav .nav-link.active {
+  color: var(--fluent-primary) !important;
+  background-color: rgba(var(--bs-primary-rgb), 0.07) !important;
 }
 
-.fluent-navbar .nav-link:hover,
-.fluent-navbar .nav-link.active {
-  color: #fff;
-  background-color: rgba(255,255,255,0.1);
-}
-
-.fluent-navbar .nav-btn-cta { /* Tombol CTA di Navbar */
-  margin-left: 1rem;
+.fluent-navbar .nav-btn-cta-dark {
+  background-color: var(--fluent-text-dark) !important;
+  color: #ffffff !important;
+  border-radius: 30px !important;
+  padding: 0.5rem 1.1rem !important;
   font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
-.fluent-navbar .btn-primary.nav-btn-cta { /* Login Button */
-    background-color: var(--fluent-primary);
-    border-color: var(--fluent-primary);
-    color: #fff;
+.fluent-navbar .nav-btn-cta-dark:hover {
+  background-color: #313538 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
 }
-.fluent-navbar .btn-outline-light.nav-btn-cta { /* Logout Button */
-    border-width: 2px;
-}
-
 
 /* Navbar Scrolled State */
 .fluent-navbar.scrolled {
-  background-color: var(--fluent-background);
-  padding: 0.6rem 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.075);
+  background: transparent !important; /* Keep outer transparent */
+  padding-top: var(--navbar-scrolled-outer-padding-vertical-desktop) !important;
+  padding-bottom: var(
+    --navbar-scrolled-outer-padding-vertical-desktop
+  ) !important;
+  box-shadow: none !important; /* Shadow is on the wrapper */
 }
-.fluent-navbar.scrolled .navbar-brand {
-  color: var(--fluent-text-dark);
-}
-.fluent-navbar.scrolled .nav-link {
-  color: var(--fluent-text-light);
-}
-.fluent-navbar.scrolled .nav-link:hover,
-.fluent-navbar.scrolled .nav-link.active {
-  color: var(--fluent-primary);
-  background-color: rgba(var(--bs-primary-rgb), 0.08);
-}
-.fluent-navbar.scrolled .btn-primary.nav-btn-cta { /* Login Button Scrolled */
-    background-color: var(--fluent-primary);
-    border-color: var(--fluent-primary);
-    color: #fff;
-}
-.fluent-navbar.scrolled .btn-outline-light.nav-btn-cta { /* Logout Button Scrolled */
-    color: var(--fluent-primary);
-    border-color: var(--fluent-primary);
-}
-.fluent-navbar.scrolled .btn-outline-light.nav-btn-cta:hover {
-    background-color: var(--fluent-primary);
-    color: #fff;
+.fluent-navbar.scrolled .navbar-content-wrapper {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Slightly more opaque for better readability */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
+  -webkit-backdrop-filter: blur(8px); /* Stronger blur */
+  backdrop-filter: blur(8px);
 }
 
-/* Navbar Toggler */
-.navbar-toggler {
-    border-color: rgba(255,255,255,0.1);
+/* Toggler Icons (Assuming Bootstrap 5 SVG toggler) */
+/* Initial state (transparent navbar, potentially over dark hero) */
+.fluent-navbar:not(.scrolled) .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
+/* Scrolled state (semi-transparent white background for navbar-content-wrapper) */
 .fluent-navbar.scrolled .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%280, 0, 0, 0.6%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-
-/*--------------------------------------------------------------
-# Main Content Wrapper & Page Content Container (base.html)
---------------------------------------------------------------*/
-.main-content-wrapper {
-  min-height: calc(100vh - 100px); /* Sesuaikan dengan tinggi footer Anda */
-}
-
-.page-content-container {
-  padding-top: 2rem; /* Default top padding, bisa dioverride per halaman */
-  padding-bottom: 2rem; /* Default bottom padding */
-}
-
-
-/*--------------------------------------------------------------
-# Footer (base.html)
---------------------------------------------------------------*/
-.fluent-footer {
-  background-color: var(--fluent-light);
-  border-top: 1px solid var(--fluent-border-color);
-  color: var(--fluent-text-light);
-}
-.fluent-footer h5 {
-  color: var(--fluent-text-dark);
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-.fluent-footer .list-unstyled a {
-  color: var(--fluent-text-light);
-  transition: color 0.2s ease;
-}
-.fluent-footer .list-unstyled a:hover {
-  color: var(--fluent-primary);
-}
-.fluent-footer .social-icons a {
-  color: var(--fluent-text-light);
-  transition: color 0.2s ease;
-  font-size: 1.2rem; /* Sedikit lebih besar untuk ikon sosial */
-}
-.fluent-footer .social-icons a:hover {
-  color: var(--fluent-primary);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(33, 37, 41, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
 }
 
 /*--------------------------------------------------------------
-# Index Page (index.html)
+# Hero Section (index.html)
 --------------------------------------------------------------*/
-/* Hero Section */
 .hero-section {
-  background-color: #2c3e50; /* Background yang lebih gelap untuk kontras */
+  background: linear-gradient(
+    135deg,
+    var(--fluent-gradient-start) 0%,
+    var(--fluent-gradient-end) 70%,
+    /* Adjusted stop for smoother transition */ var(--fluent-gradient-end) 100%
+  );
   color: #fff;
-  padding: 6rem 0;
+  padding-top: calc(
+    var(--navbar-outer-padding-top-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-outer-padding-bottom-desktop) + var(--hero-extra-space)
+  );
+  padding-bottom: 6rem;
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
   position: relative;
-  overflow: hidden; /* Untuk efek animasi jika ada */
+  overflow: hidden; /* Important for absolutely positioned decorative elements if any */
+}
+.fluent-navbar.scrolled + .main-content-wrapper .hero-section {
+  padding-top: calc(
+    var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      var(--hero-extra-space)
+  );
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
 }
 .hero-section h1 {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 3.2rem;
+  font-weight: 800; /* Extra bold for impact */
   color: #fff;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle text shadow for readability */
 }
 .hero-section h1 span {
-  color: var(--fluent-primary); /* Warna aksen untuk brand */
+  /* If you want span to have a slightly different shade or effect */
+  /* color: var(--brand-cream); */
+  color: #ffffff;
 }
 .hero-section .lead {
   font-size: 1.2rem;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2.5rem;
+  max-width: 550px;
+}
+.hero-section .btn-primary {
+  /* This is the white button with red text */
+  background-color: #fff;
+  color: var(--brand-red);
+  border-color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1.8rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.hero-section .btn-primary:hover {
+  background-color: var(--brand-cream); /* Using brand cream for hover */
+  border-color: var(--brand-cream);
+  color: var(--brand-red-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.hero-section .btn-outline-light {
+  font-weight: 600;
+  border-width: 2px;
+  padding: 0.7rem 1.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+.hero-section .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: #fff;
+  transform: translateY(-2px);
 }
 .hero-section .hero-image-custom {
   max-width: 100%;
   height: auto;
-  animation: floatImage 4s ease-in-out infinite; /* Contoh animasi */
+  animation: floatImage 6s ease-in-out infinite alternate; /* Slightly slower animation */
 }
-
 @keyframes floatImage {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+  from {
+    transform: translateY(-12px);
+  }
+  to {
+    transform: translateY(12px);
+  }
 }
 
-/* Stats Section */
-.stats-section {
-  background-color: var(--fluent-light); /* Warna latar sedikit beda */
-  padding: 3rem 0;
+/* ... (Keep other sections like Stats, How It Works, Features, etc. largely the same) ... */
+/* Ensure they use the new variables like --fluent-card-radius, --fluent-border-color where appropriate */
+
+/*--------------------------------------------------------------
+# API Docs Page (api_docs.html) - Check sticky top
+--------------------------------------------------------------*/
+.api-docs .sticky-top {
+  top: calc(
+    var(--navbar-outer-padding-top-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-outer-padding-bottom-desktop) + 1rem /* Small gap */
+  );
+  z-index: 1000;
 }
-.stats-section h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--fluent-primary);
+.fluent-navbar.scrolled + .main-content-wrapper .api-docs .sticky-top {
+  top: calc(
+    var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-scrolled-outer-padding-vertical-desktop) + 1rem
+      /* Small gap */
+  );
 }
-.stats-section p {
-  font-size: 0.9rem;
-  color: var(--fluent-text-light);
+/* ... (rest of API docs styles largely same) ... */
+
+/*--------------------------------------------------------------
+# Admin Pages - Check padding
+--------------------------------------------------------------*/
+.admin-dashboard-content,
+.admin-content-page {
+  background-color: #eef2f7;
+  min-height: calc(
+    100vh - var(--navbar-content-wrapper-height-desktop)
+  ); /* Rough estimate */
+  padding-top: calc(
+    var(--navbar-outer-padding-top-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-outer-padding-bottom-desktop) + var(--content-extra-space)
+      /* Use content extra space */
+  ) !important;
+  padding-bottom: 3rem;
+}
+.fluent-navbar.scrolled + .main-content-wrapper .admin-dashboard-content,
+.fluent-navbar.scrolled + .main-content-wrapper .admin-content-page {
+  padding-top: calc(
+    var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      var(--navbar-content-wrapper-height-desktop) +
+      var(--navbar-scrolled-outer-padding-vertical-desktop) +
+      var(--content-extra-space)
+  ) !important;
+}
+
+/*--------------------------------------------------------------
+# Reviews Section Styling
+--------------------------------------------------------------*/
+.reviews-section {
+  /* Contoh warna background gelap, sesuaikan dengan tema Anda */
+  background-color: #1a1d24; /* Warna gelap seperti di gambar contoh */
+  color: #f0f0f0; /* Warna teks terang */
+  overflow: hidden; /* Untuk mencegah scroll horizontal jika card sedikit overflow */
+}
+
+.reviews-section .review-section-tag {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px; /* Lebih membulat */
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.reviews-section .review-section-tag:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.8);
+  color: #fff;
+}
 
-/* How It Works Section */
-.how-it-works {
-  padding: 4rem 0;
+.reviews-section h2 {
+  color: #ffffff; /* Judul utama putih */
+  line-height: 1.2;
 }
-.how-it-works .display-6 {
-    margin-bottom: 3rem !important;
+
+.reviews-section .lead-sm {
+  /* Class custom untuk deskripsi yang lebih kecil */
+  font-size: 1rem;
+  font-weight: 300;
 }
-.how-it-works .step-card {
-  background-color: var(--fluent-background);
-  padding: 2rem;
-  border-radius: var(--fluent-card-radius);
-  text-align: center;
+
+.review-card {
+  background-color: #2c2f3b; /* Warna card yang sedikit lebih terang dari background section */
+  border: 1px solid #3a3e4d; /* Border halus untuk card */
+  border-radius: var(
+    --fluent-card-radius,
+    0.5rem
+  ); /* Menggunakan variabel jika ada, atau default */
+  padding: 1.5rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.how-it-works .step-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--fluent-card-shadow);
-}
-.how-it-works .step-card .display-3 { /* Nomor langkah */
-  line-height: 1;
-}
-.how-it-works .step-card h3 {
-  font-size: 1.3rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-.how-it-works .step-card p {
-  font-size: 0.95rem;
-  color: var(--fluent-text-light);
+  display: flex;
+  flex-direction: column;
 }
 
-/*--------------------------------------------------------------
-# Features Page (features.html)
---------------------------------------------------------------*/
-.features-header-hero {
-  padding: 4rem 0;
-  background-color: var(--fluent-light);
-}
-.features-header-hero h1 span {
-  color: var(--fluent-primary);
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-.features-list .feature-item {
-  padding: 3rem 0;
-  border-bottom: 1px solid var(--fluent-border-color);
-}
-.features-list .feature-item:last-child {
-  border-bottom: none;
-}
-.features-list .feature-item img {
-  border-radius: var(--fluent-card-radius);
-  box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.05);
-}
-.features-list .feature-item h2 {
-  font-size: 2.2rem;
-  font-weight: 700;
-}
-.features-list .feature-item h2 .fas, .features-list .feature-item h2 .bi { /* Icon di heading fitur */
-  font-size: 1.8rem;
-  margin-right: 0.5rem;
-}
-.features-list .feature-item ul {
-  padding-left: 0;
-}
-.features-list .feature-item ul li {
-  margin-bottom: 0.5rem;
-  font-size: 1.05rem;
-  color: var(--fluent-text-dark);
-}
-.features-list .feature-item ul li .fas, .features-list .feature-item ul li .bi {
-  color: var(--bs-success); /* Bootstrap Success color for check marks */
-  margin-right: 0.5rem;
+.review-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a3e4d; /* Garis pemisah di card */
 }
 
-.cta-section { /* CTA di features page & lainnya */
-  padding: 4rem 0;
-}
-.cta-section.bg-primary { /* CTA dengan background primary */
-    border-radius: var(--fluent-card-radius);
-    margin: 2rem 0;
-}
-
-
-/*--------------------------------------------------------------
-# Profile Page (profile_web.html)
---------------------------------------------------------------*/
-.profile-page .card {
-  border: none !important; /* Override .fluent-card border for profile page if desired */
-}
-.profile-page .card-header.bg-transparent { /* Styling untuk header card profil yang lebih soft */
-  padding-bottom: 0.5rem !important;
-}
-.profile-avatar-img {
-  border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.avatar-initials { /* Avatar jika tidak ada gambar */
-  font-weight: 500;
-  border: 4px solid #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.profile-details-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
-}
-.profile-details-grid .detail-item {
-  background-color: #f8f9fa;
-  padding: 0.75rem 1rem;
-  border-radius: 0.3rem;
-}
-.profile-details-grid .detail-item small {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.profile-details-grid .detail-item .fw-medium {
-  font-size: 0.95rem;
+.review-card .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.3); /* Border halus pada avatar */
 }
 
-.mobile-app-promo {
-  border: 1px dashed var(--fluent-border-color);
-}
-.qr-code-image {
-    border-radius: var(--fluent-card-radius) !important;
-    padding: 0.5rem !important;
-    border: 1px solid var(--fluent-border-color) !important;
-}
-
-
-/*--------------------------------------------------------------
-# API Docs Page (api_docs.html)
---------------------------------------------------------------*/
-.api-docs .display-5 {
-    font-weight: 700;
-}
-.api-docs .sticky-top { /* Untuk sidebar navigasi API */
-  top: 100px; /* Sesuaikan dengan tinggi navbar Anda saat di-scroll */
-  z-index: 1019; /* Di bawah navbar tapi di atas konten lain */
-}
-.api-docs .api-nav-sidebar .list-group-item {
-  border-left-width: 3px;
-  border-left-color: transparent;
-  border-radius: 0 0.25rem 0.25rem 0; /* Rounded corner kanan */
-  padding: 0.8rem 1.2rem;
-  font-weight: 500;
-  color: var(--fluent-text-light);
-}
-.api-docs .api-nav-sidebar .list-group-item.active {
-  background-color: rgba(var(--bs-primary-rgb), 0.08);
-  border-left-color: var(--fluent-primary);
-  color: var(--fluent-primary);
+.review-card .user-info .username {
+  font-size: 1.1rem;
   font-weight: 600;
-}
-.api-docs .api-nav-sidebar .list-group-item:not(.active):hover {
-    background-color: var(--fluent-light);
-    color: var(--fluent-text-dark);
-}
-.api-docs .sidebar-heading {
-    font-size: 0.75rem;
-    font-weight: 600;
+  color: #ffffff;
 }
 
-.api-docs .api-section h2 { /* Judul section utama seperti Authentication, Users */
-  font-weight: 700;
-  color: var(--fluent-text-dark);
+.review-card .rating {
+  font-size: 0.9rem;
 }
-.api-docs .api-endpoint-card .card-header .badge.http-method { /* Badge untuk POST, GET, etc. */
-    font-size: 0.85em;
-    font-weight: 700;
-    padding: 0.4em 0.7em;
+
+.review-card .rating .fas,
+.review-card .rating .far,
+.review-card .rating .fa-star-half-alt {
+  color: #ffc107; /* Warna bintang kuning */
 }
-.api-docs .api-endpoint-card .card-header code {
-    color: var(--bs-code-color); /* Warna kode dari Bootstrap */
+.review-card .rating .rating-text {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
 }
-.api-docs .api-endpoint-card .card-body h6 { /* Request Body, Response, etc. */
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--fluent-text-light);
-    margin-top: 1rem;
-    margin-bottom: 0.5rem;
+
+.review-card-body p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85); /* Warna teks testimoni */
+  margin-bottom: 0; /* Hapus margin bawah default jika ini paragraf terakhir */
 }
-.api-docs pre.code-block {
-  background-color: #f8f9fa; /* Warna background code block yang soft */
-  padding: 1rem;
-  border-radius: 0.3rem; /* Border radius untuk code block */
-  border: 1px solid #e9ecef; /* Border halus untuk code block */
-  white-space: pre-wrap;
-  word-break: break-all;
-  font-size: 0.85rem; /* Ukuran font yang pas untuk kode */
-}
-.api-docs .error-list li .badge { /* Badge untuk error codes */
-    font-weight: 500;
+
+/* Penyesuaian responsif untuk review section jika perlu */
+@media (max-width: 767.98px) {
+  .reviews-section .display-5 {
+    font-size: 2rem; /* Judul lebih kecil di mobile */
+  }
+  .reviews-section .text-lg-end {
+    text-align: left !important; /* Deskripsi rata kiri di mobile */
+  }
+  .review-card {
+    padding: 1.25rem;
+  }
 }
 
 /*--------------------------------------------------------------
-# Auth Pages (login, register, forgot, reset, otp)
---------------------------------------------------------------*/
-.auth-page-container .auth-card {
-  border-radius: var(--fluent-card-radius) !important;
-}
-.auth-page-container .auth-card .card-body {
-  padding: 2rem 2.5rem; /* Padding lebih besar untuk auth forms */
-}
-.auth-page-container .auth-card img { /* Logo di auth forms */
-  max-height: 48px;
-}
-.auth-page-container .auth-card .btn-outline-secondary img { /* Google icon */
-    vertical-align: -0.15em;
-}
-.auth-page-container .alert.small { /* Alert yang lebih compact */
-    padding: 0.6rem 1rem;
-}
-.auth-page-container .alert.small .btn-close {
-    padding: 0.6rem 1rem; /* Pastikan tombol close bisa ditekan */
-}
-
-/* OTP Input Specific Style */
-#otp[style*="letter-spacing"] { /* Hanya target OTP input yang punya inline style letter-spacing */
-    font-weight: 500;
-}
-
-/*--------------------------------------------------------------
-# Admin Pages General
---------------------------------------------------------------*/
-.admin-dashboard-content, .admin-content-page {
-  background-color: var(--fluent-body-bg); /* Atau #eef2f7 untuk admin yang sedikit beda */
-}
-
-.page-header .btn-sm {
-    font-size: 0.875rem; /* Ukuran tombol yang pas untuk header admin */
-}
-
-.fluent-dashboard-card { /* Card yang digunakan di admin dashboard & list pages */
-  border: none !important; /* Admin cards biasanya lebih flat */
-  border-radius: var(--fluent-card-radius) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; /* Shadow yang halus */
-  background-color: #fff;
-}
-.fluent-dashboard-card .card-header.bg-transparent {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-    padding-top: 1rem;
-    border-bottom: 1px solid #f0f0f0 !important; /* Border yang sangat halus */
-}
-.fluent-dashboard-card .card-header .h5 {
-    font-weight: 600;
-}
-.fluent-dashboard-card .card-body {
-    padding: 1.5rem;
-}
-.fluent-dashboard-card .table-responsive {
-    /* Untuk iOS agar scroll di dalam table lebih smooth jika ada */
-    -webkit-overflow-scrolling: touch;
-}
-
-.admin-table thead.table-light th {
-    background-color: #f8f9fc !important; /* Warna header tabel yang lebih cerah */
-    color: #525f7f; /* Warna teks header tabel */
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom-width: 1px;
-    border-top-width: 0;
-}
-.admin-table td {
-    vertical-align: middle;
-    font-size: 0.9rem;
-    color: var(--fluent-text-light);
-    border-color: #f0f0f0; /* Border baris yang sangat halus */
-}
-.admin-table .fw-medium {
-    color: var(--fluent-text-dark);
-}
-.admin-table .avatar-sm {
-    width: 36px;
-    height: 36px;
-}
-.admin-table .avatar-sm .avatar-title {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.admin-table .badge.fs-xs { /* Badge yang lebih kecil */
-    font-size: 0.7rem;
-    padding: 0.3em 0.6em;
-}
-.admin-table .btn-icon { /* Tombol hanya ikon */
-    padding: 0.3rem 0.5rem;
-    line-height: 1;
-}
-
-/* Pagination Admin */
-.pagination .page-link {
-    border: 1px solid var(--fluent-border-color);
-    color: var(--fluent-primary);
-    margin: 0 2px;
-    border-radius: 0.25rem;
-    min-width: 36px;
-    text-align: center;
-}
-.pagination .page-item.active .page-link {
-    background-color: var(--fluent-primary);
-    border-color: var(--fluent-primary);
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(var(--bs-primary-rgb), 0.2);
-}
-.pagination .page-item.disabled .page-link {
-    color: #adb5bd;
-    background-color: var(--fluent-light);
-    border-color: var(--fluent-border-color);
-}
-.pagination .page-link:hover {
-    background-color: var(--fluent-light);
-    border-color: var(--fluent-border-color);
-    z-index: 2;
-}
-.pagination .page-item.active .page-link:hover {
-    background-color: var(--fluent-primary-dark);
-    border-color: var(--fluent-primary-dark);
-}
-
-
-/* Search Form Admin */
-.input-group .input-group-text.bg-light {
-    background-color: #f8f9fa !important; /* Pastikan override */
-    border-right: none !important;
-}
-.input-group .form-control-lg.border-light {
-    border-left: none !important;
-    padding-left: 0.5rem;
-    box-shadow: none !important;
-}
-.input-group .form-control-lg.border-light:focus {
-    border-color: var(--fluent-primary) !important; /* Atau #ced4da jika tidak mau highlight */
-    border-left: none !important;
-}
-
-
-/* Admin Modals */
-.modal-content.shadow-lg {
-    border-radius: var(--fluent-card-radius);
-}
-.modal-header.bg-light {
-    background-color: #f8f9fc !important;
-    padding: 1rem 1.5rem;
-}
-.modal-header .modal-title {
-    font-weight: 600;
-}
-.modal-body small.text-muted.d-block {
-    font-size: 0.75rem;
-    margin-bottom: 0.15rem;
-    text-transform: uppercase;
-}
-.modal-footer.bg-light {
-    background-color: #f8f9fc !important;
-    padding: 0.75rem 1.5rem;
-}
-.modal-xl { max-width: 1140px; } /* Ukuran modal XL Bootstrap jika belum ada */
-
-
-/* Admin Login Page Specific (admin_login.html) */
-.admin-login-page {
-  /* Background full-page jika diperlukan, bisa diatur di body atau div ini */
-  /* background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%); */
-}
-.admin-login-card .btn-primary {
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
-}
-
-/* Chart Placeholders */
-#registrationChart > div, #genderChart > div, #occupationChart > div, #activityChart > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: 200px; /* Minimal tinggi agar placeholder terlihat */
-}
-
-
-/*--------------------------------------------------------------
-# Media Queries (Contoh dasar, perlu disesuaikan)
+# Media Queries (Responsif)
 --------------------------------------------------------------*/
 @media (max-width: 991.98px) {
-  .fluent-navbar .nav-link {
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0.8rem 1rem; /* Padding lebih besar untuk mobile nav items */
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+  .fluent-navbar {
+    padding-top: var(--navbar-outer-padding-top-mobile) !important;
+    padding-bottom: var(
+      --navbar-outer-padding-bottom-mobile-not-scrolled
+    ) !important;
   }
-  .fluent-navbar.scrolled .nav-link {
+  .fluent-navbar.scrolled {
+    padding-top: var(
+      --navbar-scrolled-outer-padding-vertical-mobile
+    ) !important;
+    padding-bottom: var(
+      --navbar-scrolled-outer-padding-vertical-mobile
+    ) !important;
+  }
+
+  .navbar-content-wrapper {
+    flex-direction: column;
+    align-items: stretch; /* Allow brand/toggler to define width */
+    padding: 0.75rem 1rem; /* Adjust padding for mobile */
+    border-radius: 25px; /* Smaller radius for mobile */
+    margin: 0 0.75rem; /* Give some horizontal space */
+    width: calc(100% - 1.5rem); /* Occupy available width minus margins */
+  }
+  .fluent-navbar .navbar-brand {
+    margin-bottom: 0.5rem;
+    align-self: flex-start;
+    font-size: 1.25rem;
+  }
+  .fluent-navbar .navbar-brand img {
+    height: 28px;
+  }
+  .fluent-navbar .navbar-toggler {
+    position: absolute;
+    top: calc(
+      0.75rem +
+        (
+          (var(--navbar-content-wrapper-height-mobile) - 28px - 0.5rem - 1.5rem) /
+            2
+        )
+    ); /* Approximate vertical centering based on brand height */
+    /* If brand height changes, this needs adjustment. Consider fixed pixel top value. */
+    /* Example: top: 1rem; */
+    right: 1rem; /* Adjust as needed */
+    padding: 0.25rem;
+  }
+  .fluent-navbar .navbar-collapse {
+    margin-top: 0.5rem;
+    width: 100%; /* Ensure it takes full width of the wrapper */
+    background-color: var(
+      --fluent-background
+    ); /* Give it a background when expanded */
+    border-radius: 15px; /* Rounded corners for the expanded menu */
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow when expanded */
+  }
+  .fluent-navbar .navbar-nav .nav-link {
+    padding: 0.7rem 1rem; /* Slightly more padding for touch */
+    font-size: 0.95rem;
+  }
+  .fluent-navbar .navbar-nav .nav-item:not(:last-child) {
     border-bottom: 1px solid var(--fluent-border-color);
   }
-  .fluent-navbar .nav-item:last-child .nav-link {
-    border-bottom: none;
+  .fluent-navbar .nav-btn-cta-dark {
+    margin: 0.75rem 1rem 0.25rem; /* Spacing for CTA in mobile */
+    display: block;
+    text-align: center;
   }
+
+  /* Hero section padding on mobile */
   .hero-section {
-    padding: 4rem 0;
+    padding-top: calc(
+      var(--navbar-outer-padding-top-mobile) +
+        var(--navbar-content-wrapper-height-mobile) +
+        /* This needs to be accurate */
+        var(--navbar-outer-padding-bottom-mobile-not-scrolled) +
+        var(--hero-extra-space)
+    );
   }
-  .hero-section h1 {
-    font-size: 2.2rem;
+  .fluent-navbar.scrolled + .main-content-wrapper .hero-section {
+    padding-top: calc(
+      var(--navbar-scrolled-outer-padding-vertical-mobile) +
+        var(--navbar-content-wrapper-height-mobile) +
+        var(--navbar-scrolled-outer-padding-vertical-mobile) +
+        var(--hero-extra-space)
+    ) !important;
+  }
+
+  /* Regular content padding on mobile */
+  .page-content-container,
+  .admin-dashboard-content,
+  .admin-content-page {
+    padding-top: calc(
+      var(--navbar-outer-padding-top-mobile) +
+        var(--navbar-content-wrapper-height-mobile) +
+        var(--navbar-outer-padding-bottom-mobile-not-scrolled) +
+        var(--content-extra-space)
+    ) !important;
+  }
+  .fluent-navbar.scrolled + .main-content-wrapper .page-content-container,
+  .fluent-navbar.scrolled + .main-content-wrapper .admin-dashboard-content,
+  .fluent-navbar.scrolled + .main-content-wrapper .admin-content-page {
+    padding-top: calc(
+      var(--navbar-scrolled-outer-padding-vertical-mobile) +
+        var(--navbar-content-wrapper-height-mobile) +
+        var(--navbar-scrolled-outer-padding-vertical-mobile) +
+        var(--content-extra-space)
+    ) !important;
   }
 
   .api-docs .sticky-top {
-    position: static; /* Matikan sticky di mobile */
+    position: static;
     width: 100%;
     margin-bottom: 2rem;
+    top: auto;
   }
 }
 
 @media (max-width: 767.98px) {
-  .stats-section h2 {
+  body {
+    font-size: 15px;
+  }
+  h1 {
     font-size: 2rem;
+  } /* Adjusted hero H1, others relative */
+  h2 {
+    font-size: 1.6rem;
+  }
+  h3 {
+    font-size: 1.35rem;
+  }
+  .stats-section h2 {
+    font-size: 2.2rem;
   }
   .auth-page-container .auth-card .card-body {
-    padding: 1.5rem;
-  }
-  .admin-dashboard-card .card-body,
-  .fluent-dashboard-card .card-body { /* Pastikan card admin juga responsif paddingnya */
-      padding: 1rem;
-  }
-  .admin-dashboard-card .card-header.bg-transparent,
-  .fluent-dashboard-card .card-header.bg-transparent {
-      padding-left: 1rem;
-      padding-right: 1rem;
+    padding: 1.75rem;
   }
 
-  .modal-xl { /* Sesuaikan max-width modal XL di mobile jika perlu */
+  .fluent-dashboard-card .card-body,
+  .admin-dashboard-card .card-body {
+    padding: 1rem;
+  }
+  .fluent-dashboard-card .card-header.bg-transparent,
+  .admin-dashboard-card .card-header.bg-transparent {
+    padding: 0.75rem 1rem;
+  }
+
+  .modal-xl {
     max-width: 95%;
+  }
+  .modal-dialog {
+    margin: 1rem;
+  }
+
+  .hero-section h1 {
+    font-size: 2.4rem;
+  }
+  .hero-section .lead {
+    font-size: 1.05rem;
+  }
+  .hero-section .btn-primary,
+  .hero-section .btn-outline-light {
+    padding: 0.65rem 1.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-content-wrapper {
+    padding: 0.6rem 0.75rem;
+    border-radius: 20px;
+    margin: 0 0.5rem;
+    width: calc(100% - 1rem);
+  }
+  .fluent-navbar .navbar-brand {
+    font-size: 1.15rem;
+  }
+  .fluent-navbar .navbar-brand img {
+    height: 26px;
+  }
+  .fluent-navbar .nav-btn-cta-dark {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem !important; /* Ensure sufficient padding */
+  }
+  .fluent-navbar .navbar-toggler {
+    right: 0.75rem; /* Adjust toggler position for smaller wrapper padding */
+  }
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  .hero-section .lead {
+    font-size: 1rem;
   }
 }
