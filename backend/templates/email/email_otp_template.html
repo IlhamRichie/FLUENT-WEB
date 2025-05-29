@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kode Verifikasi OTP Anda - {{ app_name }}</title>
+    <title><span class="lang-id">Kode Verifikasi OTP Anda</span><span class="lang-en">Your OTP Verification Code</span> - {{ app_name }}</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -21,13 +21,13 @@
             box-sizing: border-box;
         }
         .container {
-            width: 100%; 
-            max-width: 580px; 
+            width: 100%;
+            max-width: 580px;
             margin: 20px auto;
             padding: 30px;
             background-color: #ffffff;
             border-radius: 8px;
-            border: 1px solid #e0e0e0; 
+            border: 1px solid #e0e0e0;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         .header {
@@ -36,19 +36,19 @@
             padding-bottom: 20px;
             border-bottom: 1px solid #eeeeee;
         }
-        .header img.logo {
-            max-height: 48px; 
+        .header img.logo { /* Pastikan URL logo diisi jika digunakan */
+            max-height: 48px;
             margin-bottom: 15px;
         }
         .header h2 {
-            font-size: 22px; 
-            color: #202124; 
+            font-size: 22px;
+            color: #202124;
             margin:0;
-            font-weight: 500; 
+            font-weight: 500;
         }
         .content {
             font-size: 15px;
-            color: #3c4043; 
+            color: #3c4043;
         }
         .content p {
             margin-bottom: 16px;
@@ -57,23 +57,23 @@
             text-align: center;
             margin: 25px 0;
         }
-        .otp-code {
-            display: inline-block; 
-            font-size: 28px; 
-            font-weight: 700; 
-            color: #D84040; 
-            letter-spacing: 4px; 
-            padding: 12px 25px; 
-            background-color: #f1f3f4; 
-            border: 1px solid #dadce0; 
-            border-radius: 4px; 
+        .otp-code { /* Warna OTP #D84040 adalah primary FLUENT */
+            display: inline-block;
+            font-size: 28px;
+            font-weight: 700;
+            color: #D84040; /* Warna utama FLUENT */
+            letter-spacing: 4px;
+            padding: 12px 25px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
         }
         .expiry-notice {
             font-size: 14px;
-            color: #5f6368; 
+            color: #5f6368;
         }
         .footer {
-            font-size: 12px; 
+            font-size: 12px;
             color: #5f6368;
             text-align: center;
             margin-top: 30px;
@@ -83,33 +83,54 @@
          .footer p {
             margin-bottom: 5px;
         }
+      /* Language span display logic */
+      .lang-en, .lang-id { display: none; }
+      html[lang="id"] .lang-id { display: inline; } /* Use inline for most text, or block/inline-block as needed */
+      html[lang="en"] .lang-en { display: inline; }
+      html[lang="id"] .lang-id.d-block { display: block; }
+      html[lang="en"] .lang-en.d-block { display: block; }
     </style>
 </head>
 <body>
     <div class="email-wrapper">
         <div class="container">
             <div class="header">
-                {# Ganti dengan URL logo Anda yang dihosting atau hapus jika tidak ada logo gambar #}
-                {# <img src="URL_TO_YOUR_HOSTED_FLUENT_LOGO.png" alt="{{ app_name }} Logo" class="logo"> #}
-                <h2>Verifikasi Akun Anda di {{ app_name }}</h2>
+                {# <img src="URL_LOGO_FLUENT_ANDA_YANG_DIHOSTING/fluent-logo.png" alt="{{ app_name }} Logo" class="logo"> #}
+                <h2>
+                    <span class="lang-id">Verifikasi Akun Anda di {{ app_name }}</span>
+                    <span class="lang-en">Verify Your {{ app_name }} Account</span>
+                </h2>
             </div>
             <div class="content">
-                <p>Halo,</p>
-                <p>Terima kasih telah menggunakan layanan {{ app_name }}. Untuk menyelesaikan proses login atau verifikasi Anda, silakan gunakan kode One-Time Password (OTP) berikut:</p>
-                
+                <p><span class="lang-id">Halo,</span><span class="lang-en">Hello,</span></p>
+                <p>
+                    <span class="lang-id">Terima kasih telah menggunakan layanan {{ app_name }}. Untuk menyelesaikan proses masuk atau verifikasi Anda, silakan gunakan Kode Sekali Pakai (OTP) berikut:</span>
+                    <span class="lang-en">Thank you for using {{ app_name }}. To complete your login or verification process, please use the following One-Time Password (OTP):</span>
+                </p>
+
                 <div class="otp-container">
                     <span class="otp-code">{{ otp }}</span>
                 </div>
-                
-                <p class="expiry-notice">Kode OTP ini hanya berlaku selama <strong>{{ config.OTP_EXPIRY_MINUTES }} menit</strong>. Demi keamanan, mohon jangan berikan kode ini kepada siapa pun.</p>
-                <p>Jika Anda tidak merasa melakukan permintaan ini atau memulai proses yang memerlukan OTP, Anda dapat mengabaikan email ini dengan aman.</p>
+
+                <p class="expiry-notice">
+                    <span class="lang-id">Kode OTP ini hanya berlaku selama <strong>{{ config.OTP_EXPIRY_MINUTES }} menit</strong>. Demi keamanan, mohon jangan berikan kode ini kepada siapa pun.</span>
+                    <span class="lang-en">This OTP code is valid for <strong>{{ config.OTP_EXPIRY_MINUTES }} minutes</strong> only. For security reasons, please do not share this code with anyone.</span>
+                </p>
+                <p>
+                    <span class="lang-id">Jika Anda tidak merasa melakukan permintaan ini atau memulai proses yang memerlukan OTP, Anda dapat mengabaikan email ini dengan aman.</span>
+                    <span class="lang-en">If you did not request this or initiate a process requiring an OTP, you can safely ignore this email.</span>
+                </p>
             </div>
-            
+
             <div class="footer">
-                <p>Salam Hormat,<br>Tim {{ app_name }}</p>
-                <p>&copy; {% if now %}{{ now.year }}{% else %}{{ current_year_fallback }}{% endif %} {{ app_name }}. Semua hak cipta dilindungi.</p>
-                 {# Tambahkan link ke website utama Anda jika diinginkan #}
-                 {# <p><a href="URL_WEBSITE_FLUENT_ANDA" style="color: #5f6368; text-decoration:none;">Kunjungi {{ app_name }}</a></p> #}
+                <p>
+                    <span class="lang-id d-block">Salam Hormat,</span><span class="lang-en d-block">Best regards,</span>
+                    <span class="lang-id d-block">Tim {{ app_name }}</span><span class="lang-en d-block">The {{ app_name }} Team</span>
+                </p>
+                <p>&copy; {% if now %}{{ now.year }}{% else %}{{ current_year_fallback | default((range(2024,2026)|random)) }}{% endif %} {{ app_name }}.
+                    <span class="lang-id">Semua hak cipta dilindungi.</span><span class="lang-en">All rights reserved.</span>
+                </p>
+                 {# <p><a href="URL_WEBSITE_FLUENT_ANDA" style="color: #5f6368; text-decoration:none;"><span class="lang-id">Kunjungi</span><span class="lang-en">Visit</span> {{ app_name }}</a></p> #}
             </div>
         </div>
     </div>

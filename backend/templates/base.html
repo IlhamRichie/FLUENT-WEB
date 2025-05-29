@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
-  {# Default ke Bahasa Indonesia #}
+<html lang="id"> {# Default ke Bahasa Indonesia #}
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,10 +11,8 @@
       rel="stylesheet"
     />
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-      crossorigin="anonymous"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      xintegrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"
     />
     <link
       rel="stylesheet"
@@ -24,9 +21,8 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      xintegrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
@@ -39,166 +35,121 @@
     {% block head_extra %}{% endblock %}
     <style>
       /* Basic style for language elements before CSS loads / JS runs */
-      .lang-en,
-      .lang-id {
-        display: none;
-      }
-      html[lang="id"] .lang-id {
-        display: inline-block; /* or block, depending on element */
-      }
-      html[lang="en"] .lang-en {
-        display: inline-block; /* or block, depending on element */
-      }
-      .lang-en.d-block,
-      .lang-id.d-block {
-        display: none;
-      } /* For block elements */
-      html[lang="id"] .lang-id.d-block {
-        display: block;
-      }
-      html[lang="en"] .lang-en.d-block {
-        display: block;
-      }
+      .lang-en, .lang-id { display: none; }
+      html[lang="id"] .lang-id { display: inline-block; /* or block, depending on element */ }
+      html[lang="en"] .lang-en { display: inline-block; /* or block, depending on element */ }
+      .lang-en.d-block, .lang-id.d-block { display: none; } /* For block elements */
+      html[lang="id"] .lang-id.d-block { display: block; }
+      html[lang="en"] .lang-en.d-block { display: block; }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg fluent-navbar fixed-top">
-      <div class="container">
-        <div class="navbar-content-wrapper">
-          <a
-            class="navbar-brand fw-bold"
-            href="{{ url_for('web.index_route') }}"
-          >
-            <img
-              src="{{ url_for('static', filename='images/fluent-logo.png') }}"
-              alt="FLUENT Logo"
-              height="32"
-              class="me-2"
-            />
-            FLUENT
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-              <li class="nav-item">
-                <a
-                  class="nav-link {% if request.endpoint == 'web.index_route' %}active{% endif %}"
-                  href="{{ url_for('web.index_route') }}"
-                  ><span class="lang-id">Beranda</span
-                  ><span class="lang-en">Home</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link {% if request.endpoint == 'web.features_route' %}active{% endif %}"
-                  href="{{ url_for('web.features_route') }}"
-                  ><span class="lang-id">Fitur</span
-                  ><span class="lang-en">Features</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link {% if request.endpoint == 'web.api_docs_page_route' %}active{% endif %}"
-                  href="{{ url_for('web.api_docs_page_route') }}"
-                  ><span class="lang-id">Dok API</span
-                  ><span class="lang-en">API Docs</span></a
-                >
-              </li>
-            </ul>
-            <ul class="navbar-nav ms-auto align-items-center">
-              <li class="nav-item dropdown me-2">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="languageDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-globe me-1"></i>
-                  <span id="currentLangDisplay">ID</span>
-                </a>
-                <ul
-                  class="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="languageDropdown"
-                >
-                  <li>
+    <div class="floating-navbar-wrapper"> {# Wrapper baru untuk efek floating #}
+        <nav class="navbar navbar-expand-lg fluent-navbar"> {# Hapus fixed-top dari sini #}
+          <div class="container">
+            <div class="navbar-content-wrapper">
+              <a
+                class="navbar-brand fw-bold"
+                href="{{ url_for('web.index_route') }}"
+              >
+                <img
+                  src="{{ url_for('static', filename='images/fluent-logo.png') }}"
+                  alt="FLUENT Logo"
+                  height="32"
+                  class="me-2"
+                />
+                FLUENT
+              </a>
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                  <li class="nav-item">
                     <a
-                      class="dropdown-item lang-switcher"
-                      href="#"
-                      data-lang="id"
-                      >Bahasa Indonesia (ID)</a
+                      class="nav-link {% if request.endpoint == 'web.index_route' %}active{% endif %}"
+                      href="{{ url_for('web.index_route') }}"
+                      ><span class="lang-id">Beranda</span><span class="lang-en">Home</span></a
                     >
                   </li>
-                  <li>
+                  <li class="nav-item">
                     <a
-                      class="dropdown-item lang-switcher"
-                      href="#"
-                      data-lang="en"
-                      >English (EN)</a
+                      class="nav-link {% if request.endpoint == 'web.features_route' %}active{% endif %}"
+                      href="{{ url_for('web.features_route') }}"
+                      ><span class="lang-id">Fitur</span><span class="lang-en">Features</span></a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link {% if request.endpoint == 'web.api_docs_page_route' %}active{% endif %}"
+                      href="{{ url_for('web.api_docs_page_route') }}"
+                      ><span class="lang-id">Dok API</span><span class="lang-en">API Docs</span></a
                     >
                   </li>
                 </ul>
-              </li>
-              {% if session.is_web_user %}
-              <li class="nav-item">
-                <a
-                  class="nav-link {% if request.endpoint == 'web.web_profile_route' %}active{% endif %}"
-                  href="{{ url_for('web.web_profile_route') }}"
-                  ><span class="lang-id">Profil</span
-                  ><span class="lang-en">Profile</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="btn btn-sm nav-btn-cta-dark"
-                  href="{{ url_for('web.web_logout_route') }}"
-                  ><span class="lang-id">Keluar</span
-                  ><span class="lang-en">Logout</span></a
-                >
-              </li>
-              {% elif session.is_admin %}
-              <li class="nav-item">
-                <a
-                  class="nav-link {% if request.endpoint and 'admin.' in request.endpoint %}active{% endif %}"
-                  href="{{ url_for('admin.admin_dashboard_route') }}"
-                  ><span class="lang-id">Dasbor Admin</span
-                  ><span class="lang-en">Admin Dashboard</span></a
-                >
-              </li>
-              <li class="nav-item">
-                <a
-                  class="btn btn-sm nav-btn-cta-dark"
-                  href="{{ url_for('admin.admin_logout_route') }}"
-                  ><span class="lang-id">Keluar Admin</span
-                  ><span class="lang-en">Admin Logout</span></a
-                >
-              </li>
-              {% else %}
-              <li class="nav-item">
-                <a
-                  class="btn btn-sm nav-btn-cta-dark"
-                  href="{{ url_for('web.web_login_route') }}"
-                  ><span class="lang-id">Masuk Aplikasi</span
-                  ><span class="lang-en">Enter App</span></a
-                >
-              </li>
-              {% endif %}
-            </ul>
+                <ul class="navbar-nav ms-auto align-items-center">
+                  <li class="nav-item dropdown me-2">
+                    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-globe me-1"></i> <span id="currentLangDisplay">ID</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                      <li><a class="dropdown-item lang-switcher" href="#" data-lang="id">Bahasa Indonesia (ID)</a></li>
+                      <li><a class="dropdown-item lang-switcher" href="#" data-lang="en">English (EN)</a></li>
+                    </ul>
+                  </li>
+                  {% if session.is_web_user %}
+                  <li class="nav-item">
+                    <a
+                      class="nav-link {% if request.endpoint == 'web.web_profile_route' %}active{% endif %}"
+                      href="{{ url_for('web.web_profile_route') }}"
+                      ><span class="lang-id">Profil</span><span class="lang-en">Profile</span></a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="btn btn-sm nav-btn-cta-dark"
+                      href="{{ url_for('web.web_logout_route') }}"
+                      ><span class="lang-id">Keluar</span><span class="lang-en">Logout</span></a
+                    >
+                  </li>
+                  {% elif session.is_admin %}
+                  <li class="nav-item">
+                    <a
+                      class="nav-link {% if request.endpoint and 'admin.' in request.endpoint %}active{% endif %}"
+                      href="{{ url_for('admin.admin_dashboard_route') }}"
+                      ><span class="lang-id">Dasbor Admin</span><span class="lang-en">Admin Dashboard</span></a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="btn btn-sm nav-btn-cta-dark"
+                      href="{{ url_for('admin.admin_logout_route') }}"
+                      ><span class="lang-id">Keluar Admin</span><span class="lang-en">Admin Logout</span></a
+                    >
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                    <a
+                      class="btn btn-sm nav-btn-cta-dark"
+                      href="{{ url_for('web.web_login_route') }}"
+                      ><span class="lang-id">Masuk Aplikasi</span><span class="lang-en">Enter App</span></a
+                    >
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </nav>
+        </nav>
+    </div>
 
     <main role="main" class="main-content-wrapper">
       {% block content_hero %}{% endblock %} {% block content %}{% endblock %}
@@ -210,78 +161,58 @@
           <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <h5 class="fw-semibold">FLUENT</h5>
             <p class="small text-muted">
-              <span class="lang-id"
-                >Merevolusi persiapan wawancara dengan analisis bertenaga
-                AI.</span
-              >
-              <span class="lang-en"
-                >Revolutionizing interview preparation with AI-powered
-                analysis.</span
-              >
+              <span class="lang-id">Merevolusi persiapan wawancara dengan analisis bertenaga AI.</span>
+              <span class="lang-en">Revolutionizing interview preparation with AI-powered analysis.</span>
             </p>
           </div>
           <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <h5 class="fw-semibold">
-              <span class="lang-id">Tautan Cepat</span>
-              <span class="lang-en">Quick Links</span>
+                <span class="lang-id">Tautan Cepat</span>
+                <span class="lang-en">Quick Links</span>
             </h5>
             <ul class="list-unstyled">
               <li>
                 <a
                   href="{{ url_for('web.index_route') }}"
                   class="text-decoration-none text-muted small footer-link"
-                  ><span class="lang-id">Beranda</span
-                  ><span class="lang-en">Home</span></a
+                  ><span class="lang-id">Beranda</span><span class="lang-en">Home</span></a
                 >
               </li>
               <li>
                 <a
                   href="{{ url_for('web.features_route') }}"
                   class="text-decoration-none text-muted small footer-link"
-                  ><span class="lang-id">Fitur</span
-                  ><span class="lang-en">Features</span></a
+                  ><span class="lang-id">Fitur</span><span class="lang-en">Features</span></a
                 >
               </li>
               <li>
-                <a
-                  href="#"
-                  class="text-decoration-none text-muted small footer-link"
-                  ><span class="lang-id">Kebijakan Privasi</span
-                  ><span class="lang-en">Privacy Policy</span></a
+                <a href="#" class="text-decoration-none text-muted small footer-link"
+                  ><span class="lang-id">Kebijakan Privasi</span><span class="lang-en">Privacy Policy</span></a
                 >
               </li>
               <li>
-                <a
-                  href="#"
-                  class="text-decoration-none text-muted small footer-link"
-                  ><span class="lang-id">Ketentuan Layanan</span
-                  ><span class="lang-en">Terms of Service</span></a
+                <a href="#" class="text-decoration-none text-muted small footer-link"
+                  ><span class="lang-id">Ketentuan Layanan</span><span class="lang-en">Terms of Service</span></a
                 >
               </li>
             </ul>
           </div>
           <div class="col-lg-4 col-md-12">
             <h5 class="fw-semibold">
-              <span class="lang-id">Kontak</span>
-              <span class="lang-en">Contact</span>
+                <span class="lang-id">Kontak</span>
+                <span class="lang-en">Contact</span>
             </h5>
             <p class="small text-muted">
               <i class="fas fa-envelope me-2"></i>contact@fluentapp.com
             </p>
             <div class="social-icons mt-3">
-              <a
-                href="#"
-                class="text-decoration-none text-muted me-3 fs-5 social-icon"
+              <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon"
                 ><i class="fab fa-twitter"></i
               ></a>
-              <a
-                href="#"
-                class="text-decoration-none text-muted me-3 fs-5 social-icon"
+              <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon"
                 ><i class="fab fa-linkedin"></i
               ></a>
-              <a
-                href="#"
-                class="text-decoration-none text-muted fs-5 social-icon"
+              <a href="#" class="text-decoration-none text-muted fs-5 social-icon"
                 ><i class="fab fa-github"></i
               ></a>
             </div>
@@ -290,9 +221,7 @@
         <hr class="my-4" />
         <div class="text-center">
           <p class="small text-muted">
-            &copy; {% if now %}{{ now.year }}{% else %}{% set current_year = []
-            %}{% if current_year.append(range(2023, 2024)|random) %}{% endif
-            %}{{ current_year[0] }}{% endif %} FLUENT.
+            &copy; {% if now %}{{ now.year }}{% else %}{% set current_year = [] %}{% if current_year.append(range(2023, 2024)|random) %}{% endif %}{{ current_year[0] }}{% endif %} FLUENT.
             <span class="lang-id">Hak cipta dilindungi.</span>
             <span class="lang-en">All rights reserved.</span>
           </p>
@@ -300,144 +229,103 @@
       </div>
     </footer>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            xintegrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const navbar = document.querySelector(".fluent-navbar");
-        const mainContentWrapper = document.querySelector(
-          ".main-content-wrapper"
-        );
+        const navbarWrapper = document.querySelector(".floating-navbar-wrapper"); // Target wrapper
+        const actualNavbar = document.querySelector(".fluent-navbar"); // Target navbar di dalamnya
+        const mainContentWrapper = document.querySelector(".main-content-wrapper");
         const firstVisibleContentSection =
           mainContentWrapper.querySelector(".hero-section") ||
-          mainContentWrapper.querySelector(".page-content-container") ||
+          mainContentWrapper.querySelector(".page-content-container") || // Kelas umum untuk halaman konten
           mainContentWrapper.querySelector(".admin-dashboard-content") ||
           mainContentWrapper.querySelector(".admin-content-page") ||
+          mainContentWrapper.querySelector(".auth-page-container") || // Untuk halaman login, register, dll.
           mainContentWrapper.firstElementChild;
 
         function setInitialContentPadding() {
           if (
-            navbar &&
+            navbarWrapper && // Cek wrapper
             firstVisibleContentSection &&
-            !document.querySelector(".admin-login-page") // Pastikan tidak di halaman login admin
+            !document.querySelector(".admin-login-page")
           ) {
-            const navbarHeight = navbar.offsetHeight;
-            // Extra space bisa diatur via CSS variable atau hardcode jika lebih simpel
-            const extraSpace =
-              parseFloat(
-                getComputedStyle(document.documentElement).getPropertyValue(
-                  "--hero-extra-space"
-                )
-              ) || 32;
+            const wrapperRect = navbarWrapper.getBoundingClientRect();
+            const navbarHeight = wrapperRect.height; // Tinggi wrapper (termasuk navbar di dalamnya)
+            const navbarTopOffset = wrapperRect.top; // Jarak wrapper dari atas viewport
+            
+            // Ambil dari CSS var atau default
+            const extraSpace = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--hero-extra-space")) || 32;
+
             if (firstVisibleContentSection) {
-              // Cek lagi untuk memastikan elemen ada
-              firstVisibleContentSection.style.paddingTop =
-                navbarHeight + extraSpace + "px";
+                 firstVisibleContentSection.style.paddingTop = navbarHeight + navbarTopOffset + extraSpace + "px";
             }
-          } else if (
-            mainContentWrapper &&
-            document.querySelector(".admin-login-page")
-          ) {
-            if (mainContentWrapper) mainContentWrapper.style.paddingTop = "0px"; // atau "1px" jika ada isu collapse margin
+          } else if (mainContentWrapper && document.querySelector(".admin-login-page")) {
+             if (mainContentWrapper) mainContentWrapper.style.paddingTop = "0px";
           }
         }
 
         setInitialContentPadding();
-        // Optional: Recalculate on resize if navbar height can change significantly
-        // window.addEventListener('resize', setInitialContentPadding);
+        window.addEventListener('resize', setInitialContentPadding); // Panggil juga saat resize
 
-        if (navbar && !document.querySelector(".admin-login-page")) {
+        if (actualNavbar && !document.querySelector(".admin-login-page")) {
           let isScrolled = false;
           window.addEventListener("scroll", function () {
-            if (window.scrollY > 50) {
-              // Tambah threshold sedikit
+            if (window.scrollY > 30) { // Jarak scroll sebelum efek muncul
               if (!isScrolled) {
-                navbar.classList.add("scrolled");
+                actualNavbar.classList.add("scrolled");
                 isScrolled = true;
               }
             } else {
               if (isScrolled) {
-                navbar.classList.remove("scrolled");
+                actualNavbar.classList.remove("scrolled");
                 isScrolled = false;
               }
             }
           });
         }
 
-        // Language Switcher Logic
-        const langSwitcherLinks = document.querySelectorAll(".lang-switcher");
+        // Language Switcher Logic (tetap sama)
+        const langSwitcherLinks = document.querySelectorAll('.lang-switcher');
         const htmlTag = document.documentElement;
-        const currentLangDisplay =
-          document.getElementById("currentLangDisplay");
+        const currentLangDisplay = document.getElementById('currentLangDisplay');
 
         function setLanguage(lang) {
-          htmlTag.setAttribute("lang", lang);
-          localStorage.setItem("preferredLang", lang);
+          htmlTag.setAttribute('lang', lang);
+          localStorage.setItem('preferredLang', lang);
           if (currentLangDisplay) {
             currentLangDisplay.textContent = lang.toUpperCase();
           }
-          // Hide all language specific elements
-          document.querySelectorAll(".lang-id, .lang-en").forEach((el) => {
-            // Check if it's a block display element
-            if (el.classList.contains("d-block")) {
-              el.style.display = "none";
+          document.querySelectorAll('.lang-id, .lang-en').forEach(el => {
+            if (el.classList.contains('d-block')) {
+                 el.style.display = 'none';
             } else {
-              el.style.display = "none"; // Default to inline if not specified
+                 el.style.display = 'none';
             }
           });
-
-          // Show current language specific elements
-          document.querySelectorAll(`.lang-${lang}`).forEach((el) => {
-            if (el.classList.contains("d-block")) {
-              el.style.display = "block";
+          document.querySelectorAll(`.lang-${lang}`).forEach(el => {
+            if (el.classList.contains('d-block')) {
+                 el.style.display = 'block';
             } else {
-              // Heuristic: if parent is a block or flex, or if it's a p, h1-h6, div, section, li, then treat as block context for display
-              let computedDisplay = window
-                .getComputedStyle(el)
-                .getPropertyValue("display");
-              let parentDisplay = el.parentElement
-                ? window
-                    .getComputedStyle(el.parentElement)
-                    .getPropertyValue("display")
-                : "";
-              if (
-                [
-                  "P",
-                  "H1",
-                  "H2",
-                  "H3",
-                  "H4",
-                  "H5",
-                  "H6",
-                  "DIV",
-                  "SECTION",
-                  "LI",
-                  "BUTTON",
-                ].includes(el.tagName) ||
-                computedDisplay === "block" ||
-                parentDisplay.includes("flex")
-              ) {
-                el.style.display = "block"; // Or its original display type if more complex logic is needed
-              } else {
-                el.style.display = "inline-block"; // Or 'inline'
-              }
+                let computedDisplay = window.getComputedStyle(el).getPropertyValue('display');
+                let parentDisplay = el.parentElement ? window.getComputedStyle(el.parentElement).getPropertyValue('display') : '';
+                if (['P','H1','H2','H3','H4','H5','H6','DIV','SECTION', 'LI', 'BUTTON'].includes(el.tagName) || computedDisplay === 'block' || parentDisplay.includes('flex') ) {
+                   el.style.display = 'block';
+                } else {
+                   el.style.display = 'inline-block';
+                }
             }
           });
         }
-
-        langSwitcherLinks.forEach((link) => {
-          link.addEventListener("click", function (e) {
+        langSwitcherLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
             e.preventDefault();
             const selectedLang = this.dataset.lang;
             setLanguage(selectedLang);
           });
         });
-
-        // Load preferred language or default to 'id'
-        const preferredLang = localStorage.getItem("preferredLang") || "id";
+        const preferredLang = localStorage.getItem('preferredLang') || 'id';
         setLanguage(preferredLang);
       });
     </script>
