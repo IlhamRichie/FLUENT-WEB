@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Login - FLUENT{% endblock %}
+{% block title %}<span class="lang-id">Masuk</span><span class="lang-en">Login</span> - FLUENT{% endblock %}
 
 {% block content %}
 <div class="container my-5 auth-page-container">
@@ -10,8 +10,12 @@
                 <div class="card-body p-4 p-lg-5">
                     <div class="text-center mb-4">
                         <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
-                        <h2 class="card-title h3 fw-bold mb-1">Welcome Back!</h2>
-                        <p class="text-muted small">Login to your FLUENT account.</p>
+                        <h2 class="card-title h3 fw-bold mb-1">
+                            <span class="lang-id">Selamat Datang Kembali!</span><span class="lang-en">Welcome Back!</span>
+                        </h2>
+                        <p class="text-muted small">
+                            <span class="lang-id">Masuk ke akun FLUENT Anda.</span><span class="lang-en">Login to your FLUENT account.</span>
+                        </p>
                     </div>
 
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -28,34 +32,41 @@
                     <form method="POST" action="{{ url_for('web.web_login_email_password_route') }}" class="mb-3">
                         {{ csrf_token if csrf_token else '' }}
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="nama@contoh.com" required>
+                            <label for="email"><span class="lang-id">Alamat Email</span><span class="lang-en">Email Address</span></label>
                         </div>
                         <div class="form-floating mb-2">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Kata Sandi" required>
+                            <label for="password"><span class="lang-id">Kata Sandi</span><span class="lang-en">Password</span></label>
                         </div>
                         <div class="text-end mb-3">
-                            <a href="{{ url_for('web.web_forgot_password_request_route') }}" class="text-decoration-none small">Forgot Password?</a>
+                            <a href="{{ url_for('web.web_forgot_password_request_route') }}" class="text-decoration-none small">
+                                <span class="lang-id">Lupa Kata Sandi?</span><span class="lang-en">Forgot Password?</span>
+                            </a>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">Login</button>
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                <span class="lang-id">Masuk</span><span class="lang-en">Login</span>
+                            </button>
                         </div>
                     </form>
-                    
+
                     <div class="row align-items-center my-3">
                         <div class="col"><hr class="text-muted-25"></div>
-                        <div class="col-auto"><span class="text-muted small">OR</span></div>
+                        <div class="col-auto"><span class="text-muted small"><span class="lang-id">ATAU</span><span class="lang-en">OR</span></span></div>
                         <div class="col"><hr class="text-muted-25"></div>
                     </div>
 
                     <div class="d-grid">
                         <a href="{{ url_for('web.google_login_web_start', next=url_for('web.web_profile_route')) }}" class="btn btn-outline-secondary btn-lg">
-                            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google icon" class="me-2" style="height:1em;"/> Login with Google
+                            <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google icon" class="me-2" style="height:1em;"/>
+                            <span class="lang-id">Masuk dengan Google</span><span class="lang-en">Login with Google</span>
                         </a>
                     </div>
                     <p class="text-center small text-muted mt-4">
-                        Don't have an account? <a href="{{ url_for('web.web_register_page_route') }}" class="fw-semibold text-decoration-none text-primary">Register here</a>.
+                        <span class="lang-id">Belum punya akun? </span><span class="lang-en">Don't have an account? </span>
+                        <a href="{{ url_for('web.web_register_page_route') }}" class="fw-semibold text-decoration-none text-primary">
+                            <span class="lang-id">Daftar di sini</span><span class="lang-en">Register here</span></a>.
                     </p>
                 </div>
             </div>

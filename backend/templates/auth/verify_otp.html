@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Verify OTP - FLUENT{% endblock %}
+{% block title %}<span class="lang-id">Verifikasi OTP</span><span class="lang-en">Verify OTP</span> - FLUENT{% endblock %}
 
 {% block content %}
 <div class="container my-5 auth-page-container">
@@ -10,16 +10,23 @@
                 <div class="card-body p-4 p-lg-5">
                     <div class="text-center mb-4">
                         <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
-                        <h2 class="card-title h3 fw-bold mb-1">Verify Your Email</h2>
+                        <h2 class="card-title h3 fw-bold mb-1">
+                            <span class="lang-id">Verifikasi Email Anda</span><span class="lang-en">Verify Your Email</span>
+                        </h2>
                     </div>
 
                     {% if email_for_verification %}
                     <p class="text-center text-muted small mb-3">
-                        An OTP has been sent to <strong>{{ email_for_verification }}</strong>.
-                        <br>Please enter it below to complete verification.
+                        <span class="lang-id d-block">Sebuah OTP telah dikirim ke <strong>{{ email_for_verification }}</strong>.</span>
+                        <span class="lang-en d-block">An OTP has been sent to <strong>{{ email_for_verification }}</strong>.</span>
+                        <span class="lang-id d-block">Silakan masukkan di bawah ini untuk menyelesaikan verifikasi.</span>
+                        <span class="lang-en d-block">Please enter it below to complete verification.</span>
                     </p>
                     {% else %}
-                    <div class="alert alert-warning small py-2">Email for verification not found in session.</div>
+                    <div class="alert alert-warning small py-2">
+                        <span class="lang-id">Email untuk verifikasi tidak ditemukan di sesi.</span>
+                        <span class="lang-en">Email for verification not found in session.</span>
+                    </div>
                     {% endif %}
 
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -34,26 +41,33 @@
                     {% endwith %}
 
                     <form method="POST" action="{{ url_for('web.web_verify_otp_submit_route') }}">
+                        {{ csrf_token if csrf_token else '' }}
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control text-center fs-4" id="otp" name="otp" 
-                                   required autofocus 
-                                   pattern="[0-9]{6}" title="Enter 6-digit OTP"
+                            <input type="text" class="form-control text-center fs-4" id="otp" name="otp"
+                                   required autofocus
+                                   pattern="[0-9]{6}" title="Masukkan 6 digit OTP"
                                    inputmode="numeric" autocomplete="one-time-code"
                                    placeholder="------"
                                    style="letter-spacing: 0.5em;">
-                            <label for="otp">6-Digit OTP Code</label>
+                            <label for="otp"><span class="lang-id">Kode OTP 6 Digit</span><span class="lang-en">6-Digit OTP Code</span></label>
                         </div>
                         <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">Verify OTP</button>
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                <span class="lang-id">Verifikasi OTP</span><span class="lang-en">Verify OTP</span>
+                            </button>
                         </div>
                     </form>
                     <div class="text-center small">
                         <p class="mb-1">
-                            Didn't receive the OTP? 
-                            <a href="{{ url_for('web.web_resend_otp_route') }}" class="text-decoration-none text-primary">Resend OTP</a>
+                            <span class="lang-id">Tidak menerima OTP? </span><span class="lang-en">Didn't receive the OTP? </span>
+                            <a href="{{ url_for('web.web_resend_otp_route') }}" class="text-decoration-none text-primary">
+                                <span class="lang-id">Kirim ulang OTP</span><span class="lang-en">Resend OTP</span>
+                            </a>
                         </p>
                         <p>
-                            <a href="{{ url_for('web.web_login_route') }}" class="text-decoration-none text-primary"><i class="fas fa-arrow-left me-1"></i> Back to Login</a>
+                            <a href="{{ url_for('web.web_login_route') }}" class="text-decoration-none text-primary">
+                                <i class="fas fa-arrow-left me-1"></i> <span class="lang-id">Kembali ke Login</span><span class="lang-en">Back to Login</span>
+                            </a>
                         </p>
                     </div>
                 </div>

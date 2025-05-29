@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register - FLUENT{% endblock %}
+{% block title %}<span class="lang-id">Registrasi</span><span class="lang-en">Register</span> - FLUENT{% endblock %}
 
 {% block content %}
 <div class="container my-5 auth-page-container">
@@ -10,13 +10,19 @@
                 <div class="card-body p-4 p-lg-5">
                     <div class="text-center mb-4">
                         <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
-                        <h2 class="card-title h3 fw-bold mb-1">Create Your Account</h2>
-                        <p class="text-muted small">Join FLUENT and start improving today.</p>
+                        <h2 class="card-title h3 fw-bold mb-1">
+                            <span class="lang-id">Buat Akunmu</span><span class="lang-en">Create Your Account</span>
+                        </h2>
+                        <p class="text-muted small">
+                            <span class="lang-id">Gabung FLUENT dan mulai tingkatkan dirimu hari ini.</span>
+                            <span class="lang-en">Join FLUENT and start improving today.</span>
+                        </p>
                     </div>
 
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             {% for category, message in messages %}
+                            {# Pesan flash akan tetap dalam bahasa backend, kecuali Anda punya sistem i18n di backend #}
                             <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show small py-2" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -24,44 +30,48 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    
+
                     <form method="POST" action="{{ url_for('web.web_register_submit_route') }}">
                         {{ csrf_token if csrf_token else '' }}
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
-                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Pilih username" required>
+                            <label for="username"><span class="lang-id">Nama Pengguna</span><span class="lang-en">Username</span></label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
-                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="nama@contoh.com" required>
+                            <label for="email"><span class="lang-id">Alamat Email</span><span class="lang-en">Email Address</span></label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required minlength="6">
-                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Buat kata sandi" required minlength="6">
+                            <label for="password"><span class="lang-id">Kata Sandi</span><span class="lang-en">Password</span></label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
-                            <label for="confirm_password">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Konfirmasi kata sandi" required>
+                            <label for="confirm_password"><span class="lang-id">Konfirmasi Kata Sandi</span><span class="lang-en">Confirm Password</span></label>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" id="gender" name="gender">
-                                <option value="" selected>Select Gender (Optional)</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Not specified">Prefer not to say</option>
+                                <option value="" selected><span class="lang-id">Pilih Jenis Kelamin (Opsional)</span><span class="lang-en">Select Gender (Optional)</span></option>
+                                <option value="Male"><span class="lang-id">Pria</span><span class="lang-en">Male</span></option>
+                                <option value="Female"><span class="lang-id">Wanita</span><span class="lang-en">Female</span></option>
+                                <option value="Not specified"><span class="lang-id">Tidak ingin menyebutkan</span><span class="lang-en">Prefer not to say</span></option>
                             </select>
-                            <label for="gender">Gender</label>
+                            <label for="gender"><span class="lang-id">Jenis Kelamin</span><span class="lang-en">Gender</span></label>
                         </div>
                         <div class="form-floating mb-4">
-                            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="e.g., Student, Engineer">
-                            <label for="occupation">Occupation (Optional)</label>
+                            <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Contoh: Mahasiswa, Insinyur">
+                            <label for="occupation"><span class="lang-id">Pekerjaan (Opsional)</span><span class="lang-en">Occupation (Optional)</span></label>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">Register</button>
+                            <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                                <span class="lang-id">Daftar</span><span class="lang-en">Register</span>
+                            </button>
                         </div>
                     </form>
                     <p class="text-center small text-muted mt-4">
-                        Already have an account? <a href="{{ url_for('web.web_login_route') }}" class="fw-semibold text-decoration-none text-primary">Login here</a>.
+                        <span class="lang-id">Sudah punya akun? </span><span class="lang-en">Already have an account? </span>
+                        <a href="{{ url_for('web.web_login_route') }}" class="fw-semibold text-decoration-none text-primary">
+                            <span class="lang-id">Masuk di sini</span><span class="lang-en">Login here</span></a>.
                     </p>
                 </div>
             </div>
