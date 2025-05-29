@@ -1,38 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Kode Verifikasi OTP Anda - {{ app_name }}</title> <!-- Tambahkan app_name di title -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kode Verifikasi OTP Anda - {{ app_name }}</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4;} /* Tambah padding:0; background-color */
-        .email-wrapper { padding: 20px; } /* Wrapper untuk padding di mobile */
-        .container { width: 90%; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #ffffff; } /* Tambah background-color */
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h2 { color: #333; } /* Pastikan warna heading konsisten */
-        .otp-code { font-size: 28px; font-weight: bold; color: #D84040; letter-spacing: 3px; text-align: center; margin: 20px 0; padding: 10px; background-color: #f9f9f9; border: 1px dashed #ccc; border-radius: 4px;} /* Tambah border-radius */
-        .footer { font-size: 0.9em; color: #777; text-align: center; margin-top: 20px; }
-        p { margin-bottom: 15px; } /* Spasi antar paragraf */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .email-wrapper {
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%; 
+            max-width: 580px; 
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .header img.logo {
+            max-height: 48px; 
+            margin-bottom: 15px;
+        }
+        .header h2 {
+            font-size: 22px; 
+            color: #202124; 
+            margin:0;
+            font-weight: 500; 
+        }
+        .content {
+            font-size: 15px;
+            color: #3c4043; 
+        }
+        .content p {
+            margin-bottom: 16px;
+        }
+        .otp-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        .otp-code {
+            display: inline-block; 
+            font-size: 28px; 
+            font-weight: 700; 
+            color: #D84040; 
+            letter-spacing: 4px; 
+            padding: 12px 25px; 
+            background-color: #f1f3f4; 
+            border: 1px solid #dadce0; 
+            border-radius: 4px; 
+        }
+        .expiry-notice {
+            font-size: 14px;
+            color: #5f6368; 
+        }
+        .footer {
+            font-size: 12px; 
+            color: #5f6368;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+        }
+         .footer p {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="email-wrapper"> <!-- Tambahkan wrapper -->
+    <div class="email-wrapper">
         <div class="container">
             <div class="header">
-                <!-- Anda bisa menambahkan logo di sini jika ada -->
-                <!-- <img src="URL_LOGO_FLUENT_ANDA" alt="{{ app_name }} Logo" style="max-height: 50px; margin-bottom: 10px;"> -->
+                {# Ganti dengan URL logo Anda yang dihosting atau hapus jika tidak ada logo gambar #}
+                {# <img src="URL_TO_YOUR_HOSTED_FLUENT_LOGO.png" alt="{{ app_name }} Logo" class="logo"> #}
                 <h2>Verifikasi Akun Anda di {{ app_name }}</h2>
             </div>
-            <p>Halo,</p>
-            <p>Terima kasih telah menggunakan layanan {{ app_name }}. Untuk menyelesaikan proses login Anda, silakan gunakan kode One-Time Password (OTP) berikut:</p>
-            
-            <div class="otp-code">{{ otp }}</div>
-            
-            <p>Kode OTP ini berlaku selama <strong>{{ config.OTP_EXPIRY_MINUTES }} menit</strong>. Mohon jangan berikan kode ini kepada siapa pun.</p>
-            <p>Jika Anda tidak merasa melakukan permintaan ini, Anda dapat mengabaikan email ini.</p>
+            <div class="content">
+                <p>Halo,</p>
+                <p>Terima kasih telah menggunakan layanan {{ app_name }}. Untuk menyelesaikan proses login atau verifikasi Anda, silakan gunakan kode One-Time Password (OTP) berikut:</p>
+                
+                <div class="otp-container">
+                    <span class="otp-code">{{ otp }}</span>
+                </div>
+                
+                <p class="expiry-notice">Kode OTP ini hanya berlaku selama <strong>{{ config.OTP_EXPIRY_MINUTES }} menit</strong>. Demi keamanan, mohon jangan berikan kode ini kepada siapa pun.</p>
+                <p>Jika Anda tidak merasa melakukan permintaan ini atau memulai proses yang memerlukan OTP, Anda dapat mengabaikan email ini dengan aman.</p>
+            </div>
             
             <div class="footer">
                 <p>Salam Hormat,<br>Tim {{ app_name }}</p>
-                <p>© {% if now %}{{ now.year }}{% else %}{{ current_year_fallback }}{% endif %} {{ app_name }}. All rights reserved.</p> <!-- Fallback untuk tahun jika 'now' tidak selalu ada -->
+                <p>&copy; {% if now %}{{ now.year }}{% else %}{{ current_year_fallback }}{% endif %} {{ app_name }}. Semua hak cipta dilindungi.</p>
+                 {# Tambahkan link ke website utama Anda jika diinginkan #}
+                 {# <p><a href="URL_WEBSITE_FLUENT_ANDA" style="color: #5f6368; text-decoration:none;">Kunjungi {{ app_name }}</a></p> #}
             </div>
         </div>
     </div>
