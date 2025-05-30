@@ -5,7 +5,6 @@ from bson.objectid import ObjectId
 from flask import send_from_directory, current_app
 import os
 
-
 from backend.auth.services import (
     get_google_client,
     process_google_oauth_callback_service,

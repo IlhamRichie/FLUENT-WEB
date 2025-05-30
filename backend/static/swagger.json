@@ -1,362 +1,677 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Fluent Interview API",
-      "description": "API untuk sistem wawancara berbasis AI",
-      "version": "1.0.0"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fluent Interview API",
+    "description": "API untuk sistem wawancara berbasis AI dan manajemen pengguna FLUENT.",
+    "version": "1.0.1",
+    "contact": {
+      "name": "Fluent Support",
+      "email": "contact@fluentapp.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Development Server"
     },
-    "servers": [
-      {
-        "url": "http://localhost:5000"
-      }
-    ],
-    "paths": {
-      "/login": {
-        "post": {
-          "summary": "User Login",
-          "requestBody": {
-            "required": true,
+    {
+      "url": "https://api.fluentapp.com",
+      "description": "Production Server (Contoh)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Operasi terkait Autentikasi Pengguna (API)"
+    },
+    {
+      "name": "Users",
+      "description": "Operasi terkait Profil Pengguna (API)"
+    },
+    {
+      "name": "Interview",
+      "description": "Operasi terkait Sesi Wawancara (API)"
+    },
+    {
+      "name": "Analysis",
+      "description": "Operasi terkait Analisis Realtime dan Ucapan (API)"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Registrasi Pengguna Baru (via API)",
+        "description": "Mendaftarkan pengguna baru dengan email, username, password, dan OTP jika alur Anda menggunakannya. Endpoint ini mungkin untuk API langsung atau setelah verifikasi OTP.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registrasi berhasil",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "email": { "type": "string" },
-                    "password": { "type": "string" }
-                  },
-                  "required": ["email", "password"]
+                  "$ref": "#/components/schemas/UserRegistrationSuccessResponse"
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Login successful",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "status": "success",
-                    "access_token": "string",
-                    "refresh_token": "string",
-                    "user": {
-                      "username": "john_doe",
-                      "email": "john@example.com",
-                      "gender": "male",
-                      "occupation": "Engineer",
-                      "is_active": true
-                    }
-                  }
-                }
-              }
-            },
-            "401": {
-              "description": "Invalid credentials or expired token"
-            }
-          }
-        }
-      },
-      "/register": {
-        "post": {
-          "summary": "Register New User",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "email": { "type": "string" },
-                    "username": { "type": "string" },
-                    "password": { "type": "string" },
-                    "gender": { "type": "string" },
-                    "occupation": { "type": "string" }
-                  },
-                  "required": ["email", "username", "password", "gender", "occupation"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Registration successful",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "status": "success",
-                    "message": "User registered successfully",
-                    "user": {
-                      "id": "string",
-                      "username": "john_doe",
-                      "email": "john@example.com"
-                    }
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Incomplete data or duplicate email/username"
-            }
-          }
-        }
-      },
-      "/refresh": {
-        "post": {
-          "summary": "Refresh Access Token",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "refresh_token": { "type": "string" }
-                  },
-                  "required": ["refresh_token"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Token refreshed",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "status": "success",
-                    "access_token": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/analyze_realtime": {
-        "post": {
-          "summary": "Real-time Video Analysis",
-          "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "frame": { "type": "string", "format": "base64" }
-                  },
-                  "required": ["frame"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Analysis result",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "status": "success",
-                    "results": {
-                      "emotion": "happy",
-                      "mouth": "talking",
-                      "pose": "looking_straight"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/analyze_speech": {
-        "post": {
-          "summary": "Speech-to-Text & Analysis",
-          "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "multipart/form-data": {
-                "schema": {
-                  "properties": {
-                    "audio": { "type": "string", "format": "binary" }
-                  },
-                  "required": ["audio"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Transcript and analysis returned",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "transcript": "This is a sample speech",
-                    "word_count": 5,
-                    "words_per_minute": 100,
-                    "language": "id-ID"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/user/update": {
-        "put": {
-          "summary": "Update User Profile",
-          "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "required": false,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "username": { "type": "string" },
-                    "occupation": { "type": "string" }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Profile updated"
-            }
-          }
-        }
-      },
-      "/api/interview/start": {
-        "post": {
-          "summary": "Start Interview Session",
-          "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "category": { "type": "string", "default": "general" }
-                  }
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Session started",
-              "content": {
-                "application/json": {
-                  "example": {
-                    "session_id": "abc123",
-                    "current_question": "Tell me about yourself"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/api/interview/submit": {
-        "post": {
-          "summary": "Submit Interview Answer",
-          "security": [{ "bearerAuth": [] }],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "session_id": { "type": "string" },
-                    "answer_text": { "type": "string" },
-                    "audio_answer": { "type": "string", "format": "base64", "nullable": true }
-                  },
-                  "required": ["session_id", "answer_text"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Answer submitted with evaluation"
-            }
-          }
-        }
-      },
-      "/api/interview/results/{session_id}": {
-        "get": {
-          "summary": "Get Interview Results",
-          "security": [{ "bearerAuth": [] }],
-          "parameters": [
-            {
-              "name": "session_id",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Interview results retrieved"
-            }
-          }
-        }
-      },
-      "/admin/login": {
-        "post": {
-          "summary": "Admin Login",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/x-www-form-urlencoded": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "email": { "type": "string" },
-                    "password": { "type": "string" }
-                  },
-                  "required": ["email", "password"]
-                }
-              }
-            }
-          },
-          "responses": {
-            "302": {
-              "description": "Redirect to admin dashboard on success"
-            }
-          }
-        }
-      },
-      "/admin/users/toggle-status/{user_id}": {
-        "post": {
-          "summary": "Toggle User Activation",
-          "security": [{ "bearerAuth": [] }],
-          "parameters": [
-            {
-              "name": "user_id",
-              "in": "path",
-              "required": true,
-              "schema": { "type": "string" }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "User status toggled"
-            }
-          }
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
         }
       }
     },
-    "components": {
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login Pengguna (API)",
+        "description": "Mengautentikasi pengguna dengan email dan password, mengembalikan token JWT.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login berhasil",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserLoginSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "$ref": "#/components/responses/TooManyRequests" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Perbarui Access Token (API)",
+        "description": "Menggunakan refresh token untuk mendapatkan access token baru.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token berhasil diperbarui",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/auth/google/app-signin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login/Registrasi dengan Google (ID Token dari Aplikasi Native)",
+        "description": "Menerima ID Token Google dari aplikasi native (Flutter), memvalidasinya, lalu me-login-kan atau mendaftarkan pengguna, dan mengembalikan token JWT aplikasi.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_token": { "type": "string", "description": "Google ID Token yang didapatkan dari aplikasi native." }
+                },
+                "required": ["id_token"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/LoginOrRegisterGoogleSuccess" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/auth/request-password-reset": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Minta Reset Password (API)",
+        "description": "Mengirim permintaan untuk mereset password. Email akan dikirim jika pengguna ada.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/PasswordResetRequested" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/auth/reset-password-submit": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Submit Password Baru dengan Token (API)",
+        "description": "Mengatur password baru menggunakan token yang diterima dari email.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordSubmitRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/PasswordResetSuccess" },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+     "/api/users/profile": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Dapatkan Profil Pengguna Saat Ini",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Profil pengguna berhasil diambil",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserProfileResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/users/update": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Perbarui Profil Pengguna",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserUpdateRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profil berhasil diperbarui",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserUpdateSuccessResponse" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "409": { "$ref": "#/components/responses/Conflict" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/interview/start": {
+      "post": {
+        "tags": ["Interview"],
+        "summary": "Mulai Sesi Wawancara Baru",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": { "type": "string", "enum": ["general", "hrd_simulation", "narration_practice"], "default": "general", "description": "Kategori wawancara." }
+                },
+                "required": ["category"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sesi berhasil dimulai, pertanyaan pertama dikembalikan",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "session_id": "string_session_id",
+                  "question_text": "Ceritakan tentang diri Anda.",
+                  "question_index": 0,
+                  "total_questions": 5 
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/interview/submit": {
+      "post": {
+        "tags": ["Interview"],
+        "summary": "Kirim Jawaban untuk Pertanyaan Wawancara",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "session_id": { "type": "string", "description": "ID sesi wawancara saat ini." },
+                  "question_index": { "type": "integer", "description": "Indeks pertanyaan yang dijawab." },
+                  "answer_text": { "type": "string", "description": "Transkrip teks dari jawaban pengguna." },
+                  "response_time_seconds": { "type": "integer", "description": "Waktu respons pengguna dalam detik." },
+                  "audio_answer_base64": { "type": "string", "format": "byte", "description": "Data audio jawaban (opsional, base64 encoded).", "nullable": true }
+                },
+                "required": ["session_id", "question_index", "answer_text", "response_time_seconds"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Jawaban berhasil dikirim dan dievaluasi (jika berlaku), pertanyaan berikutnya atau status selesai dikembalikan.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "feedback": "Jawaban Anda cukup baik.",
+                  "expression_suggestion": "happy",
+                  "score": 85,
+                  "next_question_text": "Apa kelebihan Anda?",
+                  "next_question_index": 1,
+                  "total_questions": 5,
+                  "session_completed": false
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/api/interview/results/{session_id}": {
+      "get": {
+        "tags": ["Interview"],
+        "summary": "Dapatkan Hasil Detail Sesi Wawancara",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "description": "ID sesi wawancara yang ingin dilihat hasilnya.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hasil wawancara berhasil diambil.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "session_id": "string_session_id",
+                  "user_id": "string_user_id",
+                  "timestamp": "2024-05-30T10:00:00Z",
+                  "type": "hrd_simulation",
+                  "overall_score": 78.5,
+                  "responses_detail": [
+                    {
+                      "question_text": "Ceritakan tentang diri Anda.",
+                      "answer_text": "Saya adalah...",
+                      "score": 80,
+                      "feedback": "Cukup baik.",
+                      "expression": "neutral"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/analysis/realtime": {
+      "post": {
+        "tags": ["Analysis"],
+        "summary": "Analisis Frame Video Secara Real-time",
+        "description": "Mengirim frame video (base64) untuk dianalisis (emosi, mulut, pose).",
+        "security": [{ "bearerAuth": [] }, {"apiKeyAuth": []} ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "frame": { "type": "string", "format": "byte", "description": "Gambar frame video dalam format base64." }
+                },
+                "required": ["frame"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hasil analisis frame berhasil dikembalikan.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "results": {
+                    "emotion": "happy",
+                    "mouth": "talking",
+                    "pose": "looking_straight"
+                  }
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/analysis/speech": {
+      "post": {
+        "tags": ["Analysis"],
+        "summary": "Analisis Ucapan dari File Audio",
+        "description": "Mengunggah file audio untuk dianalisis (transkrip, WPM, dll.).",
+        "security": [{ "bearerAuth": [] }, {"apiKeyAuth": []} ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "audio": { "type": "string", "format": "binary", "description": "File audio yang akan dianalisis." }
+                },
+                "required": ["audio"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hasil analisis ucapan berhasil dikembalikan.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "success",
+                  "transcript": "Ini adalah contoh transkrip ucapan dari audio.",
+                  "word_count": 7,
+                  "words_per_minute": 150,
+                  "language": "id-ID",
+                  "confidence": 0.92
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
         }
       }
     }
+  },
+  "components": {
+    "schemas": {
+      "UserBase": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "user@example.com" },
+          "username": { "type": "string", "example": "john_doe" }
+        }
+      },
+      "UserRegistrationRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/UserBase" },
+          {
+            "type": "object",
+            "properties": {
+              "password": { "type": "string", "format": "password", "example": "strongpassword123" },
+              "gender": { "type": "string", "enum": ["Male", "Female", "Not specified"], "example": "Male", "nullable": true },
+              "occupation": { "type": "string", "example": "Software Engineer", "nullable": true },
+              "otp": { "type": "string", "description": "OTP jika diperlukan oleh alur registrasi Anda", "example":"123456", "nullable": true}
+            },
+            "required": ["password"]
+          }
+        ]
+      },
+      "UserLoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "example": "user@example.com" },
+          "password": { "type": "string", "format": "password", "example": "strongpassword123" }
+        },
+        "required": ["email", "password"]
+      },
+      "UserData": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "objectid", "example": "60d0fe4f5311236168a109ca" },
+          "email": { "type": "string", "format": "email" },
+          "username": { "type": "string" },
+          "gender": { "type": "string", "nullable": true },
+          "occupation": { "type": "string", "nullable": true },
+          "is_active": { "type": "boolean" },
+          "profile_picture": { "type": "string", "format": "url", "nullable": true },
+          "auth_provider": { "type": "string", "enum": ["local", "google"], "example": "local" }
+        }
+      },
+      "UserRegistrationSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "success" },
+          "message": { "type": "string", "example": "User registered successfully" },
+          "user": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string", "format": "objectid" },
+                "username": { "type": "string" },
+                "email": { "type": "string", "format": "email" }
+            }
+          }
+        }
+      },
+      "UserLoginSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "success" },
+          "message": { "type": "string", "example": "Login successful" },
+          "access_token": { "type": "string", "format": "jwt" },
+          "refresh_token": { "type": "string", "format": "jwt" },
+          "user": { "$ref": "#/components/schemas/UserData" }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refresh_token": { "type": "string", "format": "jwt" }
+        },
+        "required": ["refresh_token"]
+      },
+      "RefreshTokenSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "success" },
+          "access_token": { "type": "string", "format": "jwt" }
+        }
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string", "nullable": true, "minLength": 3 },
+          "gender": { "type": "string", "enum": ["Male", "Female", "Not specified"], "nullable": true },
+          "occupation": { "type": "string", "nullable": true }
+        },
+        "minProperties": 1
+      },
+      "UserUpdateSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "success" },
+          "message": { "type": "string", "example": "Profile updated successfully" },
+          "user": { "$ref": "#/components/schemas/UserData" }
+        }
+      },
+       "ResetPasswordSubmitRequest": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string", "description": "Token reset yang diterima dari email." },
+          "new_password": { "type": "string", "format": "password", "minLength": 6 }
+        },
+        "required": ["token", "new_password"]
+      },
+      "UserProfileResponse": {
+         "type": "object",
+         "properties": {
+           "status": { "type": "string", "example": "success" },
+           "user": { "$ref": "#/components/schemas/UserData" }
+         }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "fail" },
+          "message": { "type": "string" }
+        }
+      },
+      "ErrorResponseWithData": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "error" },
+          "message": { "type": "string" },
+          "data": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Permintaan tidak valid atau data yang hilang.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Unauthorized": {
+        "description": "Autentikasi gagal atau token tidak valid/kedaluwarsa.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Forbidden": {
+        "description": "Akses ditolak, pengguna tidak memiliki izin.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "NotFound": {
+        "description": "Sumber daya yang diminta tidak ditemukan.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Conflict": {
+        "description": "Konflik data, misalnya username/email sudah ada.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "TooManyRequests": {
+        "description": "Terlalu banyak percobaan (misalnya, login).",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "InternalServerError": {
+        "description": "Terjadi kesalahan internal pada server.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponseWithData" } } }
+      },
+      "LoginOrRegisterGoogleSuccess": {
+        "description": "Login atau registrasi dengan Google berhasil.",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserLoginSuccessResponse" } } }
+      },
+      "PasswordResetRequested": {
+        "description": "Permintaan reset password telah diterima, instruksi dikirim via email.",
+        "content": { "application/json": { "schema": {
+          "type": "object", "properties": {
+            "status": {"type": "string", "example": "success"},
+            "message": {"type": "string", "example": "Jika email Anda terdaftar, instruksi reset password telah dikirimkan."}
+          }
+        }}}
+      },
+      "PasswordResetSuccess": {
+        "description": "Password berhasil direset.",
+        "content": { "application/json": { "schema": {
+          "type": "object", "properties": {
+            "status": {"type": "string", "example": "success"},
+            "message": {"type": "string", "example": "Password Anda telah berhasil direset. Silakan login."}
+          }
+        }}}
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Masukkan token JWT dengan prefix 'Bearer '. Contoh: 'Bearer abcdef12345'"
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API Key untuk mengakses endpoint tertentu."
+      }
+    }
   }
+}

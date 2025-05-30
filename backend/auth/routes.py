@@ -22,7 +22,6 @@ from backend.database import get_users_collection
 
 # url_prefix akan di-set saat registrasi Blueprint di backend/__init__.py
 auth_bp = Blueprint('auth_api', __name__) # Nama blueprint untuk API, misal 'auth_api'
-                                        # Untuk web auth routes, kita buat blueprint terpisah di web/routes.py
 
 @auth_bp.route("/register", methods=["POST"])
 def register_route():

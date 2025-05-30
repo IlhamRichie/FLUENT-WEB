@@ -3,7 +3,6 @@ import io
 import os
 from flask import Flask, flash, redirect, render_template, request, jsonify, Blueprint, send_from_directory, session, url_for
 from flask_cors import CORS
-# from models import register_user, login_user, get_user_by_username # Ini sepertinya sudah di-inlin di app.py
 import cv2
 from speech_recognition import Recognizer, AudioFile
 import tempfile
@@ -32,7 +31,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 
 # Initialize Flask App
 # Update CORS untuk mengizinkan header X-API-Key
-app = Flask(_name_)
+app = Flask(__name__)
 CORS(app, resources={
     r"/api/": {"origins": ""},
     r"/": {"origins": ""}
@@ -1473,4 +1472,4 @@ def reset_password():
         'user_id': str(user['_id']),
         'email': user['email'],
         'exp': datetime.utcnow() + app.config['JWT_REFRESH_TOKEN_EXPIRES']
-    },
+    },)

@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 from dotenv import load_dotenv
-load_dotenv() # Ini akan memuat variabel dari .env ke environment
+load_dotenv()
 
 class Config:
     # ... (semua atribut config Anda yang sudah ada) ...
