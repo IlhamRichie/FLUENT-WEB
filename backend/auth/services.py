@@ -16,25 +16,43 @@ from backend.database import get_users_collection
 # Buat instance OAuth di sini
 oauth = OAuth()
 
-def init_app_oauth(app): # Fungsi untuk dipanggil dari create_app
+# backend/auth/services.py
+def init_app_oauth(app):
+    global _google_oauth_client
     oauth.init_app(app)
-    # Daftarkan provider Google di sini setelah oauth diinisialisasi dengan app
-    # Ini penting karena membutuhkan app.config
-    google = oauth.register(
-        name='google',
-        client_id=app.config['GOOGLE_CLIENT_ID'],
-        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
-        access_token_url='https://accounts.google.com/o/oauth2/token',
-        authorize_url='https://accounts.google.com/o/oauth2/auth',
-        api_base_url='https://www.googleapis.com/oauth2/v1/',
-        userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-        client_kwargs={'scope': 'openid email profile'},
-        jwks_uri="https://www.googleapis.com/oauth2/v3/certs",
-    )
-    # Anda mungkin ingin menyimpan 'google' ini di suatu tempat jika perlu diakses
-    # atau selalu akses via oauth.google
-    return google
+    client_id_to_register = app.config.get('GOOGLE_CLIENT_ID')
+    client_secret_to_register = app.config.get('GOOGLE_CLIENT_SECRET')
 
+    app.logger.info(f"Attempting to register Google OAuth. Client ID: {client_id_to_register}") # Log Client ID yang digunakan
+
+    if not client_id_to_register or not client_secret_to_register:
+        app.logger.error("CRITICAL: GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET is missing in app.config. Google OAuth client will NOT be registered.")
+        _google_oauth_client = None
+        return
+
+    try:
+        registered_google_client = oauth.register(
+            name='google',
+            client_id=client_id_to_register,
+            client_secret=client_secret_to_register,
+            server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+            client_kwargs={'scope': 'openid email profile'}
+        )
+        # Verifikasi bahwa klien 'google' benar-benar terdaftar di objek oauth
+        if hasattr(oauth, 'google') and oauth.google:
+             _google_oauth_client = oauth.google
+             app.logger.info("Google OAuth client registered successfully via server metadata.")
+             # Anda bisa coba log beberapa properti klien untuk memastikan metadata diambil
+             # app.logger.info(f"   Authorize URL from client: {oauth.google.authorize_url}")
+             # app.logger.info(f"   Token URL from client: {oauth.google.access_token_url}")
+             # app.logger.info(f"   Userinfo endpoint from client: {oauth.google.userinfo_endpoint}")
+        else:
+            app.logger.error("Authlib registered the client, but 'oauth.google' is not available as expected.")
+            _google_oauth_client = None
+
+    except Exception as e:
+        app.logger.error(f"Failed to register Google OAuth client with Authlib: {e}", exc_info=True)
+        _google_oauth_client = None
 
 def get_user_by_id(user_id_str: str):
     # ... (tidak berubah)
@@ -127,67 +145,161 @@ def refresh_access_token_service(refresh_token_str: str):
         return {"status": "error", "message": f'Token processing error: {str(e)}'}, 500
 
 # get_google_client sekarang hanya mengakses oauth.google
+# backend/auth/services.py
 def get_google_client():
-    # oauth.google seharusnya sudah ada setelah init_app_oauth dipanggil
-    if not hasattr(oauth, 'google') or not oauth.google:
-        # Ini seharusnya tidak terjadi jika init_app_oauth dipanggil dengan benar
-        current_app.logger.error("Google OAuth client not registered/initialized properly.")
-        raise RuntimeError("Google OAuth client not available.")
-    return oauth.google
-
+    global _google_oauth_client # Jika Anda menggunakan ini
+    if _google_oauth_client is None:
+        current_app.logger.error("Google OAuth client (_google_oauth_client) is None. Was init_app_oauth called successfully at startup?")
+        # Pertimbangkan untuk memanggil init_app_oauth lagi sebagai fallback, tapi ini menunjukkan masalah startup
+        # init_app_oauth(current_app._get_current_object())
+        # if _google_oauth_client is None:
+        raise RuntimeError("Google OAuth client not available. Check app config and startup logs.")
+    return _google_oauth_client
 
 def process_google_oauth_callback_service():
-    google = get_google_client() # Dapat client Google yang sudah terdaftar
-    # ... (sisa logika sama seperti sebelumnya, menggunakan 'google' ini) ...
-    users_coll = get_users_collection()
-    config = current_app.config
     try:
-        token = google.authorize_access_token()
-        user_info_resp = google.get('userinfo', token=token)
-        user_info_resp.raise_for_status()
-        userinfo = user_info_resp.json()
+        google = get_google_client()
+    except RuntimeError as e:
+        current_app.logger.critical(f"Google client not available in callback: {e}")
+        return None, None, "Google Login service is critically misconfigured. Please contact support."
+
+    users_coll = get_users_collection()
+    if users_coll is None:
+        current_app.logger.error("Users collection is None in process_google_oauth_callback_service.")
+        return None, None, "Database service unavailable. Please try again later."
+
+    token_response = None
+    userinfo = None
+
+    try:
+        current_app.logger.info("Attempting to authorize access token from Google...")
+        token_response = google.authorize_access_token()
+        if not token_response or 'access_token' not in token_response:
+            current_app.logger.error(f"Google OAuth: Failed to authorize access token. Response: {token_response}")
+            return None, None, "Google OAuth: Failed to obtain access token from Google."
+        current_app.logger.info("Successfully authorized access token from Google.")
+
+        current_app.logger.info("Fetching userinfo from Google...")
+        
+        # Method 1: Use built-in userinfo() if available
+        if hasattr(google, 'userinfo') and callable(google.userinfo):
+            userinfo = google.userinfo(token=token_response)
+            if isinstance(userinfo, dict):
+                # Direct dictionary response
+                pass
+            else:
+                # Handle case where it might be a response object
+                try:
+                    userinfo = userinfo.json()
+                except Exception as e:
+                    current_app.logger.error(f"Failed to parse userinfo response: {e}")
+                    return token_response, None, "Failed to process Google user information"
+        
+        # Method 2: Fallback to manual userinfo endpoint request
+        elif hasattr(google, 'userinfo_endpoint') and google.userinfo_endpoint:
+            current_app.logger.info(f"Using google.get() with discovered userinfo_endpoint: {google.userinfo_endpoint}")
+            userinfo_resp = google.get(google.userinfo_endpoint, token=token_response)
+            if userinfo_resp.status_code != 200:
+                error_msg = f"Google userinfo request failed with status {userinfo_resp.status_code}"
+                current_app.logger.error(f"{error_msg}: {userinfo_resp.text}")
+                return token_response, None, f"{error_msg}. Please try again."
+            try:
+                userinfo = userinfo_resp.json()
+            except ValueError as e:
+                current_app.logger.error(f"Failed to decode userinfo JSON: {e}")
+                return token_response, None, "Failed to process Google user information"
+        
+        else:
+            current_app.logger.error("Google OAuth: No valid method to fetch userinfo available")
+            return token_response, None, "Google OAuth client configuration error (cannot fetch userinfo)."
+
+        # Check for errors in userinfo response
+        if not userinfo or 'error' in userinfo:
+            error_msg = userinfo.get('error', 'No userinfo received')
+            current_app.logger.error(f"Google OAuth Error in userinfo: {error_msg}")
+            return token_response, None, f"Google authentication error: {error_msg}"
+
+        current_app.logger.info(f"Successfully fetched userinfo: email='{userinfo.get('email')}', name='{userinfo.get('name')}'")
+
     except Exception as e:
-        current_app.logger.error(f"Google OAuth Error during token/userinfo fetch: {str(e)}")
-        return None, None, f"Google OAuth authentication failed: {str(e)}"
+        current_app.logger.error(f"Google OAuth Error during token exchange or userinfo fetch: {str(e)}", exc_info=True)
+        authlib_error_description = session.pop("google_authlib_error_description", None)
+        response_text = getattr(e, 'response', None)
 
-    email = userinfo.get('email')
-    if not email:
-        return None, None, "Email not found from Google profile."
-    email = email.lower()
+        if authlib_error_description:
+            error_msg = f"Google login failed: {authlib_error_description}"
+        elif response_text is not None and hasattr(response_text, 'text') and response_text.text:
+            error_msg = f"Google authentication process failed: {str(e)} - Server Response: {response_text.text[:200]}"
+        else:
+            error_msg = f"Google authentication process failed: {str(e)}"
+        return token_response, None, error_msg
 
-    user = users_coll.find_one({'email': email})
+    # Process user information
+    email_from_google = userinfo.get('email', '').lower()
+    if not email_from_google:
+        current_app.logger.error("Google OAuth: Email not found in userinfo response.")
+        return token_response, None, "Email not received from Google. Please ensure your Google account has an email."
+
+    if not userinfo.get('email_verified', False):
+        current_app.logger.warning(f"Google OAuth: Email {email_from_google} is not verified by Google. Proceeding anyway.")
+
+    # Find or create user
+    user = users_coll.find_one({'email': email_from_google})
     now_utc = datetime.now(timezone.utc)
 
     if user:
-        if not user.get('is_active', True):
-            return None, None, "Account is inactive. Please contact administrator."
-        users_coll.update_one(
-            {'_id': user['_id']},
-            {'$set': {
-                'last_login': now_utc, 'is_active': True, 'auth_provider': "google",
-                'username': userinfo.get('name', user.get('username')),
-                'profile_picture': userinfo.get('picture', user.get('profile_picture'))
-            }}
-        )
-        user = users_coll.find_one({'_id': user['_id']})
+        current_app.logger.info(f"Google OAuth: User found with email {email_from_google}. Updating user data.")
+        if not user.get('is_active', False):
+            current_app.logger.warning(f"Google OAuth: Account for {email_from_google} is inactive.")
+            return token_response, None, "Your account is currently inactive. Please contact support."
+
+        update_fields = {
+            'last_login': now_utc,
+            'is_active': True,
+            'auth_provider': "google",
+            'username': userinfo.get('name', user.get('username')),
+            'profile_picture': userinfo.get('picture', user.get('profile_picture')),
+            'updated_at': now_utc
+        }
+        
+        try:
+            users_coll.update_one({'_id': user['_id']}, {'$set': update_fields})
+            user = users_coll.find_one({'_id': user['_id']})
+        except Exception as e:
+            current_app.logger.error(f"Error updating existing user {email_from_google}: {e}", exc_info=True)
+            return token_response, None, "Failed to update your account information. Please try again."
     else:
+        current_app.logger.info(f"Google OAuth: Creating new user for email {email_from_google}")
         new_user_data = {
-            'email': email,
-            'username': userinfo.get('name', email.split('@')[0]),
+            'email': email_from_google,
+            'username': userinfo.get('name', email_from_google.split('@')[0]),
             'password': None,
             'gender': userinfo.get('gender', 'Not specified'),
-            'occupation': 'Not specified', 'is_active': True, 'last_login': now_utc,
-            'created_at': now_utc, 'is_admin': False, 'auth_provider': 'google',
+            'occupation': 'Not specified',
+            'is_active': True,
+            'is_verified': True,
+            'last_login': now_utc,
+            'created_at': now_utc,
+            'updated_at': now_utc,
+            'is_admin': False,
+            'auth_provider': 'google',
             'profile_picture': userinfo.get('picture')
         }
-        user_id_obj = users_coll.insert_one(new_user_data).inserted_id
-        user = users_coll.find_one({'_id': user_id_obj})
+        
+        try:
+            result = users_coll.insert_one(new_user_data)
+            user = users_coll.find_one({'_id': result.inserted_id})
+            current_app.logger.info(f"Successfully created new user {email_from_google}")
+        except Exception as e:
+            current_app.logger.error(f"Error creating new user: {e}", exc_info=True)
+            return None, None, "Failed to create your account. Please try again."
 
     if not user:
-        current_app.logger.error(f"Failed to process Google OAuth user for email: {email}")
-        return None, None, "Internal error processing login with Google."
-    return token, user, None
+        current_app.logger.critical(f"CRITICAL: User object is None after processing for email: {email_from_google}")
+        return token_response, None, "An unexpected error occurred during login."
 
+    current_app.logger.info(f"Google OAuth process successful for user: {user.get('email')}")
+    return token_response, user, None
 
 def generate_otp_service(length=6):
     # ... (tidak berubah)

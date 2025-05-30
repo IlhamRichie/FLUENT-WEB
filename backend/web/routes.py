@@ -250,15 +250,48 @@ def web_resend_otp_route():
 
 @web_bp.route('/google/login/web')
 def google_login_web_start():
-    google = get_google_client()
-    session['oauth_web_request'] = True
-    session['oauth_next_url'] = request.args.get('next') or url_for('web.web_profile_route', _external=True)
-    session.modified = True
-    redirect_uri = url_for('web.google_authorize_web_callback', _external=True)
-    if not current_app.config['GOOGLE_CLIENT_ID'] or current_app.config['GOOGLE_CLIENT_ID'] == '801295038520-90b851hknplg0rpq77n8vr4bs1g5h7mm.apps.googleusercontent.com':
-        flash("Google Login service is currently unavailable. Please try again later.", "danger")
+    current_app.logger.info(f"Attempting Google web login. Next URL: {request.args.get('next')}")
+    try:
+        client_id = current_app.config.get('GOOGLE_CLIENT_ID')
+        client_secret = current_app.config.get('GOOGLE_CLIENT_SECRET') # Periksa juga secret
+        current_app.logger.info(f"GOOGLE_CLIENT_ID from config: {client_id}")
+
+        # Pengecekan yang lebih baik: pastikan tidak None atau kosong
+        if not client_id or not client_secret: # Cek keduanya
+            current_app.logger.error("Google Client ID or Client Secret is missing in config.")
+            flash("Google Login service is not configured correctly. Please contact support.", "danger")
+            return redirect(url_for('web.web_login_route'))
+
+        # Anda juga bisa menambahkan pengecekan terhadap placeholder jika Anda sangat yakin nilainya
+        # placeholder_client_id = '801295038520-90b851hknplg0rpq77n8vr4bs1g5h7mm.apps.googleusercontent.com'
+        # if client_id == placeholder_client_id:
+        #     current_app.logger.error("Google Client ID is still the placeholder value.")
+        #     flash("Google Login configuration error. Please contact support.", "danger")
+        #     return redirect(url_for('web.web_login_route'))
+
+        google = get_google_client()
+        current_app.logger.info("Successfully retrieved Google client instance from get_google_client().")
+
+        redirect_uri = url_for('web.google_authorize_web_callback', _external=True)
+        current_app.logger.info(f"Generated web Google OAuth redirect_uri for Google: {redirect_uri}")
+
+        next_url_after_login = request.args.get('next') or url_for('web.web_profile_route')
+        session['oauth_web_next_url'] = next_url_after_login
+        session['oauth_flow_type'] = 'web' # Tandai ini web flow
+        session.modified = True
+        current_app.logger.info(f"Next URL after web Google login will be: {next_url_after_login}")
+
+        # Pemanggilan yang menyebabkan error
+        return google.authorize_redirect(redirect_uri)
+
+    except RuntimeError as e: # Jika get_google_client() raise RuntimeError
+        current_app.logger.error(f"RuntimeError during Google web login start (get_google_client failed?): {e}", exc_info=True)
+        flash("Google Login service is currently unavailable (Setup Error). Please try again later.", "danger")
         return redirect(url_for('web.web_login_route'))
-    return google.authorize_redirect(redirect_uri)
+    except Exception as e:
+        current_app.logger.error(f"Unexpected error during Google web login start: {e}", exc_info=True)
+        flash("An unexpected error occurred with Google Login. Please try again later.", "danger")
+        return redirect(url_for('web.web_login_route'))
 
 @web_bp.route('/google/callback/web')
 def google_authorize_web_callback():
