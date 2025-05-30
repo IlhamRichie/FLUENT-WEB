@@ -1,0 +1,668 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <span class="lang-id">Latihan Wawancara AI</span><span class="lang-en">AI Interview Practice</span> - {{ app_name | default('FLUENT') }}
+{% endblock %}
+
+{% block head_extra %}
+    {# Font Awesome sudah ada di base.html, Font Inter juga #}
+    <style>
+        /* Gaya spesifik untuk halaman ini - Idealnya dipindah ke style.css */
+        /* Anda perlu mendefinisikan ulang gaya Tailwind dengan Bootstrap/CSS Kustom */
+
+        .interview-simulation-container { /* Menggantikan .container.mx-auto.my-8.p-4.md:p-8 */
+            /* Padding sudah dari .container Bootstrap dan my-5 dari page-content-container */
+        }
+
+        .simulation-main-card { /* Menggantikan .bg-white.shadow-xl.rounded-lg.p-6.md:p-10 */
+            background-color: var(--fluent-background, #fff);
+            box-shadow: var(--fluent-shadow-lg, 0 1rem 3rem rgba(0,0,0,.175));
+            border-radius: var(--fluent-card-radius, 0.75rem); /* Lebih besar dari default card */
+            padding: 1.5rem;
+        }
+        @media (min-width: 768px) { /* md: */
+            .simulation-main-card {
+                padding: 2.5rem;
+            }
+        }
+
+        .video-placeholder-sim { /* Menggantikan .video-placeholder.shadow-md Tailwind */
+            background-color: var(--fluent-dark, #212529); /* Mirip gray-800 */
+            aspect-ratio: 16 / 9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--fluent-border-radius, 0.5rem);
+            color: var(--fluent-text-muted, #6c757d); /* Mirip gray-400 */
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--fluent-shadow-sm);
+        }
+        .video-placeholder-sim .icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+        .video-placeholder-sim .text {
+            font-size: 1.125rem;
+        }
+
+        .talking-head-sim { /* Menggantikan .talking-head Tailwind */
+            width: 80px;
+            height: 80px;
+            background-color: var(--fluent-secondary, #6c757d); /* Mirip gray-600 */
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); /* Green glow, awalnya transparan */
+        }
+        .talking-head-sim.is-talking {
+            animation: talk-glow-sim 1.5s infinite;
+        }
+        .talking-head-face-sim { /* Menggantikan .talking-head-face Tailwind */
+            width: 50px;
+            height: 50px;
+            background-color: lighten(var(--fluent-secondary, #6c757d), 10%); /* Mirip gray-500 */
+            border-radius: 50%;
+            position: relative;
+        }
+        .talking-head-mouth-sim { /* Menggantikan .talking-head-mouth Tailwind */
+            width: 20px;
+            height: 5px;
+            background-color: var(--fluent-dark, #212529); /* Mirip gray-800 */
+            border-radius: 2px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: height 0.2s ease-in-out;
+        }
+        .talking-head-sim.is-talking .talking-head-mouth-sim {
+            animation: talk-mouth-sim 0.5s infinite alternate;
+        }
+
+        @keyframes talk-glow-sim {
+          0% { box-shadow: 0 0 5px 2px rgba(25, 135, 84, 0.7); } /* Bootstrap success */
+          50% { box-shadow: 0 0 20px 10px rgba(25, 135, 84, 0.3); }
+          100% { box-shadow: 0 0 5px 2px rgba(25, 135, 84, 0.7); }
+        }
+        @keyframes talk-mouth-sim {
+            from { height: 2px; }
+            to { height: 10px; }
+        }
+
+        .question-display-area { /* Menggantikan .bg-gray-50.p-4.rounded-lg.shadow */
+            background-color: var(--fluent-light, #f8f9fa);
+            padding: 1rem;
+            border-radius: var(--fluent-border-radius);
+            box-shadow: var(--fluent-shadow-sm);
+        }
+        .question-display-area .question-text { /* Menggantikan .font-semibold.text-lg.text-blue-700.mb-2 */
+            font-weight: 600; /* fw-semibold */
+            font-size: 1.25rem; /* h5 atau h4 Bootstrap */
+            color: var(--fluent-primary); /* text-primary */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+
+        .transcript-area-custom { /* Menggantikan .transcript-area Tailwind */
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #fff; /* Berbeda dari bg-gray-50 di atas */
+            border: 1px solid var(--fluent-border-color, #dee2e6);
+            border-radius: var(--fluent-border-radius);
+            padding: 0.75rem;
+            font-style: italic;
+            color: var(--fluent-text-muted, #6c757d);
+        }
+        .transcript-area-custom::-webkit-scrollbar { width: 8px; }
+        .transcript-area-custom::-webkit-scrollbar-track { background: var(--fluent-light, #f8f9fa); border-radius: 10px; }
+        .transcript-area-custom::-webkit-scrollbar-thumb { background: var(--fluent-secondary, #6c757d); border-radius: 10px; }
+        .transcript-area-custom::-webkit-scrollbar-thumb:hover { background: darken(var(--fluent-secondary, #6c757d), 10%); }
+        .interim-transcript-custom { color: var(--fluent-text-muted); } /* Menggantikan .interim-transcript */
+
+
+        .analysis-card-sim { /* Menggantikan .bg-white.p-5.rounded-lg.shadow-lg Tailwind */
+            background-color: #fff;
+            padding: 1.25rem; /* Mirip p-5 */
+            border-radius: var(--fluent-border-radius);
+            box-shadow: var(--fluent-shadow); /* Mirip shadow-lg */
+        }
+        .analysis-card-sim h3 { /* Menggantikan .text-xl.font-semibold.text-blue-700.mb-3.flex.items-center */
+            font-size: 1.25rem; /* h5 */
+            font-weight: 600; /* fw-semibold */
+            color: var(--fluent-primary); /* text-primary */
+            margin-bottom: 1rem; /* mb-3 */
+            /* display: flex dan align-items: center sudah dari Bootstrap .d-flex .align-items-center */
+        }
+        .analysis-card-sim h3 i { /* Ikon di judul kartu analisis */
+            /* color sudah diatur oleh text-yellow-500 dll di HTML, atau bisa di-override */
+        }
+        .analysis-card-sim .analysis-item p { /* Menggantikan .space-y-2 .text-sm .text-gray-600 */
+            font-size: 0.875rem; /* small */
+            color: var(--fluent-text-muted); /* text-muted */
+            margin-bottom: 0.5rem; /* space-y-2 */
+        }
+        .analysis-card-sim .analysis-item p .analysis-label { /* Menggantikan .font-medium */
+            font-weight: 500; /* fw-medium */
+        }
+        .analysis-card-sim .analysis-item p .analysis-value { /* Menggantikan .text-gray-800.font-semibold */
+            color: var(--fluent-text-dark);
+            font-weight: 600; /* fw-semibold */
+        }
+
+        .recording-indicator-dot-sim { /* Menggantikan .recording-indicator-dot Tailwind */
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: red;
+            border-radius: 50%;
+            animation: pulse-sim 1.5s infinite;
+            vertical-align: middle;
+        }
+        @keyframes pulse-sim {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 page-content-container interview-simulation-container">
+    <div class="simulation-main-card">
+        <header class="mb-5 text-center">
+            <h1 class="display-5 fw-bold text-primary">
+                <span class="lang-id">Latihan Wawancara AI (Simulasi)</span>
+                <span class="lang-en">AI Interview Practice (Simulation)</span>
+            </h1>
+            <p class="text-muted mt-2 fs-5"> {# fs-5 Bootstrap untuk text-lg Tailwind #}
+                <span class="lang-id">Jawab pertanyaan secara lisan dan dapatkan feedback instan.</span>
+                <span class="lang-en">Answer questions verbally and get instant feedback.</span>
+            </p>
+            <div class="mt-4">
+                <button id="languageSwitcher" class="btn btn-sm btn-outline-secondary">
+                    <span class="lang-id">Switch to English</span>
+                    <span class="lang-en">Ganti ke Bahasa Indonesia</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="row g-4"> {/* Grid Bootstrap */}
+            <div class="col-lg-8 d-flex flex-column"> {/* d-flex flex-column untuk space-y */}
+                <div class="video-placeholder-sim mb-4"> {/* mb-4 untuk space-y-6 */}
+                    <div id="talkingHead" class="talking-head-sim">
+                        <div class="talking-head-face-sim">
+                            <div class="talking-head-mouth-sim"></div>
+                        </div>
+                    </div>
+                    <div class="text mt-4">
+                        <span class="lang-id">Simulasi Pewawancara AI</span>
+                        <span class="lang-en">AI Interviewer Simulation</span>
+                    </div>
+                    <div id="aiSpeakerStatus" class="position-absolute bottom-0 start-0 m-2 p-1 small rounded" style="background-color: rgba(0,0,0,0.5); color: white;">
+                        <span class="lang-id">AI sedang menunggu...</span>
+                        <span class="lang-en">AI is waiting...</span>
+                    </div>
+                </div>
+
+                <div class="question-display-area mb-4">
+                    <p class="question-text" id="currentQuestionDisplay">
+                        <span class="lang-id">Pertanyaan akan muncul di sini...</span>
+                        <span class="lang-en">Question will appear here...</span>
+                    </p>
+                </div>
+
+                <div class="question-display-area mb-4"> {/* Mirip .bg-gray-50.p-4.rounded-lg.shadow Tailwind */}
+                    <label for="transcript" class="form-label fw-medium mb-2">
+                        <span class="lang-id">Jawaban Anda (Transkrip Suara):</span>
+                        <span class="lang-en">Your Answer (Voice Transcript):</span>
+                    </label>
+                    <div id="transcript" class="transcript-area-custom" aria-live="polite">
+                        <span class="lang-id">Tekan "Mulai Wawancara" dan izinkan akses mikrofon untuk berbicara...</span>
+                        <span class="lang-en">Press "Start Interview" and allow microphone access to speak...</span>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-auto pt-3"> {# mt-auto pt-3 untuk spacing, d-grid dan d-sm-flex untuk tombol #}
+                    <button id="startButton" class="btn btn-primary btn-lg flex-grow-1 flex-sm-grow-0">
+                        <i class="fas fa-microphone-alt me-2"></i>
+                        <span class="lang-id">Mulai Wawancara</span>
+                        <span class="lang-en">Start Interview</span>
+                    </button>
+                    <button id="stopButton" class="btn btn-danger btn-lg flex-grow-1 flex-sm-grow-0" disabled>
+                        <i class="fas fa-stop-circle me-2"></i>
+                        <span class="lang-id">Hentikan Jawaban</span>
+                        <span class="lang-en">Stop Answer</span>
+                    </button>
+                     <button id="nextQuestionButton" class="btn btn-success btn-lg flex-grow-1 flex-sm-grow-0" style="display: none;">
+                        <i class="fas fa-arrow-right me-2"></i>
+                        <span class="lang-id">Pertanyaan Berikutnya</span>
+                        <span class="lang-en">Next Question</span>
+                    </button>
+                </div>
+                <p id="interviewStatus" class="text-center text-muted small mt-3">
+                    <span class="lang-id">Status: Menunggu untuk memulai</span>
+                    <span class="lang-en">Status: Waiting to start</span>
+                    <span id="recordingIndicator" class="recording-indicator-dot-sim ms-2" style="display: none;"></span>
+                </p>
+            </div>
+
+            <div class="col-lg-4 d-flex flex-column"> {/* d-flex flex-column untuk space-y */}
+                <div class="analysis-card-sim mb-4 flex-grow-1"> {/* mb-4 untuk space-y-6 */}
+                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                        <i class="fas fa-smile-beam me-2 text-warning"></i> {# text-warning Bootstrap untuk yellow-500 #}
+                        <span class="lang-id">Deteksi Emosi</span><span class="lang-en">Emotion Detection</span>
+                    </h3>
+                    <div class="analysis-item">
+                        <p><span class="analysis-label lang-id">Kondisi Emosional:</span><span class="analysis-label lang-en">Emotional State:</span> <span id="emotionState" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Tingkat Kepercayaan Diri:</span><span class="analysis-label lang-en">Confidence Level:</span> <span id="confidenceLevel" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Kegugupan:</span><span class="analysis-label lang-en">Nervousness:</span> <span id="nervousnessLevel" class="analysis-value">-</span></p>
+                    </div>
+                </div>
+
+                <div class="analysis-card-sim mb-4 flex-grow-1">
+                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                        <i class="fas fa-bullhorn me-2 text-info"></i> {# text-info Bootstrap untuk purple-500 (atau pilih warna lain) #}
+                        <span class="lang-id">Analisis Ucapan</span><span class="lang-en">Speech Analysis</span>
+                    </h3>
+                     <div class="analysis-item">
+                        <p><span class="analysis-label lang-id">Kecepatan Bicara (KPM):</span><span class="analysis-label lang-en">Speech Rate (WPM):</span> <span id="speechRate" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Kata Pengisi:</span><span class="analysis-label lang-en">Filler Words:</span> <span id="fillerWords" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Kejelasan:</span><span class="analysis-label lang-en">Clarity:</span> <span id="speechClarity" class="analysis-value">-</span></p>
+                    </div>
+                </div>
+
+                <div class="analysis-card-sim flex-grow-1">
+                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                        <i class="fas fa-child me-2 text-success"></i> {# text-success Bootstrap untuk green-500 #}
+                        <span class="lang-id">Analisis Bahasa Tubuh</span><span class="lang-en">Body Language Analysis</span>
+                    </h3>
+                     <div class="analysis-item">
+                        <p><span class="analysis-label lang-id">Postur:</span><span class="analysis-label lang-en">Posture:</span> <span id="postureDisplay" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Kontak Mata:</span><span class="analysis-label lang-en">Eye Contact:</span> <span id="eyeContact" class="analysis-value">-</span></p>
+                        <p><span class="analysis-label lang-id">Gestur Tangan:</span><span class="analysis-label lang-en">Hand Gestures:</span> <span id="handGestures" class="analysis-value">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-5 pt-4 border-top text-center small text-muted">
+            <p>&copy; <span id="currentYear"></span> {{ app_name | default('Simulasi Latihan Wawancara AI') }}.
+                <span class="lang-id">Hanya untuk tujuan demonstrasi.</span>
+                <span class="lang-en">For demonstration purposes only.</span>
+            </p>
+            <p>
+                <span class="lang-id">Tidak ada data video/audio yang direkam atau dianalisis secara nyata.</span>
+                <span class="lang-en">No video/audio data is actually recorded or analyzed.</span>
+            </p>
+             <p class="mt-4">
+                <a href="{{ url_for('web.web_profile_route') }}" id="backToProfileLink" class="btn btn-sm btn-outline-secondary"> {# Gunakan url_for Flask #}
+                    <i class="fas fa-arrow-left me-1"></i>
+                    <span class="lang-id">Kembali ke Profil</span>
+                    <span class="lang-en">Back to Profile</span>
+                </a>
+            </p>
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    // --- DOM Elements ---
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+    const nextQuestionButton = document.getElementById("nextQuestionButton");
+    const interviewStatus = document.getElementById("interviewStatus");
+    const transcriptDiv = document.getElementById("transcript");
+    const recordingIndicator = document.getElementById("recordingIndicator");
+    const currentQuestionDisplay = document.getElementById("currentQuestionDisplay");
+    const languageSwitcher = document.getElementById("languageSwitcher");
+    const backToProfileLink = document.getElementById("backToProfileLink");
+    const aiSpeakerStatus = document.getElementById("aiSpeakerStatus");
+    const talkingHead = document.getElementById("talkingHead");
+
+    // Analysis display elements
+    const emotionState = document.getElementById("emotionState");
+    // const emotionIndicator = document.getElementById("emotionIndicator"); // Tidak ada di HTML Anda
+    const confidenceLevel = document.getElementById("confidenceLevel");
+    const nervousnessLevel = document.getElementById("nervousnessLevel");
+    const speechRate = document.getElementById("speechRate");
+    const fillerWords = document.getElementById("fillerWords");
+    const speechClarity = document.getElementById("speechClarity");
+    const postureDisplay = document.getElementById("postureDisplay");
+    const eyeContact = document.getElementById("eyeContact");
+    const handGestures = document.getElementById("handGestures");
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+    // --- State Variables ---
+    let interviewInterval;
+    let isInterviewRunning = false;
+    let currentQuestionIndex = 0;
+    let currentLanguage = localStorage.getItem('preferredLang') || document.documentElement.lang || 'id';
+
+    // --- Speech Recognition Setup ---
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onstart = function () {
+            console.log("Speech recognition started.");
+            if(recordingIndicator) recordingIndicator.style.display = "inline-block";
+            setInterviewStatusText("Mendengarkan...", "Listening...");
+            if(talkingHead) talkingHead.classList.add('is-talking');
+            if(aiSpeakerStatus) setAISpeakerStatusText("Saya mendengarkan jawaban Anda...", "I'm listening to your answer...");
+        };
+
+        recognition.onresult = function (event) {
+            let interim_transcript = "";
+            let final_transcript = "";
+
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    final_transcript += event.results[i][0].transcript;
+                } else {
+                    interim_transcript += event.results[i][0].transcript;
+                }
+            }
+            if(transcriptDiv) transcriptDiv.innerHTML = `<span class="interim-transcript-custom">${interim_transcript}</span>${final_transcript}`;
+            if(transcriptDiv) transcriptDiv.scrollTop = transcriptDiv.scrollHeight; 
+        };
+
+        recognition.onerror = function (event) {
+            console.error("Speech recognition error:", event.error);
+            let errorMessageId = "Terjadi kesalahan pada pengenalan suara.";
+            let errorMessageEn = "Speech recognition error.";
+            if (event.error === "no-speech") {
+                errorMessageId = "Tidak ada suara terdeteksi. Mohon coba lagi.";
+                errorMessageEn = "No speech detected. Please try again.";
+            } else if (event.error === "audio-capture") {
+                errorMessageId = "Gagal menangkap audio. Pastikan mikrofon berfungsi.";
+                errorMessageEn = "Audio capture failed. Ensure microphone is working.";
+            } else if (event.error === "not-allowed") {
+                errorMessageId = "Akses ke mikrofon tidak diizinkan. Mohon izinkan di pengaturan browser Anda.";
+                errorMessageEn = "Microphone access not allowed. Please allow it in your browser settings.";
+            }
+            setInterviewStatusText(errorMessageId, errorMessageEn, true);
+            stopSpeechRecognition(false); 
+            if(talkingHead) talkingHead.classList.remove('is-talking');
+            if(aiSpeakerStatus) setAISpeakerStatusText("Ada masalah dengan mikrofon.", "There was an issue with the microphone.");
+        };
+
+        recognition.onend = function () {
+            console.log("Speech recognition ended.");
+            if(recordingIndicator) recordingIndicator.style.display = "none";
+            if(talkingHead) talkingHead.classList.remove('is-talking');
+            if (isInterviewRunning) { 
+                 setInterviewStatusText("Sesi perekaman suara berakhir. Tekan 'Hentikan Jawaban' jika selesai atau 'Mulai' lagi.", "Voice recording session ended. Press 'Stop Answer' if done, or 'Start' again.");
+            }
+        };
+    } else {
+        console.warn("Speech Recognition API not supported in this browser.");
+        if(startButton) startButton.disabled = true;
+        if(transcriptDiv) setBilingualText(transcriptDiv, "Maaf, browser Anda tidak mendukung fitur pengenalan suara.", "Sorry, your browser does not support speech recognition.");
+        setInterviewStatusText("Browser tidak mendukung.", "Browser not supported.", true);
+    }
+
+    const interviewQuestions = [
+        { id: "Ceritakan tentang diri Anda.", en: "Tell me about yourself." },
+        { id: "Apa kekuatan terbesar Anda?", en: "What is your greatest strength?" },
+        { id: "Apa kelemahan terbesar Anda?", en: "What is your greatest weakness?" },
+        { id: "Di mana Anda melihat diri Anda dalam 5 tahun ke depan?", en: "Where do you see yourself in 5 years?" },
+        { id: "Mengapa Anda tertarik dengan posisi ini?", en: "Why are you interested in this position?" },
+        { id: "Mengapa kami harus mempekerjakan Anda?", en: "Why should we hire you?" }
+    ];
+
+    const emotions = [
+        { stateId: "Tenang", stateEn: "Calm", confidenceId: "Tinggi", confidenceEn: "High", nervousId: "Rendah", nervousEn: "Low" },
+        { stateId: "Antusias", stateEn: "Enthusiastic", confidenceId: "Sangat Tinggi", confidenceEn: "Very High", nervousId: "Rendah", nervousEn: "Low" },
+        { stateId: "Sedikit Gugup", stateEn: "Slightly Nervous", confidenceId: "Sedang", confidenceEn: "Medium", nervousId: "Sedang", nervousEn: "Medium" },
+        { stateId: "Fokus", stateEn: "Focused", confidenceId: "Tinggi", confidenceEn: "High", nervousId: "Rendah Sekali", nervousEn: "Very Low" },
+    ];
+    const speechRatesData = [ { id: "Ideal (140 KPM)", en: "Ideal (140 WPM)" }, /* ... */ ];
+    const fillerWordsData = [ { id: "Rendah (0-1)", en: "Low (0-1)" }, /* ... */ ];
+    const claritiesData = [ { id: "Sangat Jelas", en: "Very Clear" }, /* ... */ ];
+    const posturesData = [ { id: "Tegak & Terbuka", en: "Upright & Open" }, /* ... */ ];
+    const eyeContactsData = [ { id: "Baik & Konsisten", en: "Good & Consistent" }, /* ... */ ];
+    const handGesturesData = [ { id: "Natural & Ekspresif", en: "Natural & Expressive" }, /* ... */ ];
+    // Pastikan data simulasi di atas diisi lengkap
+
+
+    function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function updateAnalysisData() {
+        if (!isInterviewRunning) return;
+        const langSuffix = currentLanguage.charAt(0).toUpperCase() + currentLanguage.slice(1);
+        const currentEmotion = getRandomElement(emotions);
+        if(emotionState) emotionState.textContent = currentEmotion[`state${langSuffix}`];
+        if(confidenceLevel) confidenceLevel.textContent = currentEmotion[`confidence${langSuffix}`];
+        if(nervousnessLevel) nervousnessLevel.textContent = currentEmotion[`nervous${langSuffix}`];
+        if(speechRate) speechRate.textContent = getRandomElement(speechRatesData)[currentLanguage];
+        if(fillerWords) fillerWords.textContent = getRandomElement(fillerWordsData)[currentLanguage];
+        if(speechClarity) speechClarity.textContent = getRandomElement(claritiesData)[currentLanguage];
+        if(postureDisplay) postureDisplay.textContent = getRandomElement(posturesData)[currentLanguage];
+        if(eyeContact) eyeContact.textContent = getRandomElement(eyeContactsData)[currentLanguage];
+        if(handGestures) handGestures.textContent = getRandomElement(handGesturesData)[currentLanguage];
+    }
+
+    function setBilingualText(element, textId, textEn) {
+        if (!element) return;
+        const idSpan = element.querySelector(".lang-id");
+        const enSpan = element.querySelector(".lang-en");
+        if (idSpan) idSpan.textContent = textId; else if (currentLanguage === 'id') element.textContent = textId;
+        if (enSpan) enSpan.textContent = textEn; else if (currentLanguage === 'en') element.textContent = textEn;
+        
+        // Panggil applyLanguageVisibility untuk elemen spesifik ini jika perlu,
+        // atau pastikan applyLanguageVisibility global dipanggil setelah perubahan ini.
+        if (idSpan && enSpan) { // Hanya jika kedua span ada
+             idSpan.style.display = currentLanguage === 'id' ? 'inline' : 'none';
+             enSpan.style.display = currentLanguage === 'en' ? 'inline' : 'none';
+        }
+    }
+    
+    function setInterviewStatusText(textId, textEn, isError = false) {
+        if(!interviewStatus) return;
+        setBilingualText(interviewStatus, textId, textEn);
+        interviewStatus.classList.toggle("text-danger", isError); 
+        interviewStatus.classList.toggle("text-muted", !isError); 
+        interviewStatus.classList.toggle("fw-semibold", isError);
+    }
+    
+    function setAISpeakerStatusText(textId, textEn) {
+        setBilingualText(aiSpeakerStatus, textId, textEn);
+    }
+
+    function displayQuestion() {
+        if (currentQuestionIndex < interviewQuestions.length) {
+            const question = interviewQuestions[currentQuestionIndex];
+            setBilingualText(currentQuestionDisplay, question.id, question.en);
+            setAISpeakerStatusText("Saya akan bertanya...", "I'm about to ask a question...");
+            if(talkingHead) talkingHead.classList.add('is-talking');
+
+            let speechSynth = window.speechSynthesis;
+            if (speechSynth && SpeechRecognition) {
+                let utterance = new SpeechSynthesisUtterance(question[currentLanguage]);
+                utterance.lang = currentLanguage === 'id' ? 'id-ID' : 'en-US';
+                utterance.onstart = () => {
+                    setAISpeakerStatusText("Sedang bertanya...", "Asking question...");
+                };
+                utterance.onend = () => {
+                    setAISpeakerStatusText("Silakan jawab pertanyaan ini.", "Please answer this question.");
+                    if(talkingHead) talkingHead.classList.remove('is-talking');
+                    if (!isInterviewRunning && startButton) {
+                       startButton.disabled = false;
+                    }
+                };
+                speechSynth.speak(utterance);
+            } else {
+                 setTimeout(() => {
+                    setAISpeakerStatusText("Silakan jawab pertanyaan ini.", "Please answer this question.");
+                    if(talkingHead) talkingHead.classList.remove('is-talking');
+                    if (!isInterviewRunning && startButton) {
+                       startButton.disabled = false;
+                    }
+                }, 1500); 
+            }
+            setBilingualText(transcriptDiv, "Menunggu jawaban Anda...", "Waiting for your answer...");
+            resetAnalysisDisplay();
+            if(startButton) startButton.disabled = true; 
+            if(stopButton) stopButton.disabled = true;
+            if(nextQuestionButton) nextQuestionButton.style.display = 'none';
+        } else {
+            setBilingualText(currentQuestionDisplay, "Wawancara selesai!", "Interview complete!");
+            setInterviewStatusText("Selamat! Anda telah menyelesaikan semua pertanyaan.", "Congratulations! You've completed all questions.");
+            if(startButton) startButton.style.display = 'none';
+            if(stopButton) stopButton.style.display = 'none';
+            if(nextQuestionButton) nextQuestionButton.style.display = 'none';
+            setAISpeakerStatusText("Wawancara telah berakhir.", "The interview has ended.");
+            if(talkingHead) talkingHead.classList.remove('is-talking');
+        }
+    }
+
+    function startInterview() {
+        if (!recognition) {
+            setInterviewStatusText("Fitur suara tidak didukung.", "Speech feature not supported.", true);
+            return;
+        }
+        isInterviewRunning = true;
+        if(startButton) startButton.disabled = true;
+        if(stopButton) stopButton.disabled = false;
+        if(nextQuestionButton) nextQuestionButton.style.display = 'none';
+        setBilingualText(transcriptDiv, "Mulai berbicara...", "Start speaking...");
+
+        recognition.lang = currentLanguage === 'id' ? 'id-ID' : 'en-US';
+        try {
+            recognition.start();
+        } catch (e) {
+            console.warn("Error starting recognition (possibly already started):", e);
+        }
+        resetAnalysisDisplay(); 
+        updateAnalysisData(); 
+        interviewInterval = setInterval(updateAnalysisData, 2500); 
+    }
+    
+    function stopSpeechRecognition(isEndOfQuestion = true) {
+        if (recognition) {
+            recognition.stop(); 
+        }
+        isInterviewRunning = false; 
+        if(talkingHead) talkingHead.classList.remove('is-talking');
+        clearInterval(interviewInterval);
+        if(startButton) startButton.disabled = false; 
+        if(stopButton) stopButton.disabled = true;
+
+        if(isEndOfQuestion) {
+             setInterviewStatusText("Jawaban dihentikan. Analisis ditampilkan.", "Answer stopped. Analysis displayed.");
+             if (currentQuestionIndex < interviewQuestions.length && nextQuestionButton) { // Cek juga nextQuestionButton
+                nextQuestionButton.style.display = 'inline-flex';
+             }
+             updateAnalysisData();
+        }
+    }
+
+    function stopCurrentAnswer() {
+        stopSpeechRecognition(true); 
+        setAISpeakerStatusText("Jawaban Anda telah diterima.", "Your answer has been received.");
+    }
+
+    function handleNextQuestion() {
+        currentQuestionIndex++;
+        displayQuestion();
+        if(startButton) startButton.disabled = true; 
+        if(stopButton) stopButton.disabled = true;
+        if(nextQuestionButton) nextQuestionButton.style.display = 'none';
+        resetAnalysisDisplay();
+        setBilingualText(transcriptDiv, "Menunggu pertanyaan berikutnya...", "Waiting for the next question...");
+    }
+
+    function resetAnalysisDisplay() {
+        const placeholder = "-";
+        if(emotionState) emotionState.textContent = placeholder;
+        if(confidenceLevel) confidenceLevel.textContent = placeholder;
+        if(nervousnessLevel) nervousnessLevel.textContent = placeholder;
+        if(speechRate) speechRate.textContent = placeholder;
+        if(fillerWords) fillerWords.textContent = placeholder;
+        if(speechClarity) speechClarity.textContent = placeholder;
+        if(postureDisplay) postureDisplay.textContent = placeholder;
+        if(eyeContact) eyeContact.textContent = placeholder;
+        if(handGestures) handGestures.textContent = placeholder;
+    }
+
+    function applyLanguageVisibility() {
+        const langToDisplay = currentLanguage;
+        const langToHide = currentLanguage === 'id' ? 'en' : 'id';
+
+        document.querySelectorAll(`.lang-${langToDisplay}`).forEach(el => {
+            // Periksa apakah display style sudah diatur oleh CSS
+            const computedDisplay = window.getComputedStyle(el).getPropertyValue('display');
+            if (computedDisplay === 'none') { // Hanya ubah jika saat ini none
+                el.style.display = el.classList.contains('d-block') ? 'block' : 'inline';
+            } else if (el.style.display === 'none') { // Jika JS sebelumnya menyembunyikan
+                 el.style.display = el.classList.contains('d-block') ? 'block' : 'inline';
+            }
+        });
+        document.querySelectorAll(`.lang-${langToHide}`).forEach(el => el.style.display = 'none');
+        
+        // Update recognition language
+        if (recognition) {
+            const recWasRunning = isInterviewRunning && (recognition.recognizing || false); // Cek apakah sedang aktif (spesifik browser)
+            if (recWasRunning) recognition.stop();
+            recognition.lang = currentLanguage === 'id' ? 'id-ID' : 'en-US';
+            if (recWasRunning) setTimeout(() => recognition.start(), 100);
+        }
+    }
+
+
+    function toggleLanguage() {
+        currentLanguage = currentLanguage === 'id' ? 'en' : 'id';
+        localStorage.setItem('preferredLang', currentLanguage);
+        document.documentElement.lang = currentLanguage; // Update lang di <html> juga
+        applyLanguageVisibility();
+        
+        // Update teks dinamis yang tidak memiliki span lang-id/lang-en, atau yang perlu di-trigger ulang
+        // Contoh: Judul pertanyaan
+        if (currentQuestionIndex < interviewQuestions.length) {
+             const question = interviewQuestions[currentQuestionIndex];
+             setBilingualText(currentQuestionDisplay, question.id, question.en);
+        } else {
+             setBilingualText(currentQuestionDisplay, "Wawancara selesai!", "Interview complete!");
+        }
+        // Update status jika perlu
+        const currentStatusTextId = interviewStatus.querySelector('.lang-id') ? interviewStatus.querySelector('.lang-id').textContent : "Status Awal ID";
+        const currentStatusTextEn = interviewStatus.querySelector('.lang-en') ? interviewStatus.querySelector('.lang-en').textContent : "Initial Status EN";
+        setBilingualText(interviewStatus, currentStatusTextId, currentStatusTextEn);
+
+        // Update teks tombol language switcher
+        setBilingualText(languageSwitcher, "Switch to English", "Ganti ke Bahasa Indonesia");
+    }
+
+    // --- Event Listeners ---
+    if(startButton) startButton.addEventListener("click", startInterview);
+    if(stopButton) stopButton.addEventListener("click", stopCurrentAnswer);
+    if(nextQuestionButton) nextQuestionButton.addEventListener("click", handleNextQuestion);
+    if(languageSwitcher) languageSwitcher.addEventListener("click", toggleLanguage);
+    
+    if(backToProfileLink) {
+        backToProfileLink.href = "{{ url_for('web.web_profile_route') }}"; // Set href dari Flask
+    }
+
+    // --- Initial Setup ---
+    document.documentElement.lang = currentLanguage;
+    applyLanguageVisibility(); 
+    displayQuestion(); 
+    resetAnalysisDisplay(); 
+    setInterviewStatusText("Menunggu untuk memulai", "Waiting to start");
+    if(aiSpeakerStatus) setAISpeakerStatusText("Selamat datang di simulasi wawancara!", "Welcome to the interview simulation!");
+    setBilingualText(languageSwitcher, "Switch to English", "Ganti ke Bahasa Indonesia"); // Set teks awal tombol bahasa
+
+
+</script>
+{% endblock %}

@@ -117,6 +117,13 @@
                   </li>
                   <li class="nav-item">
                     <a
+                      class="nav-link {% if request.endpoint == 'web.interview_simulation_page' %}active{% endif %}"
+                      href="{{ url_for('web.interview_simulation_page') }}"
+                      ><span class="lang-id">Wawancara AI</span><span class="lang-en">Interview AI</span></a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
                       class="btn btn-sm nav-btn-cta-dark"
                       href="{{ url_for('web.web_logout_route') }}"
                       ><span class="lang-id">Keluar</span><span class="lang-en">Logout</span></a

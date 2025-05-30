@@ -1,248 +1,177 @@
-{% extends "base.html" %} {% block title %}<span class="lang-id"
-  >Profil Pengguna</span
-><span class="lang-en">User Profile</span> - FLUENT{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+
+{% block title %}
+    <span class="lang-id">Profil Pengguna</span><span class="lang-en">User Profile</span> - FLUENT
+{% endblock %}
+
+{% block content %}
 <div class="container my-5 profile-page page-content-container">
-  <div class="row justify-content-center">
-    <div class="col-lg-7 col-md-12 mb-4 mb-lg-0">
-      <div class="card shadow-sm border-0 h-100 fluent-card">
-        <br />
-        <br />
-        <br />
-        <div class="card-header bg-transparent pt-4 px-4 border-0">
-          <h3 class="fw-bold mb-0">
-            <span class="lang-id">Profil Pengguna</span
-            ><span class="lang-en">User Profile</span>
-          </h3>
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-12 mb-4 mb-lg-0">
+            <div class="card shadow-sm border-0 h-100 fluent-card">
+                <div class="card-header bg-transparent pt-4 px-4 border-0">
+                    <h3 class="fw-bold mb-0">
+                        <span class="lang-id">Profil Pengguna</span><span class="lang-en">User Profile</span>
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    {% if user %}
+                        <div class="text-center mb-4">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture }}"
+                                     alt="Profile picture of {{ user.username }}" {# PERBAIKAN DI SINI #}
+                                     class="rounded-circle shadow-sm profile-avatar-img mb-3"
+                                     style="width: 120px; height: 120px; object-fit: cover" />
+                            {% else %}
+                                <div class="avatar-initials rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm mx-auto mb-3"
+                                     style="width: 120px; height: 120px; font-size: 3rem">
+                                    {{ user.username[0]|upper if user.username else 'U' }}
+                                </div>
+                            {% endif %}
+                            <h4 class="mt-3 mb-1 fw-semibold">{{ user.username }}</h4>
+                            <p class="text-muted small">{{ user.email }}</p>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <h5 class="text-primary fw-semibold mb-3">
+                            <span class="lang-id">Detail Akun:</span><span class="lang-en">Account Details:</span>
+                        </h5>
+                        <div class="profile-details-grid mb-4">
+                            <div class="detail-item">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="lang-id">Jenis Kelamin</span><span class="lang-en">Gender</span>
+                                </small>
+                                <span class="fw-medium">
+                                    {% if user.gender %}
+                                        {% if user.gender|lower == 'male' %}
+                                            <span class="lang-id">Pria</span><span class="lang-en">Male</span>
+                                        {% elif user.gender|lower == 'female' %}
+                                            <span class="lang-id">Wanita</span><span class="lang-en">Female</span>
+                                        {% else %}
+                                            {{ user.gender }}
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="lang-id">Pekerjaan</span><span class="lang-en">Occupation</span>
+                                </small>
+                                <span class="fw-medium">
+                                    {% if user.occupation %}
+                                        {{ user.occupation }}
+                                    {% else %}
+                                        <span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="lang-id">Bergabung</span><span class="lang-en">Joined</span>
+                                </small>
+                                <span class="fw-medium">
+                                    {{ user.created_at.strftime('%d %B %Y') if user.created_at else 'N/A' }}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span>
+                                </small>
+                                <span class="fw-medium">
+                                    {% if user.last_login %}
+                                        {{ user.last_login.strftime('%d %B %Y, %H:%M') }}
+                                    {% else %}
+                                        <span class="lang-id">Tidak Pernah</span><span class="lang-en">Never</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="detail-item">
+                                <small class="text-muted d-block mb-1">
+                                    <span class="lang-id">Penyedia Auth</span><span class="lang-en">Auth Provider</span>
+                                </small>
+                                <span class="badge rounded-pill text-bg-{{ 'info' if user.auth_provider == 'google' else 'light' }}">
+                                    {{ user.auth_provider|capitalize }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="mobile-app-promo text-center p-3 bg-light rounded mb-4">
+                            <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}"
+                                 alt="FLUENT Mobile App"
+                                 style="max-width: 60px"
+                                 class="mb-2" />
+                            <h5 class="fw-semibold fluent-red-text mb-2">
+                                <span class="lang-id">Coba Aplikasi Mobile <span class="text-primary">FLUENT</span>!</span>
+                                <span class="lang-en">Experience <span class="text-primary">FLUENT</span> Mobile!</span>
+                            </h5>
+                            <p class="small text-muted mb-2">
+                                <span class="lang-id d-block">Untuk pengalaman wawancara yang lebih interaktif dan analisis mendalam, unduh aplikasi mobile FLUENT.</span>
+                                <span class="lang-en d-block">For a more interactive interview experience and in-depth analysis, download the FLUENT mobile app.</span>
+                            </p>
+                            <p class="small text-muted">
+                                <em>(<span class="lang-id">Segera hadir di Play Store & App Store</span><span class="lang-en">Coming soon to Play Store & App Store</span>)</em>
+                            </p>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('web.web_logout_route') }}" class="btn btn-outline-danger btn-lg">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                <span class="lang-id">Keluar</span><span class="lang-en">Logout</span>
+                            </a>
+                        </div>
+
+                    {% else %}
+                        <div class="alert alert-warning d-flex align-items-center" role="alert">
+                            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                            <div>
+                                <span class="lang-id">Informasi pengguna tidak ditemukan. Mohon <a href="{{ url_for('web.web_login_route') }}" class="alert-link fw-semibold">login kembali</a>.</span>
+                                <span class="lang-en">User information not found. Please <a href="{{ url_for('web.web_login_route') }}" class="alert-link fw-semibold">login again</a>.</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="card-body p-4">
-          {% if user %}
-          <div class="text-center mb-4">
-            {% if user.profile_picture %}
-            <img
-              src="{{ user.profile_picture }}"
-              alt="<span class='lang-id'>Foto profil</span><span class='lang-en'>Profile picture of</span> {{ user.username }}"
-              class="rounded-circle shadow-sm profile-avatar-img mb-3"
-              style="width: 120px; height: 120px; object-fit: cover"
-            />
-            {% else %}
-            <div
-              class="avatar-initials rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm mx-auto mb-3"
-              style="width: 120px; height: 120px; font-size: 3rem"
-            >
-              {{ user.username[0]|upper if user.username else 'U' }}
-            </div>
-            {% endif %}
-            <h4 class="mt-3 mb-1 fw-semibold">{{ user.username }}</h4>
-            <p class="text-muted small">{{ user.email }}</p>
-          </div>
 
-          <hr class="my-4" />
-
-          <h5 class="text-primary fw-semibold mb-3">
-            <span class="lang-id">Detail Akun:</span
-            ><span class="lang-en">Account Details:</span>
-          </h5>
-          <div class="profile-details-grid mb-4">
-            <div class="detail-item">
-              <small class="text-muted d-block mb-1"
-                ><span class="lang-id">Jenis Kelamin</span
-                ><span class="lang-en">Gender</span></small
-              >
-              <span class="fw-medium">
-                {% if user.gender %} {% if user.gender|lower == 'male' %}<span
-                  class="lang-id"
-                  >Pria</span
-                ><span class="lang-en">Male</span> {% elif user.gender|lower ==
-                'female' %}<span class="lang-id">Wanita</span
-                ><span class="lang-en">Female</span>
-                {% else %}{{ user.gender }} {% endif %} {% else %}
-                <span class="lang-id">Tidak disebutkan</span
-                ><span class="lang-en">Not specified</span>
-                {% endif %}
-              </span>
+        <div class="col-lg-5 col-md-12">
+            <div class="card shadow-sm border-0 h-100 fluent-card">
+                <div class="card-header bg-transparent pt-4 px-4 border-0">
+                    <h3 class="fw-bold mb-0">
+                        <span class="lang-id">Unduh Aplikasi Mobile</span><span class="lang-en">Download Mobile App</span>
+                    </h3>
+                </div>
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center">
+                    <p class="text-muted mb-3">
+                        <span class="lang-id d-block">Pindai kode QR di bawah untuk mengunduh aplikasi FLUENT di perangkat mobile Anda.</span>
+                        <span class="lang-en d-block">Scan the QR code below to download the FLUENT app on your mobile device.</span>
+                    </p>
+                    <img src="{{ url_for('web.web_serve_static', filename='images/hihi.jpg') }}"
+                         alt="QR Code for FLUENT App"
+                         class="img-fluid mb-3 rounded border p-1"
+                         style="max-width: 220px" />
+                    <p class="small text-muted mb-4">
+                        <span class="lang-id">Arahkan kamera ponsel Anda ke kode ini.</span>
+                        <span class="lang-en">Point your phone camera at this code.</span>
+                    </p>
+                    <div class="mt-auto app-store-buttons">
+                        <a href="#" class="btn btn-outline-primary btn-lg me-2 disabled" aria-disabled="true">
+                            <i class="fab fa-google-play me-2"></i> Google Play
+                        </a>
+                        <a href="#" class="btn btn-outline-dark btn-lg disabled" aria-disabled="true">
+                            <i class="fab fa-apple me-2"></i> App Store
+                        </a>
+                        <p class="small text-muted mt-2">
+                            <em>(<span class="lang-id">Segera Hadir</span><span class="lang-en">Coming Soon</span>)</em>
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div class="detail-item">
-              <small class="text-muted d-block mb-1"
-                ><span class="lang-id">Pekerjaan</span
-                ><span class="lang-en">Occupation</span></small
-              >
-              <span class="fw-medium"
-                >{{ user.occupation or "<span class="lang-id"
-                  >Tidak disebutkan</span
-                ><span class="lang-en">Not specified</span>"|safe }}</span
-              >
-            </div>
-            <div class="detail-item">
-              <small class="text-muted d-block mb-1"
-                ><span class="lang-id">Bergabung</span
-                ><span class="lang-en">Joined</span></small
-              >
-              <span class="fw-medium"
-                >{{ user.created_at.strftime('%d %B %Y') if user.created_at else
-                'N/A' }}</span
-              >
-            </div>
-            <div class="detail-item">
-              <small class="text-muted d-block mb-1"
-                ><span class="lang-id">Login Terakhir</span
-                ><span class="lang-en">Last Login</span></small
-              >
-              <span class="fw-medium"
-                >{{ user.last_login.strftime('%d %B %Y, %H:%M') if
-                user.last_login else "<span class="lang-id">Tidak Pernah</span
-                ><span class="lang-en">Never</span>"|safe }}</span
-              >
-            </div>
-            <div class="detail-item">
-              <small class="text-muted d-block mb-1"
-                ><span class="lang-id">Penyedia Auth</span
-                ><span class="lang-en">Auth Provider</span></small
-              >
-              <span
-                class="badge rounded-pill text-bg-{{ 'info' if user.auth_provider == 'google' else 'light' }}"
-                >{{ user.auth_provider|capitalize }}</span
-              >
-            </div>
-          </div>
-
-          <hr class="my-4" />
-
-          <div class="mobile-app-promo text-center p-3 bg-light rounded mb-4">
-            <img
-              src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}"
-              alt="FLUENT Mobile App"
-              style="max-width: 60px"
-              class="mb-2"
-            />
-            <h5 class="fw-semibold fluent-red-text mb-2">
-              <span class="lang-id"
-                >Coba Aplikasi Mobile
-                <span class="text-primary">FLUENT</span>!</span
-              >
-              <span class="lang-en"
-                >Experience
-                <span class="text-primary">FLUENT</span> Mobile!</span
-              >
-            </h5>
-            <p class="small text-muted mb-2">
-              <span class="lang-id d-block"
-                >Untuk pengalaman wawancara yang lebih interaktif dan analisis
-                mendalam, unduh aplikasi mobile FLUENT.</span
-              >
-              <span class="lang-en d-block"
-                >For a more interactive interview experience and in-depth
-                analysis, download the FLUENT mobile app.</span
-              >
-            </p>
-            <p class="small text-muted">
-              <em
-                >(<span class="lang-id"
-                  >Segera hadir di Play Store & App Store</span
-                ><span class="lang-en"
-                  >Coming soon to Play Store & App Store</span
-                >)</em
-              >
-            </p>
-          </div>
-
-          <div class="d-grid gap-2">
-            <a
-              href="{{ url_for('web.web_logout_route') }}"
-              class="btn btn-outline-danger btn-lg"
-            >
-              <i class="fas fa-sign-out-alt me-2"></i>
-              <span class="lang-id">Keluar</span
-              ><span class="lang-en">Logout</span>
-            </a>
-          </div>
-
-          {% else %}
-          <div
-            class="alert alert-warning d-flex align-items-center"
-            role="alert"
-          >
-            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
-            <div>
-              <span class="lang-id"
-                >Informasi pengguna tidak ditemukan. Mohon
-                <a
-                  href="{{ url_for('web.web_login_route') }}"
-                  class="alert-link fw-semibold"
-                  >login kembali</a
-                >.</span
-              >
-              <span class="lang-en"
-                >User information not found. Please
-                <a
-                  href="{{ url_for('web.web_login_route') }}"
-                  class="alert-link fw-semibold"
-                  >login again</a
-                >.</span
-              >
-            </div>
-          </div>
-          {% endif %}
         </div>
-      </div>
     </div>
-
-    <div class="col-lg-5 col-md-12">
-      <div class="card shadow-sm border-0 h-100 fluent-card">
-        <div class="card-header bg-transparent pt-4 px-4 border-0">
-          <h3 class="fw-bold mb-0">
-            <span class="lang-id">Unduh Aplikasi Mobile</span
-            ><span class="lang-en">Download Mobile App</span>
-          </h3>
-        </div>
-        <div
-          class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center"
-        >
-          <p class="text-muted mb-3">
-            <span class="lang-id"
-              >Pindai kode QR di bawah untuk mengunduh aplikasi FLUENT di
-              perangkat mobile Anda.</span
-            >
-            <span class="lang-en"
-              >Scan the QR code below to download the FLUENT app on your mobile
-              device.</span
-            >
-          </p>
-          <img
-            src="{{ url_for('web.web_serve_static', filename='images/hihi.jpg') }}"
-            alt="QR Code for FLUENT App"
-            class="img-fluid mb-3 rounded border p-1"
-            style="max-width: 220px"
-          />
-          <p class="small text-muted mb-4">
-            <span class="lang-id">Arahkan kamera ponsel Anda ke kode ini.</span>
-            <span class="lang-en">Point your phone camera at this code.</span>
-          </p>
-          <div class="mt-auto app-store-buttons">
-            <a
-              href="#"
-              class="btn btn-outline-primary btn-lg me-2 disabled"
-              aria-disabled="true"
-            >
-              <i class="fab fa-google-play me-2"></i> Google Play
-            </a>
-            <a
-              href="#"
-              class="btn btn-outline-dark btn-lg disabled"
-              aria-disabled="true"
-            >
-              <i class="fab fa-apple me-2"></i> App Store
-            </a>
-            <p class="small text-muted mt-2">
-              <em
-                >(<span class="lang-id">Segera Hadir</span
-                ><span class="lang-en">Coming Soon</span>)</em
-              >
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}

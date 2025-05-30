@@ -420,6 +420,17 @@ def web_logout_route():
     flash('You have been successfully logged out.', 'success')
     return redirect(url_for('web.web_login_route'))
 
+@web_bp.route('/interview-simulation')
+@web_login_required# Hanya user yang sudah login bisa akses
+def interview_simulation_page():
+    # Anda bisa mengirim data user ke template jika diperlukan
+    user_info = {
+        "username": session.get("username", "Pengguna"),
+        # Tambahkan data lain jika perlu
+    }
+    current_app.logger.info(f"User {session.get('user_id')} accessing interview simulation.")
+    return render_template('web/gimmick.html', user=user_info, app_name=current_app.config.get("APP_NAME", "FLUENT"))
+
 
 # Route untuk serve static files (jika tidak dihandle oleh Nginx/Apache di production)
 from flask import send_from_directory

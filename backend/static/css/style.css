@@ -59,8 +59,6 @@
   --navbar-scrolled-outer-padding-vertical-desktop: 0.75rem;
   --navbar-scrolled-outer-padding-vertical-mobile: 0.5rem;
 
-  
-
   --hero-extra-space: 2.5rem;
   --content-extra-space: 2rem;
 }
@@ -343,8 +341,8 @@ h6 {
 }
 
 .fluent-navbar .navbar-nav.mx-auto {
-    position: relative;
-    left: 90px; /* atau 2%, 30px, dll. Sesuaikan nilainya */
+  position: relative;
+  left: 90px; /* atau 2%, 30px, dll. Sesuaikan nilainya */
 }
 
 /* Tombol CTA di navbar jika ada yang gelap, biarkan kontras. Jika ada yang primary, akan mengikuti .btn-primary */
@@ -396,7 +394,7 @@ h6 {
     var(--hero-gradient-mid) 35%,
     var(--hero-gradient-end) 75%
   );
-    color: var(--fluent-text-on-primary);
+  color: var(--fluent-text-on-primary);
 
   padding-top: calc(
     var(--navbar-outer-padding-top-desktop) +
@@ -482,14 +480,19 @@ h6 {
   }
 }
 
-.hero-section h1 .text-primary { /* Menargetkan span.text-primary di dalam H1 hero */
-  background: linear-gradient(45deg, #c03030, #c03030); /* Contoh gradasi: Putih ke Emas */
+.hero-section h1 .text-primary {
+  /* Menargetkan span.text-primary di dalam H1 hero */
+  background: linear-gradient(
+    45deg,
+    #c03030,
+    #c03030
+  ); /* Contoh gradasi: Putih ke Emas */
   /* Atau gradasi lain yang Anda inginkan, misalnya: */
   /* background: linear-gradient(to right, var(--brand-cream), #fff); */
   /* background: linear-gradient(135deg, #fff, #ffeb99); */
 
   -webkit-background-clip: text; /* Untuk browser WebKit (Chrome, Safari) */
-  -moz-background-clip: text;    /* Untuk Firefox (meskipun mungkin tidak selalu diperlukan) */
+  -moz-background-clip: text; /* Untuk Firefox (meskipun mungkin tidak selalu diperlukan) */
   background-clip: text;
   color: transparent; /* Membuat warna teks asli transparan agar background (gradasi) terlihat */
   -webkit-text-fill-color: transparent; /* Untuk beberapa browser WebKit */
@@ -622,6 +625,28 @@ h6 {
 /*--------------------------------------------------------------
 # Reviews Section Styling (Tema Terang Dominan Putih - PENYESUAIAN ULANG)
 --------------------------------------------------------------*/
+
+/* Contoh di style.css */
+html[lang="id"] .lang-en {
+  display: none !important;
+}
+html[lang="en"] .lang-id {
+  display: none !important;
+}
+
+html[lang="id"] .lang-id {
+  display: initial;
+}
+html[lang="en"] .lang-en {
+  display: initial;
+}
+
+html[lang="id"] .lang-id.d-block {
+  display: block !important;
+}
+html[lang="en"] .lang-en.d-block {
+  display: block !important;
+}
 
 /* Target section yang berisi "KATA MEREKA" dan kartu testimoni */
 /* Coba identifikasi class atau ID unik pada section ini dari Developer Tools browser Anda */
@@ -796,6 +821,61 @@ section.reviews-section .review-card-body p {
   margin-bottom: 0;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Error Page Styling                               */
+/* -------------------------------------------------------------------------- */
+.error-page-section {
+  min-height: 60vh; /* Minimal tinggi agar konten di tengah layar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(
+    --fluent-light-bg
+  ); /* Atau warna background yang sesuai */
+}
+
+.error-page-section .error-code {
+  font-size: 6rem; /* Ukuran kode error besar */
+  font-weight: 800;
+  color: var(--fluent-primary); /* Gunakan warna primer Anda */
+  text-shadow: 2px 2px 0px rgba(var(--fluent-primary-rgb), 0.1); /* Shadow halus */
+  margin-bottom: 0.5rem;
+}
+
+.error-page-section h2 {
+  font-size: 2rem;
+  color: var(--fluent-text-dark);
+}
+
+.error-page-section .lead {
+  font-size: 1.1rem;
+  color: var(--fluent-text-muted);
+  max-width: 500px; /* Batasi lebar teks agar mudah dibaca */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.error-page-section .btn-primary {
+  /* Gaya tombol primary Anda sudah ada, pastikan konsisten */
+}
+
+.error-page-section .btn-outline-secondary {
+  /* Gaya tombol sekunder Anda */
+}
+
+/* Responsive adjustments untuk halaman error jika perlu */
+@media (max-width: 767.98px) {
+  .error-page-section .error-code {
+    font-size: 4.5rem;
+  }
+  .error-page-section h2 {
+    font-size: 1.5rem;
+  }
+  .error-page-section .lead {
+    font-size: 1rem;
+  }
+}
+
 /*--------------------------------------------------------------
 # Media Queries (Responsif - sebagian besar tidak berubah, hanya memastikan konsistensi)
 --------------------------------------------------------------*/
@@ -954,8 +1034,8 @@ section.reviews-section .review-card-body p {
     font-size: 0.9rem;
   }
   .features-header-hero.page-content-container {
-  margin-top: var(--features-hero-specific-top-offset);
-}
+    margin-top: var(--features-hero-specific-top-offset);
+  }
 }
 
 @media (max-width: 575.98px) {

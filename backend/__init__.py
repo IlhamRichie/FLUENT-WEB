@@ -1,14 +1,33 @@
 # FLUENTSERVICE/backend/__init__.py
 import os
-from flask import Flask
+from flask import Flask, render_template # Hapus 'app' dari impor ini
 # ... (impor lainnya) ...
 from .config import Config
 from .database import init_db, get_questions_collection # Impor fungsi getter
+# Hapus impor 'Flask, render_template' yang duplikat jika ada
+
+# HAPUS DEFINISI ERROR HANDLER DARI SINI
+
 
 def create_app(config_class=Config):
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__, instance_relative_config=True) # Instance app dibuat di sini
     app.config.from_object(config_class)
     Config.init_app(app)
+
+    # --- PINDAHKAN DEFINISI ERROR HANDLER KE SINI ---
+    @app.errorhandler(404)
+    def page_not_found(e):
+        # Untuk mengakses request, impor `request` dari flask jika belum
+        # from flask import request, current_app
+        # current_app.logger.warning(f"Page not found: {request.url} - {e}")
+        return render_template('errors/404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        # from flask import request, current_app
+        # current_app.logger.error(f"Internal server error: {request.url} - {e}")
+        return render_template('errors/500.html'), 500
+    # --- BATAS PEMINDAHAN ERROR HANDLER ---
 
     from flask_bcrypt import Bcrypt
     from flask_cors import CORS
@@ -36,14 +55,14 @@ def create_app(config_class=Config):
     from .interview.routes import interview_api_bp
     from .analysis.routes import analysis_api_bp
     from .admin.routes import admin_bp
-    from .web.routes import web_bp
+    from .web.routes import web_bp # Pastikan web_bp diimpor
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(users_api_bp, url_prefix='/api/users')
     app.register_blueprint(interview_api_bp, url_prefix='/api/interview')
     app.register_blueprint(analysis_api_bp, url_prefix='/api/analysis')
     app.register_blueprint(admin_bp, url_prefix='/admin')
-    app.register_blueprint(web_bp)
+    app.register_blueprint(web_bp) # Daftarkan web_bp
 
     # ... (Swagger UI seperti sebelumnya) ...
     from flask_swagger_ui import get_swaggerui_blueprint
@@ -63,8 +82,7 @@ def create_app(config_class=Config):
 
     # Seeding data
     with app.app_context():
-        current_questions_collection = get_questions_collection() # Panggil fungsi getter
-        # --- UBAH KONDISI DI SINI ---
+        current_questions_collection = get_questions_collection()
         if current_questions_collection is not None and current_questions_collection.count_documents({}) == 0:
             current_questions_collection.insert_many([
                 {"question": "Ceritakan tentang diri Anda", "category": "general", "ideal_answer_keywords": ["pengalaman", "pendidikan", "kemampuan", "tujuan"]},
