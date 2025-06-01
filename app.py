@@ -3,6 +3,7 @@ import io
 import os
 from flask import Flask, flash, redirect, render_template, request, jsonify, Blueprint, send_from_directory, session, url_for
 from flask_cors import CORS
+# from models import register_user, login_user, get_user_by_username # Ini sepertinya sudah di-inlin di app.py
 import cv2
 from speech_recognition import Recognizer, AudioFile
 import tempfile
@@ -532,7 +533,7 @@ def analyze_realtime(current_user):
             image_path = tmp_file.name
             cv2.imwrite(image_path, frame)
 
-        from detectors.emotion_detector import detect_emotion_status
+        from analysis.detectors.emotion_detector import detect_emotion_status
         from detectors.mouth_detector import detect_mouth_status
         from detectors.pose_detector import detect_pose_status
 

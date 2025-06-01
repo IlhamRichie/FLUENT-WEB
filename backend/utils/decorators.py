@@ -45,7 +45,7 @@ def web_login_required(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session or not session.get('is_web_user'):
             flash('Please log in to access this page.', 'warning')
-            return redirect(url_for('web.web_login_route')) # Nama fungsi route web login
+            return redirect(url_for('web.web_login_page_route')) # Nama fungsi route web login
         return f(*args, **kwargs)
     return decorated_function
 

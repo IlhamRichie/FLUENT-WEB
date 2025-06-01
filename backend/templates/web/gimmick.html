@@ -5,52 +5,87 @@
 {% endblock %}
 
 {% block head_extra %}
-    {# Font Awesome sudah ada di base.html, Font Inter juga #}
     <style>
-        /* Gaya spesifik untuk halaman ini - Idealnya dipindah ke style.css global */
+        /* Global Styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
         .interview-simulation-container {
-            max-width: 1140px; /* Bootstrap .container-lg */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
         }
         
         .simulation-main-card {
+            flex: 1;
             background-color: var(--fluent-background, #fff);
             box-shadow: var(--fluent-shadow-lg, 0 1rem 3rem rgba(0,0,0,.175));
-            border-radius: var(--fluent-card-radius, 0.75rem);
+            border-radius: 0;
             padding: 1.5rem;
-            border: 1px solid var(--fluent-border-color-soft, #eff2f5);
+            border: none;
+            display: flex;
+            flex-direction: column;
         }
         
-        @media (min-width: 768px) { /* md */
+        @media (min-width: 768px) {
             .simulation-main-card {
-                padding: 2.5rem;
+                padding: 2rem;
+                border-radius: var(--fluent-card-radius, 0.75rem);
+                margin: 1rem;
+                border: 1px solid var(--fluent-border-color-soft, #eff2f5);
             }
         }
 
-        .video-placeholder-sim {
-            background-color: #212529; /* Bootstrap dark */
+        /* Video/Camera Section */
+        .video-container {
+            position: relative;
+            width: 100%;
             aspect-ratio: 16 / 9;
+            background-color: #212529;
+            border-radius: var(--fluent-border-radius, 0.5rem);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        #cameraFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .camera-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: var(--fluent-border-radius, 0.5rem);
-            color: #ced4da; /* Bootstrap gray-400 */
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--fluent-shadow-sm);
+            color: #ced4da;
+            z-index: 1;
         }
         
-        .video-placeholder-sim .video-icon-placeholder { /* Mengganti .icon pada video placeholder */
-            font-size: 3.5rem; /* Sesuaikan ukuran ikon Font Awesome */
+        .camera-placeholder .camera-icon {
+            font-size: 3.5rem;
             margin-bottom: 0.5rem;
+            color: #6c757d;
         }
         
-        .video-placeholder-sim .text {
-            font-size: 1.125rem; /* Mirip text-lg */
+        .camera-placeholder .text {
+            font-size: 1.125rem;
         }
 
+        /* Talking Head Animation */
         .talking-head-sim {
-            width: 70px; /* Sedikit lebih kecil */
+            width: 70px;
             height: 70px;
             background-color: var(--fluent-secondary, #6c757d);
             border-radius: 50%;
@@ -58,8 +93,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 0 0 rgba(25, 135, 84, 0); /* Bootstrap success color, initially transparent */
+            box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
             transition: box-shadow 0.3s ease;
+            margin: 0 auto;
         }
         
         .talking-head-sim.is-talking {
@@ -69,7 +105,7 @@
         .talking-head-face-sim {
             width: 45px;
             height: 45px;
-            background-color: #adb5bd; /* Bootstrap gray-500 */
+            background-color: #adb5bd;
             border-radius: 50%;
             position: relative;
         }
@@ -77,7 +113,7 @@
         .talking-head-mouth-sim {
             width: 18px;
             height: 4px;
-            background-color: #212529; /* Bootstrap dark */
+            background-color: #212529;
             border-radius: 2px;
             position: absolute;
             bottom: 8px;
@@ -90,7 +126,7 @@
             animation: talk-mouth-sim 0.4s infinite alternate;
         }
 
-        @keyframes talk-glow-sim { /* Menggunakan warna Bootstrap success */
+        @keyframes talk-glow-sim {
             0% { box-shadow: 0 0 3px 1px rgba(25, 135, 84, 0.6); }
             50% { box-shadow: 0 0 15px 7px rgba(25, 135, 84, 0.25); }
             100% { box-shadow: 0 0 3px 1px rgba(25, 135, 84, 0.6); }
@@ -101,23 +137,26 @@
             to { height: 8px; }
         }
 
+        /* Question Display */
         .question-display-area {
             background-color: var(--fluent-light, #f8f9fa);
             padding: 1rem 1.25rem;
             border-radius: var(--fluent-border-radius, 0.5rem);
             box-shadow: var(--fluent-shadow-sm);
             border: 1px solid var(--fluent-border-color-soft, #eff2f5);
+            margin-bottom: 1rem;
         }
         
         .question-display-area .question-text {
             font-weight: 600;
-            font-size: 1.15rem; /* Sedikit disesuaikan */
+            font-size: 1.15rem;
             color: var(--fluent-primary, #0d6efd);
-            margin-bottom: 0rem; /* Dihapus karena ada progress bar */
+            margin-bottom: 0.5rem;
         }
 
+        /* Transcript Area */
         .transcript-area-custom {
-            min-height: 120px; /* Sedikit lebih tinggi */
+            min-height: 120px;
             max-height: 250px;
             overflow-y: auto;
             background-color: #fff;
@@ -131,7 +170,7 @@
         
         .transcript-area-custom::-webkit-scrollbar { width: 8px; }
         .transcript-area-custom::-webkit-scrollbar-track { background: var(--fluent-light, #f8f9fa); border-radius: 10px; }
-        .transcript-area-custom::-webkit-scrollbar-thumb { background: #adb5bd; border-radius: 10px; } /* Bootstrap gray-500 */
+        .transcript-area-custom::-webkit-scrollbar-thumb { background: #adb5bd; border-radius: 10px; }
         .transcript-area-custom::-webkit-scrollbar-thumb:hover { background: var(--fluent-secondary, #6c757d); }
         
         .interim-transcript-custom { 
@@ -139,47 +178,93 @@
             opacity: 0.65;
         }
 
+        /* Analysis Cards */
         .analysis-card-sim {
             background-color: #fff;
             padding: 1.25rem;
             border-radius: var(--fluent-border-radius);
             box-shadow: var(--fluent-shadow);
-            height: 100%; /* Agar tinggi kartu sama dalam satu baris jika d-flex */
+            height: 100%;
             border: 1px solid var(--fluent-border-color-soft, #eff2f5);
+            margin-bottom: 1rem;
         }
         
         .analysis-card-sim h3 {
-            font-size: 1.1rem; /* Sedikit lebih kecil dari h5 Bootstrap standar */
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--fluent-primary, #0d6efd);
             margin-bottom: 1rem;
         }
         
-        .analysis-card-sim h3 i.fas { /* Atur warna ikon Font Awesome */
-            /* Warna sudah di-set di HTML dengan text-warning, text-info, text-success */
-            font-size: 0.9em; /* Relatif terhadap h3 */
+        .analysis-card-sim h3 i.fas {
+            font-size: 0.9em;
         }
         
         .analysis-card-sim .analysis-item p {
-            font-size: 0.875rem; /* Bootstrap .small */
+            font-size: 0.875rem;
             color: var(--fluent-text-muted, #6c757d);
             margin-bottom: 0.5rem;
         }
         
         .analysis-card-sim .analysis-item p .analysis-label {
-            font-weight: 500; /* Bootstrap .fw-medium */
+            font-weight: 500;
         }
         
         .analysis-card-sim .analysis-item p .analysis-value {
             color: var(--fluent-text-dark, #212529);
-            font-weight: 600; /* Bootstrap .fw-semibold */
+            font-weight: 600;
         }
 
+        /* Results Section */
+        .results-container {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: var(--fluent-border-radius);
+            border: 1px solid var(--fluent-border-color-soft);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.25rem;
+            border-radius: var(--fluent-border-radius);
+            box-shadow: var(--fluent-shadow-sm);
+            border: 1px solid var(--fluent-border-color-soft);
+        }
+        
+        .recommendations {
+            background: white;
+            padding: 1.25rem;
+            border-radius: var(--fluent-border-radius);
+            box-shadow: var(--fluent-shadow-sm);
+            border: 1px solid var(--fluent-border-color-soft);
+            margin-top: 1.5rem;
+        }
+        
+        .limit-message {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #fff8e1;
+            border-radius: var(--fluent-border-radius);
+            border: 1px solid #ffecb3;
+            text-align: center;
+        }
+
+        /* Recording Indicator */
         .recording-indicator-dot-sim {
             display: inline-block;
-            width: 10px; /* Sedikit lebih kecil */
+            width: 10px;
             height: 10px;
-            background-color: #dc3545; /* Bootstrap danger */
+            background-color: #dc3545;
             border-radius: 50%;
             animation: pulse-sim 1.2s infinite ease-in-out;
             vertical-align: middle;
@@ -190,7 +275,8 @@
             50% { opacity: 0.4; transform: scale(0.75); }
         }
         
-        .btn-microphone { /* Efek ripple pada tombol Start */
+        /* Button Styles */
+        .btn-microphone {
             position: relative;
             overflow: hidden;
         }
@@ -209,7 +295,7 @@
             transform-origin: 50% 50%;
         }
         
-        .btn-microphone:not(:disabled):active::after { /* Hanya aktif jika tombol tidak disabled */
+        .btn-microphone:not(:disabled):active::after {
             animation: ripple-sim 0.7s ease-out;
         }
         
@@ -219,18 +305,19 @@
                 opacity: 0.5;
             }
             100% {
-                transform: scale(25, 25) translate(-50%, -50%); /* Sesuaikan skala ripple */
+                transform: scale(25, 25) translate(-50%, -50%);
                 opacity: 0;
             }
         }
         
-        .analysis-value { /* Kelas untuk nilai analisis yang akan diberi warna feedback */
+        /* Feedback Animations */
+        .analysis-value {
             transition: color 0.3s ease, transform 0.2s ease;
-            display: inline-block; /* Agar transform scale bekerja */
+            display: inline-block;
         }
         
         .positive-feedback { color: var(--bs-success, #198754) !important; }
-        .neutral-feedback { color: var(--bs-warning, #ffc107) !important; } /* Gunakan warna warning Bootstrap */
+        .neutral-feedback { color: var(--bs-warning, #ffc107) !important; }
         .negative-feedback { color: var(--bs-danger, #dc3545) !important; }
         
         .feedback-animation {
@@ -243,55 +330,90 @@
             100% { transform: scale(1); }
         }
         
-        .progress-thin { /* Progress bar untuk timer pertanyaan */
+        /* Progress Bar */
+        .progress-thin {
             height: 6px;
             border-radius: var(--fluent-border-radius);
         }
-        .progress-bar { /* Transisi untuk progress bar */
-             transition: width 0.25s ease-in-out !important;
+        .progress-bar {
+            transition: width 0.25s ease-in-out !important;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 767.98px) {
+            .simulation-main-card {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-lg {
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Full-height layout */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer-space {
+            margin-top: auto;
         }
     </style>
 {% endblock %}
 
 {% block content %}
-<div class="container my-5 interview-simulation-container">
+<div class="container-fluid interview-simulation-container">
     <div class="simulation-main-card">
-        <header class="mb-5 text-center">
-            <h1 class="display-5 fw-bold text-primary">
-                <span class="lang-id">Latihan Wawancara AI (Simulasi)</span>
-                <span class="lang-en">AI Interview Practice (Simulation)</span>
-            </h1>
-            <p class="text-muted mt-2 fs-5">
-                <span class="lang-id">Jawab pertanyaan secara lisan dan dapatkan feedback instan.</span>
-                <span class="lang-en">Answer questions verbally and get instant feedback.</span>
-            </p>
-            <div class="mt-4">
-                <button id="languageSwitcher" class="btn btn-sm btn-outline-secondary">
-                    <span class="lang-id">Switch to English</span>
-                    <span class="lang-en">Ganti ke Bahasa Indonesia</span>
-                </button>
-            </div>
-        </header>
+        <div class="content-wrapper">
+            <header class="mb-4 text-center">
+                <h1 class="display-5 fw-bold text-primary">
+                    <span class="lang-id">Latihan Wawancara AI (Simulasi)</span>
+                    <span class="lang-en">AI Interview Practice (Simulation)</span>
+                </h1>
+                <p class="text-muted mt-2 fs-5">
+                    <span class="lang-id">Jawab pertanyaan secara lisan dan dapatkan feedback instan.</span>
+                    <span class="lang-en">Answer questions verbally and get instant feedback.</span>
+                </p>
+                <div class="mt-3">
+                    <button id="languageSwitcher" class="btn btn-sm btn-outline-secondary">
+                        <span class="lang-id">Switch to English</span>
+                        <span class="lang-en">Ganti ke Bahasa Indonesia</span>
+                    </button>
+                </div>
+            </header>
 
-        <div class="row g-4">
-            <div class="col-lg-8 d-flex flex-column">
-                <div class="video-placeholder-sim mb-4">
-                    <div id="talkingHead" class="talking-head-sim">
-                        <div class="talking-head-face-sim">
-                            <div class="talking-head-mouth-sim"></div>
+            <div class="main-content">
+                <!-- Video/Camera Section -->
+                <div class="video-container">
+                    <video id="cameraFeed" autoplay playsinline></video>
+                    <div class="camera-placeholder">
+                        <i class="fas fa-video camera-icon"></i>
+                        <div class="text">
+                            <span class="lang-id">Kamera akan aktif saat memulai wawancara</span>
+                            <span class="lang-en">Camera will activate when interview starts</span>
                         </div>
                     </div>
-                    <div class="text mt-3 text-white-50"> {# text-white-50 Bootstrap untuk teks lebih redup #}
-                        <span class="lang-id">Simulasi Pewawancara AI</span>
-                        <span class="lang-en">AI Interviewer Simulation</span>
-                    </div>
-                     <div id="aiSpeakerStatus" class="position-absolute bottom-0 start-0 m-2 p-1 small rounded" style="background-color: rgba(0,0,0,0.6); color: white;">
+                    <div id="aiSpeakerStatus" class="position-absolute bottom-0 start-0 m-2 p-1 small rounded" style="background-color: rgba(0,0,0,0.6); color: white; z-index: 2;">
                         <span class="lang-id">AI sedang menunggu...</span>
                         <span class="lang-en">AI is waiting...</span>
                     </div>
                 </div>
 
-                <div class="question-display-area mb-4">
+                <!-- Question Section -->
+                <div class="question-display-area mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <p class="question-text mb-0" id="currentQuestionDisplay">
                             <span class="lang-id">Pertanyaan akan muncul di sini...</span>
@@ -307,7 +429,8 @@
                     </div>
                 </div>
 
-                <div class="question-display-area mb-4">
+                <!-- Transcript Section -->
+                <div class="question-display-area mb-3">
                     <label for="transcript" class="form-label fw-medium mb-2">
                         <span class="lang-id">Jawaban Anda (Transkrip Suara):</span>
                         <span class="lang-en">Your Answer (Voice Transcript):</span>
@@ -336,6 +459,123 @@
                     </div>
                 </div>
 
+                <!-- Analysis Cards -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="analysis-card-sim">
+                            <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                                <i class="fas fa-smile-beam me-2 text-warning"></i>
+                                <span class="lang-id">Deteksi Emosi</span><span class="lang-en">Emotion Detection</span>
+                            </h3>
+                            <div class="analysis-item">
+                                <p><span class="analysis-label lang-id">Kondisi Emosional:</span><span class="analysis-label lang-en">Emotional State:</span> <span id="emotionState" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Tingkat Kepercayaan Diri:</span><span class="analysis-label lang-en">Confidence Level:</span> <span id="confidenceLevel" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Kegugupan:</span><span class="analysis-label lang-en">Nervousness:</span> <span id="nervousnessLevel" class="analysis-value">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="analysis-card-sim">
+                            <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                                <i class="fas fa-bullhorn me-2 text-info"></i>
+                                <span class="lang-id">Analisis Ucapan</span><span class="lang-en">Speech Analysis</span>
+                            </h3>
+                            <div class="analysis-item">
+                                <p><span class="analysis-label lang-id">Kecepatan Bicara (KPM):</span><span class="analysis-label lang-en">Speech Rate (WPM):</span> <span id="speechRate" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Kata Pengisi:</span><span class="analysis-label lang-en">Filler Words:</span> <span id="fillerWords" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Kejelasan:</span><span class="analysis-label lang-en">Clarity:</span> <span id="speechClarity" class="analysis-value">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="analysis-card-sim">
+                            <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
+                                <i class="fas fa-child me-2 text-success"></i>
+                                <span class="lang-id">Analisis Bahasa Tubuh</span><span class="lang-en">Body Language Analysis</span>
+                            </h3>
+                            <div class="analysis-item">
+                                <p><span class="analysis-label lang-id">Postur:</span><span class="analysis-label lang-en">Posture:</span> <span id="postureDisplay" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Kontak Mata:</span><span class="analysis-label lang-en">Eye Contact:</span> <span id="eyeContact" class="analysis-value">-</span></p>
+                                <p><span class="analysis-label lang-id">Gestur Tangan:</span><span class="analysis-label lang-en">Hand Gestures:</span> <span id="handGestures" class="analysis-value">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsContainer" class="results-container">
+                    <h2 class="text-center mb-4">
+                        <span class="lang-id">Hasil Wawancara Anda</span>
+                        <span class="lang-en">Your Interview Results</span>
+                    </h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4><i class="fas fa-chart-line me-2 text-primary"></i> <span class="lang-id">Statistik Keseluruhan</span><span class="lang-en">Overall Statistics</span></h4>
+                            <canvas id="overallChart" height="200"></canvas>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h4><i class="fas fa-star me-2 text-warning"></i> <span class="lang-id">Kekuatan</span><span class="lang-en">Strengths</span></h4>
+                            <ul id="strengthsList" class="list-group list-group-flush">
+                                <!-- Will be populated by JS -->
+                            </ul>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <h4><i class="fas fa-exclamation-triangle me-2 text-danger"></i> <span class="lang-id">Perlu Perbaikan</span><span class="lang-en">Areas to Improve</span></h4>
+                            <ul id="improvementsList" class="list-group list-group-flush">
+                                <!-- Will be populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4><i class="fas fa-lightbulb me-2 text-info"></i> <span class="lang-id">Rekomendasi</span><span class="lang-en">Recommendations</span></h4>
+                        <div id="recommendationsContent">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button id="downloadReportBtn" class="btn btn-primary me-2">
+                            <i class="fas fa-download me-1"></i>
+                            <span class="lang-id">Unduh Laporan</span>
+                            <span class="lang-en">Download Report</span>
+                        </button>
+                        <button id="tryAgainBtn" class="btn btn-outline-secondary">
+                            <i class="fas fa-redo me-1"></i>
+                            <span class="lang-id">Coba Lagi</span>
+                            <span class="lang-en">Try Again</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Limit Message -->
+                <div id="limitMessage" class="limit-message">
+                    <h4><i class="fas fa-exclamation-circle me-2 text-warning"></i> 
+                        <span class="lang-id">Anda telah mencapai batas percobaan</span>
+                        <span class="lang-en">You've reached the trial limit</span>
+                    </h4>
+                    <p class="mb-3">
+                        <span class="lang-id">Untuk pengalaman lebih lengkap, silakan unduh aplikasi FLUENT di perangkat mobile Anda.</span>
+                        <span class="lang-en">For the full experience, please download the FLUENT app on your mobile device.</span>
+                    </p>
+                    <div>
+                        <a href="#" class="btn btn-success me-2">
+                            <i class="fab fa-google-play me-1"></i>
+                            <span class="lang-id">Download di Play Store</span>
+                            <span class="lang-en">Download on Play Store</span>
+                        </a>
+                        <a href="#" class="btn btn-dark">
+                            <i class="fab fa-apple me-1"></i>
+                            <span class="lang-id">Download di App Store</span>
+                            <span class="lang-en">Download on App Store</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-auto pt-3">
                     <button id="startButton" class="btn btn-primary btn-lg flex-grow-1 flex-sm-grow-0 btn-microphone">
                         <i class="fas fa-microphone-alt me-2"></i>
@@ -347,7 +587,7 @@
                         <span class="lang-id">Hentikan Jawaban</span>
                         <span class="lang-en">Stop Answer</span>
                     </button>
-                     <button id="nextQuestionButton" class="btn btn-success btn-lg flex-grow-1 flex-sm-grow-0" style="display: none;">
+                    <button id="nextQuestionButton" class="btn btn-success btn-lg flex-grow-1 flex-sm-grow-0" style="display: none;">
                         <i class="fas fa-arrow-right me-2"></i>
                         <span class="lang-id">Pertanyaan Berikutnya</span>
                         <span class="lang-en">Next Question</span>
@@ -360,69 +600,38 @@
                 </p>
             </div>
 
-            <div class="col-lg-4 d-flex flex-column">
-                <div class="analysis-card-sim mb-3 flex-grow-1"> {# mb-3 Bootstrap untuk spacing #}
-                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
-                        <i class="fas fa-smile-beam me-2 text-warning"></i>
-                        <span class="lang-id">Deteksi Emosi</span><span class="lang-en">Emotion Detection</span>
-                    </h3>
-                    <div class="analysis-item">
-                        <p><span class="analysis-label lang-id">Kondisi Emosional:</span><span class="analysis-label lang-en">Emotional State:</span> <span id="emotionState" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Tingkat Kepercayaan Diri:</span><span class="analysis-label lang-en">Confidence Level:</span> <span id="confidenceLevel" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Kegugupan:</span><span class="analysis-label lang-en">Nervousness:</span> <span id="nervousnessLevel" class="analysis-value">-</span></p>
-                    </div>
-                </div>
-
-                <div class="analysis-card-sim mb-3 flex-grow-1">
-                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
-                        <i class="fas fa-bullhorn me-2 text-info"></i>
-                        <span class="lang-id">Analisis Ucapan</span><span class="lang-en">Speech Analysis</span>
-                    </h3>
-                     <div class="analysis-item">
-                        <p><span class="analysis-label lang-id">Kecepatan Bicara (KPM):</span><span class="analysis-label lang-en">Speech Rate (WPM):</span> <span id="speechRate" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Kata Pengisi:</span><span class="analysis-label lang-en">Filler Words:</span> <span id="fillerWords" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Kejelasan:</span><span class="analysis-label lang-en">Clarity:</span> <span id="speechClarity" class="analysis-value">-</span></p>
-                    </div>
-                </div>
-
-                <div class="analysis-card-sim flex-grow-1">
-                    <h3 class="h5 fw-semibold text-primary mb-3 d-flex align-items-center">
-                        <i class="fas fa-child me-2 text-success"></i>
-                        <span class="lang-id">Analisis Bahasa Tubuh</span><span class="lang-en">Body Language Analysis</span>
-                    </h3>
-                     <div class="analysis-item">
-                        <p><span class="analysis-label lang-id">Postur:</span><span class="analysis-label lang-en">Posture:</span> <span id="postureDisplay" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Kontak Mata:</span><span class="analysis-label lang-en">Eye Contact:</span> <span id="eyeContact" class="analysis-value">-</span></p>
-                        <p><span class="analysis-label lang-id">Gestur Tangan:</span><span class="analysis-label lang-en">Hand Gestures:</span> <span id="handGestures" class="analysis-value">-</span></p>
-                    </div>
-                </div>
-            </div>
+            <footer class="mt-5 pt-4 border-top text-center small text-muted footer-space">
+                <p>&copy; <span id="currentYear"></span> {{ app_name | default('Simulasi Latihan Wawancara AI') }}.
+                    <span class="lang-id">Hanya untuk tujuan demonstrasi.</span>
+                    <span class="lang-en">For demonstration purposes only.</span>
+                </p>
+                <p>
+                    <span class="lang-id">Tidak ada data video/audio yang direkam atau dianalisis secara nyata.</span>
+                    <span class="lang-en">No video/audio data is actually recorded or analyzed.</span>
+                </p>
+                <p class="mt-3">
+                    <a href="{{ url_for('web.web_profile_route') }}" id="backToProfileLink" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>
+                        <span class="lang-id">Kembali ke Profil</span>
+                        <span class="lang-en">Back to Profile</span>
+                    </a>
+                </p>
+            </footer>
         </div>
-
-        <footer class="mt-5 pt-4 border-top text-center small text-muted">
-            <p>&copy; <span id="currentYear"></span> {{ app_name | default('Simulasi Latihan Wawancara AI') }}.
-                <span class="lang-id">Hanya untuk tujuan demonstrasi.</span>
-                <span class="lang-en">For demonstration purposes only.</span>
-            </p>
-            <p>
-                <span class="lang-id">Tidak ada data video/audio yang direkam atau dianalisis secara nyata.</span>
-                <span class="lang-en">No video/audio data is actually recorded or analyzed.</span>
-            </p>
-             <p class="mt-4">
-                <a href="{{ url_for('web.web_profile_route') }}" id="backToProfileLink" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>
-                    <span class="lang-id">Kembali ke Profil</span>
-                    <span class="lang-en">Back to Profile</span>
-                </a>
-            </p>
-        </footer>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts_extra %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // --- DOM Elements ---
+    const cameraFeed = document.getElementById("cameraFeed");
+    const cameraPlaceholder = document.querySelector(".camera-placeholder");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const limitMessage = document.getElementById("limitMessage");
+    const tryAgainBtn = document.getElementById("tryAgainBtn");
+    const downloadReportBtn = document.getElementById("downloadReportBtn");
     const startButton = document.getElementById("startButton");
     const stopButton = document.getElementById("stopButton");
     const nextQuestionButton = document.getElementById("nextQuestionButton");
@@ -431,18 +640,14 @@
     const recordingIndicator = document.getElementById("recordingIndicator");
     const currentQuestionDisplay = document.getElementById("currentQuestionDisplay");
     const languageSwitcher = document.getElementById("languageSwitcher");
-    // const backToProfileLink = document.getElementById("backToProfileLink"); // Link sudah di-set via url_for
     const aiSpeakerStatus = document.getElementById("aiSpeakerStatus");
     const talkingHead = document.getElementById("talkingHead");
     const clearTranscriptBtn = document.getElementById("clearTranscriptBtn");
     const playAnswerBtn = document.getElementById("playAnswerBtn");
-    const answerLengthEl = document.getElementById("answerLength"); // Diberi akhiran El agar tidak bentrok
+    const answerLengthEl = document.getElementById("answerLength");
     const currentQuestionNumberEl = document.getElementById("currentQuestionNumber");
     const totalQuestionsEl = document.getElementById("totalQuestions");
     const questionTimerEl = document.getElementById("questionTimer");
-
-
-    // Analysis display elements
     const emotionState = document.getElementById("emotionState");
     const confidenceLevel = document.getElementById("confidenceLevel");
     const nervousnessLevel = document.getElementById("nervousnessLevel");
@@ -452,24 +657,92 @@
     const postureDisplay = document.getElementById("postureDisplay");
     const eyeContact = document.getElementById("eyeContact");
     const handGestures = document.getElementById("handGestures");
-    
-    document.getElementById("currentYear").textContent = new Date().getFullYear();
 
     // --- State Variables ---
-    let interviewInterval; // Untuk interval update analisis
-    let isInterviewActive = false; // Status keseluruhan sesi wawancara
-    let isRecognizing = false; // Status apakah SpeechRecognition sedang aktif
+    let cameraStream = null;
+    let interviewAttempts = 0;
+    const MAX_ATTEMPTS = 3;
+    let interviewInterval;
+    let isInterviewActive = false;
+    let isRecognizing = false;
     let currentQuestionIndex = 0;
     let currentLanguage = localStorage.getItem('preferredLang') || document.documentElement.lang || 'id';
     let questionStartTime;
     let timerInterval;
-    let currentFinalTranscript = ""; // Menyimpan transkrip final terakhir
+    let currentFinalTranscript = "";
     let audioContext;
-    let audioBufferForPlayback; // Menyimpan audio buffer untuk diputar ulang
+    let audioBufferForPlayback;
     let isPlayingAudio = false;
     let audioSourceNode;
 
-    const QUESTION_TIME_LIMIT = 60; // Detik per pertanyaan
+    const QUESTION_TIME_LIMIT = 60; // Seconds per question
+
+    // Interview questions data
+    const interviewQuestions = [
+        { id: "Ceritakan tentang diri Anda.", en: "Tell me about yourself." },
+        { id: "Apa kekuatan terbesar Anda?", en: "What is your greatest strength?" },
+        { id: "Apa kelemahan terbesar Anda?", en: "What is your greatest weakness?" },
+        { id: "Di mana Anda melihat diri Anda dalam 5 tahun ke depan?", en: "Where do you see yourself in 5 years?" },
+        { id: "Mengapa Anda tertarik dengan posisi ini?", en: "Why are you interested in this position?" },
+        { id: "Mengapa kami harus mempekerjakan Anda?", en: "Why should we hire you?" }
+    ];
+    
+    // Analysis simulation data
+    const emotions = [
+        { value: "Positif", class: "positive-feedback" },
+        { value: "Netral", class: "neutral-feedback" },
+        { value: "Gugup", class: "negative-feedback" },
+        { value: "Percaya Diri", class: "positive-feedback" },
+        { value: "Antusias", class: "positive-feedback" }
+    ];
+    
+    const speechRatesData = [
+        { value: "Cepat (180 KPM)", class: "neutral-feedback" },
+        { value: "Sedang (150 KPM)", class: "positive-feedback" },
+        { value: "Lambat (120 KPM)", class: "neutral-feedback" },
+        { value: "Sangat Cepat (200 KPM)", class: "negative-feedback" },
+        { value: "Sangat Lambat (100 KPM)", class: "negative-feedback" }
+    ];
+    
+    const fillerWordsData = [
+        { value: "Rendah (5%)", class: "positive-feedback" },
+        { value: "Sedang (15%)", class: "neutral-feedback" },
+        { value: "Tinggi (30%)", class: "negative-feedback" },
+        { value: "Sangat Rendah (2%)", class: "positive-feedback" },
+        { value: "Sangat Tinggi (50%)", class: "negative-feedback" }
+    ];
+    
+    const claritiesData = [
+        { value: "Jelas", class: "positive-feedback" },
+        { value: "Sedang", class: "neutral-feedback" },
+        { value: "Kurang Jelas", class: "negative-feedback" },
+        { value: "Sangat Jelas", class: "positive-feedback" },
+        { value: "Sangat Tidak Jelas", class: "negative-feedback" }
+    ];
+    
+    const posturesData = [
+        { value: "Tegak", class: "positive-feedback" },
+        { value: "Sedikit Membungkuk", class: "neutral-feedback" },
+        { value: "Membungkuk", class: "negative-feedback" },
+        { value: "Sangat Tegak", class: "positive-feedback" },
+        { value: "Sangat Membungkuk", class: "negative-feedback" }
+    ];
+    
+    const eyeContactsData = [
+        { value: "Baik", class: "positive-feedback" },
+        { value: "Sedang", class: "neutral-feedback" },
+        { value: "Buruk", class: "negative-feedback" },
+        { value: "Sangat Baik", class: "positive-feedback" },
+        { value: "Sangat Buruk", class: "negative-feedback" }
+    ];
+    
+    const handGesturesData = [
+        { value: "Alami", class: "positive-feedback" },
+        { value: "Sedikit Kaku", class: "neutral-feedback" },
+        { value: "Kaku", class: "negative-feedback" },
+        { value: "Sangat Alami", class: "positive-feedback" },
+        { value: "Sangat Kaku", class: "negative-feedback" }
+    ];
 
     // --- Speech Recognition Setup ---
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -477,8 +750,8 @@
 
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
-        recognition.continuous = true; // Biarkan terus menerus, kita kontrol start/stop manual
-        recognition.interimResults = true; // Dapatkan hasil sementara
+        recognition.continuous = true;
+        recognition.interimResults = true;
 
         recognition.onstart = function() {
             console.log("Speech recognition has started.");
@@ -495,7 +768,7 @@
 
             for (let i = event.resultIndex; i < event.results.length; ++i) {
                 if (event.results[i].isFinal) {
-                    final_transcript_segment += event.results[i][0].transcript + ' '; // Tambah spasi
+                    final_transcript_segment += event.results[i][0].transcript + ' ';
                 } else {
                     interim_transcript += event.results[i][0].transcript;
                 }
@@ -503,8 +776,8 @@
             
             if (final_transcript_segment) {
                 currentFinalTranscript += final_transcript_segment;
-                 if (playAnswerBtn) playAnswerBtn.disabled = false;
-                 if (clearTranscriptBtn) clearTranscriptBtn.disabled = false;
+                if (playAnswerBtn) playAnswerBtn.disabled = false;
+                if (clearTranscriptBtn) clearTranscriptBtn.disabled = false;
             }
 
             if (transcriptDiv) {
@@ -520,13 +793,20 @@
             console.error("Speech recognition error:", event.error);
             let errorMessageId = "Terjadi kesalahan pada pengenalan suara.";
             let errorMessageEn = "Speech recognition error.";
-            // ... (penanganan error message seperti sebelumnya) ...
-             if (event.error === "no-speech") { /* ... */ }
-             else if (event.error === "audio-capture") { /* ... */ }
-             else if (event.error === "not-allowed") { /* ... */ }
+            
+            if (event.error === "no-speech") {
+                errorMessageId = "Tidak terdeteksi suara. Pastikan mikrofon berfungsi.";
+                errorMessageEn = "No speech detected. Please check your microphone.";
+            } else if (event.error === "audio-capture") {
+                errorMessageId = "Tidak dapat mengakses mikrofon. Pastikan izin diberikan.";
+                errorMessageEn = "Microphone access denied. Please check permissions.";
+            } else if (event.error === "not-allowed") {
+                errorMessageId = "Akses mikrofon diblokir. Harap berikan izin.";
+                errorMessageEn = "Microphone access blocked. Please allow permissions.";
+            }
 
             setInterviewStatusText(errorMessageId, errorMessageEn, true);
-            stopCurrentSpeechRecognition(false); // False karena bukan user yang stop
+            stopCurrentSpeechRecognition(false);
             if (talkingHead) talkingHead.classList.remove('is-talking');
             if (aiSpeakerStatus) setAISpeakerStatusText("Ada masalah dengan mikrofon.", "There was an issue with the microphone.");
             resetQuestionTimer();
@@ -537,50 +817,109 @@
             isRecognizing = false;
             if (recordingIndicator) recordingIndicator.style.display = "none";
             if (talkingHead) talkingHead.classList.remove('is-talking');
-            // Jangan restart otomatis di sini, biarkan startInterview() yang mengontrol
-            if (isInterviewActive && startButton.disabled) { // Jika interview masih aktif & tombol start disable (berarti sedang menjawab)
-                 // Ini berarti recognition berhenti sendiri (misal karena jeda panjang)
-                 // Tombol stop masih aktif, pengguna bisa klik stop atau start lagi
-                 setInterviewStatusText("Perekaman suara berhenti. Tekan 'Mulai' untuk lanjut atau 'Hentikan Jawaban'.", 
-                                        "Voice recording stopped. Press 'Start' to continue or 'Stop Answer'.");
+            
+            if (isInterviewActive && startButton && startButton.disabled) {
+                setInterviewStatusText(
+                    "Perekaman suara berhenti. Tekan 'Mulai' untuk lanjut atau 'Hentikan Jawaban'.",
+                    "Voice recording stopped. Press 'Start' to continue or 'Stop Answer'."
+                );
             }
         };
     } else {
-        // ... (Handling jika SpeechRecognition tidak didukung) ...
+        console.warn("Speech recognition not supported in this browser.");
+        if (startButton) startButton.disabled = true;
+        setInterviewStatusText(
+            "Browser tidak mendukung pengenalan suara. Gunakan Chrome atau Edge.",
+            "Browser doesn't support speech recognition. Please use Chrome or Edge.",
+            true
+        );
     }
 
-    // ... (Data simulasi pertanyaan dan analisis tetap sama, pastikan lengkap) ...
-    const interviewQuestions = [
-        { id: "Ceritakan tentang diri Anda.", en: "Tell me about yourself." },
-        { id: "Apa kekuatan terbesar Anda?", en: "What is your greatest strength?" },
-        { id: "Apa kelemahan terbesar Anda?", en: "What is your greatest weakness?" },
-        { id: "Di mana Anda melihat diri Anda dalam 5 tahun ke depan?", en: "Where do you see yourself in 5 years?" },
-        { id: "Mengapa Anda tertarik dengan posisi ini?", en: "Why are you interested in this position?" },
-        { id: "Mengapa kami harus mempekerjakan Anda?", en: "Why should we hire you?" }
-    ];
-    if(totalQuestionsEl) totalQuestionsEl.textContent = interviewQuestions.length;
-
-    const emotions = [ /* ... data emosi ... */ ];
-    const speechRatesData = [ /* ... data speech rates ... */ ];
-    const fillerWordsData = [ /* ... data filler words ... */ ];
-    const claritiesData = [ /* ... data clarities ... */ ];
-    const posturesData = [ /* ... data postures ... */ ];
-    const eyeContactsData = [ /* ... data eye contacts ... */ ];
-    const handGesturesData = [ /* ... data hand gestures ... */ ];
-     // Pastikan semua array data simulasi di atas diisi lengkap seperti di kode Anda sebelumnya
-
     // --- Helper Functions ---
-    function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function getRandomElement(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
 
-    function applyFeedbackClass(element, feedbackType) { /* ... (sama seperti sebelumnya) ... */ }
+    function applyFeedbackClass(element, feedbackType) {
+        if (!element) return;
+        
+        // Remove all feedback classes first
+        element.classList.remove("positive-feedback", "neutral-feedback", "negative-feedback", "feedback-animation");
+        
+        // Add the appropriate class
+        if (feedbackType) {
+            element.classList.add(feedbackType.class, "feedback-animation");
+        }
+        
+        return feedbackType ? feedbackType.value : "-";
+    }
 
-    function updateAnalysisData() { /* ... (sama seperti sebelumnya, pastikan ID elemen benar) ... */ }
+    function updateAnalysisData() {
+        if (!isInterviewActive) return;
+        
+        const emotion = getRandomElement(emotions);
+        const speechRateData = getRandomElement(speechRatesData);
+        const fillerWord = getRandomElement(fillerWordsData);
+        const clarity = getRandomElement(claritiesData);
+        const posture = getRandomElement(posturesData);
+        const eyeContactData = getRandomElement(eyeContactsData);
+        const handGesture = getRandomElement(handGesturesData);
+        
+        if (emotionState) emotionState.textContent = applyFeedbackClass(emotionState, emotion);
+        if (confidenceLevel) confidenceLevel.textContent = applyFeedbackClass(confidenceLevel, getRandomElement(emotions.filter(e => e.class !== "negative-feedback")));
+        if (nervousnessLevel) nervousnessLevel.textContent = applyFeedbackClass(nervousnessLevel, getRandomElement(emotions.filter(e => e.class === "negative-feedback")));
+        if (speechRate) speechRate.textContent = applyFeedbackClass(speechRate, speechRateData);
+        if (fillerWords) fillerWords.textContent = applyFeedbackClass(fillerWords, fillerWord);
+        if (speechClarity) speechClarity.textContent = applyFeedbackClass(speechClarity, clarity);
+        if (postureDisplay) postureDisplay.textContent = applyFeedbackClass(postureDisplay, posture);
+        if (eyeContact) eyeContact.textContent = applyFeedbackClass(eyeContact, eyeContactData);
+        if (handGestures) handGestures.textContent = applyFeedbackClass(handGestures, handGesture);
+    }
 
-    function setBilingualText(element, textId, textEn) { /* ... (sama seperti sebelumnya) ... */ }
+    function setBilingualText(element, textId, textEn) {
+        if (!element) return;
+        
+        const idSpan = element.querySelector('.lang-id');
+        const enSpan = element.querySelector('.lang-en');
+        
+        if (idSpan && enSpan) {
+            idSpan.textContent = textId;
+            enSpan.textContent = textEn;
+        } else {
+            // For elements that don't have the spans (like simple text elements)
+            element.textContent = currentLanguage === 'id' ? textId : textEn;
+        }
+    }
     
-    function setInterviewStatusText(textId, textEn, isError = false) { /* ... (sama seperti sebelumnya) ... */ }
+    function setInterviewStatusText(textId, textEn, isError = false) {
+        if (!interviewStatus) return;
+        
+        const idSpan = interviewStatus.querySelector('.lang-id');
+        const enSpan = interviewStatus.querySelector('.lang-en');
+        
+        if (idSpan && enSpan) {
+            idSpan.textContent = textId;
+            enSpan.textContent = textEn;
+        }
+        
+        if (isError) {
+            interviewStatus.classList.add('text-danger');
+        } else {
+            interviewStatus.classList.remove('text-danger');
+        }
+    }
     
-    function setAISpeakerStatusText(textId, textEn) { /* ... (sama seperti sebelumnya) ... */ }
+    function setAISpeakerStatusText(textId, textEn) {
+        if (!aiSpeakerStatus) return;
+        
+        const idSpan = aiSpeakerStatus.querySelector('.lang-id');
+        const enSpan = aiSpeakerStatus.querySelector('.lang-en');
+        
+        if (idSpan && enSpan) {
+            idSpan.textContent = textId;
+            enSpan.textContent = textEn;
+        }
+    }
 
     function startQuestionTimer() {
         clearInterval(timerInterval);
@@ -597,16 +936,15 @@
             if (questionTimerEl) questionTimerEl.style.width = percentage + "%";
 
             if (percentage < 25) {
-                if (questionTimerEl) questionTimerEl.classList.replace('bg-warning', 'bg-danger');
+                if (questionTimerEl) questionTimerEl.classList.replace('bg-info', 'bg-danger');
             } else if (percentage < 50) {
-                if (questionTimerEl) questionTimerEl.classList.replace('bg-info', 'bg-danger'); // Seharusnya bg-warning
-                 if (questionTimerEl) questionTimerEl.classList.replace('bg-info', 'bg-warning');
+                if (questionTimerEl) questionTimerEl.classList.replace('bg-info', 'bg-warning');
             }
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 setInterviewStatusText("Waktu habis untuk pertanyaan ini!", "Time's up for this question!");
-                stopCurrentAnswer(); // Otomatis hentikan jawaban dan tampilkan tombol Next
+                stopCurrentAnswer();
             }
         }, 1000);
     }
@@ -621,17 +959,17 @@
     }
     
     function displayQuestion() {
-        resetQuestionTimer(); // Reset timer setiap pertanyaan baru
+        resetQuestionTimer();
         if (currentQuestionIndex < interviewQuestions.length) {
             if(currentQuestionNumberEl) currentQuestionNumberEl.textContent = currentQuestionIndex + 1;
+            if(totalQuestionsEl) totalQuestionsEl.textContent = interviewQuestions.length;
             
             const question = interviewQuestions[currentQuestionIndex];
             setBilingualText(currentQuestionDisplay, question.id, question.en);
             setAISpeakerStatusText("Saya akan bertanya...", "I'm about to ask a question...");
             if (talkingHead) talkingHead.classList.add('is-talking');
 
-            finalTranscript = ""; // Reset transkrip untuk pertanyaan baru
-            currentFinalTranscript = ""; // Reset juga ini
+            currentFinalTranscript = "";
             if (transcriptDiv) setBilingualText(transcriptDiv, "Menunggu jawaban Anda...", "Waiting for your answer...");
             if (answerLengthEl) answerLengthEl.textContent = "0";
             
@@ -643,9 +981,8 @@
             if (playAnswerBtn) playAnswerBtn.disabled = true;
             if (clearTranscriptBtn) clearTranscriptBtn.disabled = true;
 
-
             let speechSynth = window.speechSynthesis;
-            if (speechSynth && SpeechRecognition && currentLanguage) { // Tambahkan pengecekan currentLanguage
+            if (speechSynth && SpeechRecognition && currentLanguage) {
                 speechSynth.cancel();
                 
                 let utterance = new SpeechSynthesisUtterance(question[currentLanguage]);
@@ -656,18 +993,17 @@
                 utterance.onend = () => {
                     setAISpeakerStatusText("Silakan jawab pertanyaan ini.", "Please answer this question.");
                     if (talkingHead) talkingHead.classList.remove('is-talking');
-                    if (startButton) startButton.disabled = false; // Aktifkan tombol start setelah AI selesai "berbicara"
+                    if (startButton) startButton.disabled = false;
                 };
                 speechSynth.speak(utterance);
             } else {
-                 setTimeout(() => { // Fallback jika speech synth tidak ada
+                setTimeout(() => {
                     setAISpeakerStatusText("Silakan jawab pertanyaan ini.", "Please answer this question.");
                     if (talkingHead) talkingHead.classList.remove('is-talking');
                     if (startButton) startButton.disabled = false;
                 }, 1500); 
             }
         } else {
-            // Wawancara selesai
             setBilingualText(currentQuestionDisplay, "Wawancara selesai!", "Interview complete!");
             setInterviewStatusText("Selamat! Anda telah menyelesaikan semua pertanyaan.", "Congratulations! You've completed all questions.");
             if (startButton) startButton.style.display = 'none';
@@ -681,14 +1017,17 @@
         }
     }
 
-    function startCurrentAnswer() { // Ganti nama fungsi
+    async function startCurrentAnswer() {
         if (!recognition) {
             setInterviewStatusText("Fitur suara tidak didukung.", "Speech feature not supported.", true);
             return;
         }
-        // isInterviewActive sudah true saat displayQuestion dipanggil
-        currentFinalTranscript = ""; // Bersihkan transkrip sebelum mulai jawaban baru
-        if (transcriptDiv) transcriptDiv.innerHTML = ""; // Kosongkan tampilan
+
+        // Start camera
+        await startCamera();
+        
+        currentFinalTranscript = "";
+        if (transcriptDiv) transcriptDiv.innerHTML = "";
         if (answerLengthEl) answerLengthEl.textContent = "0";
 
         if (startButton) startButton.disabled = true;
@@ -697,16 +1036,15 @@
         if (playAnswerBtn) playAnswerBtn.disabled = true;
         if (clearTranscriptBtn) clearTranscriptBtn.disabled = true;
 
-
         recognition.lang = currentLanguage === 'id' ? 'id-ID' : 'en-US';
         try {
             if (!isRecognizing) recognition.start();
         } catch (e) {
-            console.warn("Error starting recognition (possibly already started):", e);
+            console.warn("Error starting recognition:", e);
         }
         resetAnalysisDisplay(); 
         interviewInterval = setInterval(updateAnalysisData, 2500); 
-        questionStartTime = Date.now(); // Mulai timer pertanyaan saat jawaban dimulai
+        questionStartTime = Date.now();
         startQuestionTimer();
     }
     
@@ -714,9 +1052,8 @@
         if (recognition && isRecognizing) {
             recognition.stop(); 
         }
-        // isRecognizing akan di-set false di recognition.onend
         
-        if (isInterviewActive) { // Hanya jika interview secara keseluruhan masih aktif
+        if (isInterviewActive) {
             if (talkingHead) talkingHead.classList.remove('is-talking');
             clearInterval(interviewInterval);
             resetQuestionTimer();
@@ -724,38 +1061,226 @@
             if (startButton) startButton.disabled = false; 
             if (stopButton) stopButton.disabled = true;
 
-            if (isEndOfQuestionFlow) { // Jika ini adalah bagian dari alur normal penghentian jawaban
-                 setInterviewStatusText("Jawaban dihentikan. Analisis ditampilkan.", "Answer stopped. Analysis displayed.");
-                 if (currentQuestionIndex < interviewQuestions.length -1 && nextQuestionButton) { // Tampilkan jika bukan pertanyaan terakhir
+            if (isEndOfQuestionFlow) {
+                setInterviewStatusText("Jawaban dihentikan. Analisis ditampilkan.", "Answer stopped. Analysis displayed.");
+                if (currentQuestionIndex < interviewQuestions.length -1 && nextQuestionButton) {
                     nextQuestionButton.style.display = 'inline-flex';
-                 } else if (currentQuestionIndex >= interviewQuestions.length -1) { // Jika ini pertanyaan terakhir
-                    // Otomatis anggap wawancara selesai
+                } else if (currentQuestionIndex >= interviewQuestions.length -1) {
                     isInterviewActive = false;
-                    displayQuestion(); // Ini akan menampilkan pesan "Wawancara Selesai"
-                 }
-                 updateAnalysisData(); // Tampilkan analisis final untuk jawaban ini
-                 if (playAnswerBtn) playAnswerBtn.disabled = (currentFinalTranscript.trim() === "");
-                 if (clearTranscriptBtn) clearTranscriptBtn.disabled = (currentFinalTranscript.trim() === "");
+                    setTimeout(showResults, 1500);
+                }
+                updateAnalysisData();
+                if (playAnswerBtn) playAnswerBtn.disabled = (currentFinalTranscript.trim() === "");
+                if (clearTranscriptBtn) clearTranscriptBtn.disabled = (currentFinalTranscript.trim() === "");
             }
         }
     }
 
     function stopCurrentAnswer() {
         stopCurrentSpeechRecognition(true); 
+        stopCamera();
         if (aiSpeakerStatus) setAISpeakerStatusText("Jawaban Anda telah diterima.", "Your answer has been received.");
     }
 
     function handleNextQuestion() {
         currentQuestionIndex++;
-        isInterviewActive = true; // Pastikan interview aktif untuk pertanyaan berikutnya
+        isInterviewActive = true;
         displayQuestion();
     }
 
-    function resetAnalysisDisplay() { /* ... (sama seperti sebelumnya) ... */ }
+    function resetAnalysisDisplay() {
+        const resetValue = "-";
+        const elements = [
+            emotionState, confidenceLevel, nervousnessLevel, 
+            speechRate, fillerWords, speechClarity,
+            postureDisplay, eyeContact, handGestures
+        ];
+        
+        elements.forEach(el => {
+            if (el) {
+                el.textContent = resetValue;
+                el.className = "analysis-value";
+            }
+        });
+    }
 
-    function applyLanguageVisibility() { /* ... (sama seperti sebelumnya) ... */ }
+    function applyLanguageVisibility() {
+        document.querySelectorAll('.lang-id, .lang-en').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        const langElements = document.querySelectorAll(`.lang-${currentLanguage}`);
+        langElements.forEach(el => {
+            el.style.display = 'inline';
+        });
+    }
 
-    function toggleLanguage() { /* ... (sama seperti sebelumnya, pastikan memanggil applyLanguageVisibility dan mengupdate teks dinamis seperti pertanyaan) ... */ }
+    function toggleLanguage() {
+        currentLanguage = currentLanguage === 'id' ? 'en' : 'id';
+        localStorage.setItem('preferredLang', currentLanguage);
+        document.documentElement.lang = currentLanguage;
+        
+        applyLanguageVisibility();
+        
+        setBilingualText(languageSwitcher, "Switch to English", "Ganti ke Bahasa Indonesia");
+        
+        if (isInterviewActive) {
+            displayQuestion();
+        }
+    }
+
+    // --- Camera Functions ---
+    async function startCamera() {
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                video: true,
+                audio: false
+            });
+            cameraFeed.srcObject = cameraStream;
+            cameraFeed.style.display = "block";
+            cameraPlaceholder.style.display = "none";
+            return true;
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+            setInterviewStatusText(
+                "Tidak dapat mengakses kamera. Fitur analisis bahasa tubuh mungkin tidak akurat.",
+                "Could not access camera. Body language analysis may be less accurate.",
+                true
+            );
+            return false;
+        }
+    }
+
+    function stopCamera() {
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraFeed.style.display = "none";
+            cameraPlaceholder.style.display = "flex";
+        }
+    }
+
+    // --- Results Functions ---
+    function showResults() {
+        // Generate random results for demonstration
+        const overallScore = Math.floor(Math.random() * 40) + 60; // 60-100
+        const emotionScore = Math.floor(Math.random() * 20) + 70;
+        const speechScore = Math.floor(Math.random() * 20) + 65;
+        const bodyLangScore = Math.floor(Math.random() * 30) + 60;
+        
+        // Update chart
+        renderOverallChart(overallScore, emotionScore, speechScore, bodyLangScore);
+        
+        // Generate strengths
+        const strengths = [
+            { id: "Kepercayaan diri yang baik", en: "Good confidence level" },
+            { id: "Kecepatan bicara yang tepat", en: "Appropriate speech rate" },
+            { id: "Postur tubuh yang baik", en: "Good posture" },
+            { id: "Ekspresi wajah yang sesuai", en: "Appropriate facial expressions" },
+            { id: "Jawaban terstruktur dengan baik", en: "Well-structured answers" }
+        ].slice(0, Math.floor(Math.random() * 2) + 2); // 2-3 strengths
+        
+        // Generate areas to improve
+        const improvements = [
+            { id: "Kurangi kata pengisi seperti 'eee', 'mmm'", en: "Reduce filler words like 'um', 'ah'" },
+            { id: "Tingkatkan kontak mata", en: "Improve eye contact" },
+            { id: "Kurangi kegugupan", en: "Reduce nervousness" },
+            { id: "Perbaiki kejelasan pengucapan", en: "Improve speech clarity" },
+            { id: "Gunakan lebih banyak contoh konkret", en: "Use more concrete examples" }
+        ].slice(0, Math.floor(Math.random() * 2) + 2); // 2-3 improvements
+        
+        // Generate recommendations
+        const recommendations = [
+            { id: "Berlatihlah menjawab pertanyaan umum wawancara di depan cermin", en: "Practice answering common interview questions in front of a mirror" },
+            { id: "Rekam diri Anda saat berlatih dan evaluasi performa", en: "Record yourself practicing and evaluate your performance" },
+            { id: "Ambil napas dalam sebelum menjawab untuk mengurangi kegugupan", en: "Take deep breaths before answering to reduce nervousness" },
+            { id: "Persiapkan cerita pencapaian profesional yang relevan", en: "Prepare relevant professional achievement stories" },
+            { id: "Latih kontak mata dengan berbicara kepada teman atau keluarga", en: "Practice eye contact by speaking to friends or family" }
+        ];
+        
+        // Populate results
+        const strengthsList = document.getElementById("strengthsList");
+        strengthsList.innerHTML = strengths.map(item => 
+            `<li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>${currentLanguage === 'id' ? item.id : item.en}</li>`
+        ).join("");
+        
+        const improvementsList = document.getElementById("improvementsList");
+        improvementsList.innerHTML = improvements.map(item => 
+            `<li class="list-group-item"><i class="fas fa-exclamation-circle text-warning me-2"></i>${currentLanguage === 'id' ? item.id : item.en}</li>`
+        ).join("");
+        
+        const recommendationsContent = document.getElementById("recommendationsContent");
+        recommendationsContent.innerHTML = recommendations.map(item => 
+            `<p><i class="fas fa-arrow-right text-info me-2"></i>${currentLanguage === 'id' ? item.id : item.en}</p>`
+        ).join("");
+        
+        // Show results
+        resultsContainer.style.display = "block";
+        
+        // Check if reached attempt limit
+        interviewAttempts++;
+        if (interviewAttempts >= MAX_ATTEMPTS) {
+            limitMessage.style.display = "block";
+            if (tryAgainBtn) tryAgainBtn.disabled = true;
+        }
+    }
+
+    function renderOverallChart(overall, emotion, speech, bodyLang) {
+        const ctx = document.getElementById('overallChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: [
+                    currentLanguage === 'id' ? 'Keseluruhan' : 'Overall',
+                    currentLanguage === 'id' ? 'Emosi' : 'Emotion',
+                    currentLanguage === 'id' ? 'Ucapan' : 'Speech',
+                    currentLanguage === 'id' ? 'Bahasa Tubuh' : 'Body Language'
+                ],
+                datasets: [{
+                    label: currentLanguage === 'id' ? 'Skor Anda' : 'Your Score',
+                    data: [overall, emotion, speech, bodyLang],
+                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(13, 110, 253, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: { display: true },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+    }
+
+    function resetInterview() {
+        currentQuestionIndex = 0;
+        currentFinalTranscript = "";
+        resetAnalysisDisplay();
+        resetQuestionTimer();
+        resultsContainer.style.display = "none";
+        limitMessage.style.display = "none";
+        if (tryAgainBtn) tryAgainBtn.disabled = false;
+        displayQuestion();
+    }
+
+    // --- Event Listeners ---
+    if (startButton) startButton.addEventListener("click", startCurrentAnswer);
+    if (stopButton) stopButton.addEventListener("click", stopCurrentAnswer);
+    if (nextQuestionButton) nextQuestionButton.addEventListener("click", handleNextQuestion);
+    if (languageSwitcher) languageSwitcher.addEventListener("click", toggleLanguage);
+    if (tryAgainBtn) tryAgainBtn.addEventListener("click", resetInterview);
+    
+    if (downloadReportBtn) {
+        downloadReportBtn.addEventListener("click", function() {
+            alert(currentLanguage === 'id' ? 
+                "Laporan akan diunduh (simulasi)" : 
+                "Report will be downloaded (simulation)");
+        });
+    }
     
     if(clearTranscriptBtn) {
         clearTranscriptBtn.addEventListener('click', () => {
@@ -767,28 +1292,24 @@
         });
     }
 
-    // --- Event Listeners ---
-    if(startButton) startButton.addEventListener("click", startCurrentAnswer); // Ubah ke startCurrentAnswer
-    if(stopButton) stopButton.addEventListener("click", stopCurrentAnswer);
-    if(nextQuestionButton) nextQuestionButton.addEventListener("click", handleNextQuestion);
-    if(languageSwitcher) languageSwitcher.addEventListener("click", toggleLanguage);
-    
     // --- Initial Setup ---
-    if (typeof setLanguage === 'function') { // Panggil dari base.html jika ada
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+    
+    // Initialize with preferred language
+    if (typeof setLanguage === 'function') {
         const preferredLang = localStorage.getItem('preferredLang') || document.documentElement.lang || 'id';
-        setLanguage(preferredLang); // Ini akan set documentElement.lang dan memanggil applyLanguageVisibility versi base.html
-        currentLanguage = preferredLang; // Sinkronkan currentLanguage lokal
-    } else { // Fallback jika setLanguage global tidak ada
+        setLanguage(preferredLang);
+        currentLanguage = preferredLang;
+    } else {
         document.documentElement.lang = currentLanguage;
         applyLanguageVisibility(); 
     }
     
-    isInterviewActive = true; // Wawancara aktif saat halaman dimuat
+    isInterviewActive = true;
     displayQuestion(); 
     resetAnalysisDisplay(); 
     setInterviewStatusText("Menunggu untuk memulai", "Waiting to start");
     if(aiSpeakerStatus) setAISpeakerStatusText("Selamat datang di simulasi wawancara!", "Welcome to the interview simulation!");
     setBilingualText(languageSwitcher, "Switch to English", "Ganti ke Bahasa Indonesia");
-
 </script>
 {% endblock %}
