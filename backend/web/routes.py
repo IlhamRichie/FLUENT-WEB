@@ -502,7 +502,7 @@ def google_login_web_start():
 @web_bp.route('/google/callback/web')
 def google_authorize_web_callback():
     next_url_target = session.pop('oauth_web_next_url', url_for('web.web_profile_route'))
-    token_data, user_obj, error_message = process_google_oauth_callback_service(is_api_request=False)
+    token_data, user_obj, error_message = process_google_oauth_callback_service() # Hapus is_api_request=False
     if error_message or not user_obj:
         flash(error_message or "Kesalahan OAuth Google tidak diketahui saat login web.", "danger")
         return redirect(url_for('web.web_login_page_route'))
