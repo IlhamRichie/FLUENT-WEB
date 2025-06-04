@@ -56,7 +56,7 @@ def analyze_speech_audio_service(audio_file_storage): # Menerima FileStorage obj
     # Gunakan fd untuk memastikan file descriptor ditutup sebelum AudioFile membacanya
     fd, temp_path = tempfile.mkstemp(suffix=".wav") # Asumsi audio adalah wav atau bisa dikonversi
     os.close(fd) # Tutup file descriptor yang dibuka oleh mkstemp
-
+    
     try:
         audio_file_storage.save(temp_path) # Simpan audio yang diupload ke path temporer
 
