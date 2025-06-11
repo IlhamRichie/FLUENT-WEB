@@ -51,7 +51,17 @@ def admin_login_route():
 def admin_dashboard_route():
     check_and_deactivate_inactive_users_service()
     dashboard_data = get_admin_dashboard_data()
-    return render_template('admin_dashboard.html', **dashboard_data)
+
+    # --- TAMBAHKAN BLOK INI ---
+    # Ambil dictionary 'charts' dari data
+    charts_data = dashboard_data.pop('charts', {}) 
+    
+    # Gabungkan data utama dengan data charts
+    final_data_for_template = {**dashboard_data, **charts_data}
+    # --- AKHIR BLOK TAMBAHAN ---
+
+    # Kirim data yang sudah digabung ke template
+    return render_template('admin_dashboard.html', **final_data_for_template)
 
 @admin_bp.route('/users')
 @admin_required

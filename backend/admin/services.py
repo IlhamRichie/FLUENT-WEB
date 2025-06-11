@@ -19,6 +19,10 @@ def get_admin_dashboard_data():
     today_start_utc = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
     today_sessions = sessions_coll.count_documents({"start_time": {"$gte": today_start_utc}})
     completed_sessions_count = sessions_coll.count_documents({"status": "completed"})
+    
+    recent_users = list(users_coll.find({}, {"password": 0}) # Jangan kirim password ke template
+                                  .sort("created_at", -1) # Urutkan dari yang terbaru
+                                  .limit(5)) # Batasi 5 hasil
 
     charts = {}
     try:
@@ -79,7 +83,8 @@ def get_admin_dashboard_data():
         "active_user_count": active_user_count,
         "today_sessions": today_sessions,
         "completed_sessions_count": completed_sessions_count,
-        "charts": charts
+        "charts": charts,
+        "all_users": recent_users # <-- TAMBAHKAN KEY INI
     }
 
 def check_and_deactivate_inactive_users_service():

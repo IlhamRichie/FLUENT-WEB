@@ -1065,3 +1065,30 @@ section.reviews-section .review-card-body p {
     font-size: 1rem;
   }
 }
+
+/* === Card Styling === */
+.fluent-dashboard-card {
+    border-radius: 0.75rem; /* Sedikit lebih bulat */
+    border-top: 4px solid transparent; /* Default border transparan */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    overflow: hidden; /* Penting agar border-radius diterapkan dengan benar */
+}
+
+/* Efek hover untuk interaktivitas */
+.fluent-dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Warna Aksen Border */
+.card-accent-primary {
+    border-top-color: var(--bs-primary);
+}
+
+.card-accent-info {
+    border-top-color: var(--bs-info);
+}
+
+.card-accent-success {
+    border-top-color: var(--bs-success);
+}
