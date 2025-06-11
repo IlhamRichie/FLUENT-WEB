@@ -855,13 +855,13 @@ section.reviews-section .review-card-body p {
   margin-right: auto;
 }
 
-.error-page-section .btn-primary {
-  /* Gaya tombol primary Anda sudah ada, pastikan konsisten */
-}
+/* .error-page-section .btn-primary { */
+/*   Gaya tombol primary Anda sudah ada, pastikan konsisten */
+/* } */
 
-.error-page-section .btn-outline-secondary {
-  /* Gaya tombol sekunder Anda */
-}
+/* .error-page-section .btn-outline-secondary { */
+/*   Gaya tombol sekunder Anda */
+/* } */
 
 /* Responsive adjustments untuk halaman error jika perlu */
 @media (max-width: 767.98px) {
