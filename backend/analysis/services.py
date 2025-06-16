@@ -5,11 +5,93 @@ import cv2 # Untuk decode base64 ke frame
 import tempfile
 import os
 from speech_recognition import Recognizer, AudioFile
+from backend.config import MODEL_PATH, LABELS_PATH, INPUT_WIDTH, INPUT_HEIGHT
+from PIL import Image
 
 # Impor fungsi detektor yang sebenarnya
 from .detectors.emotion_detector import detect_emotion_from_frame # atau detect_emotion_from_image_path
 from .detectors.mouth_detector import detect_mouth_status_from_frame
 from .detectors.pose_detector import detect_pose_status_from_frame
+
+# Coba import tflite_runtime, jika gagal, coba import tensorflow lite biasa
+try:
+    from tensorflow.lite.python.interpreter import Interpreter
+except ImportError:
+    from tensorflow.lite.python.interpreter import Interpreter
+
+interpreter = None
+labels = []
+input_details = None
+output_details = None
+
+def load_emotion_model():
+    """Memuat model TFLite dan labelnya sekali saja saat aplikasi dimulai."""
+    global interpreter, labels, input_details, output_details
+    try:
+        print(f"Memuat model deteksi ekspresi dari {MODEL_PATH}...")
+        interpreter = Interpreter(model_path=MODEL_PATH)
+        interpreter.allocate_tensors()
+        input_details = interpreter.get_input_details()
+        output_details = interpreter.get_output_details()
+
+        print("Memuat label dari", LABELS_PATH)
+        with open(LABELS_PATH, 'r') as f:
+            labels = [line.strip() for line in f.readlines()]
+        
+        print("Model dan label ekspresi berhasil dimuat.")
+        print(f"BENTUK INPUT MODEL YANG DIHARAPKAN: {input_details[0]['shape']}")
+        return True
+    except Exception as e:
+        print(f"GAGAL memuat model atau label ekspresi: {e}")
+        interpreter = None
+        return False
+
+def preprocess_image(image: Image.Image):
+    """Pre-process gambar untuk model deteksi ekspresi."""
+    img_resized = image.resize((INPUT_WIDTH, INPUT_HEIGHT))
+    img_gray = img_resized.convert('L')
+    img_array = np.asarray(img_gray, dtype=np.float32)
+    img_normalized = img_array / 255.0
+    img_flattened = img_normalized.flatten()
+
+    # Pastikan ukuran data sesuai dengan input model
+    expected_size = input_details[0]['shape'][1]
+    if len(img_flattened) > expected_size:
+        img_final = img_flattened[:expected_size]
+    else:
+        # Jika lebih kecil, bisa ditambahkan padding jika perlu, tapi untuk sekarang kita samakan saja
+        img_final = img_flattened
+
+    return np.expand_dims(img_final, axis=0)
+
+def predict_emotion(image: Image.Image):
+    """Melakukan prediksi emosi dari objek gambar PIL."""
+    if interpreter is None:
+        raise RuntimeError("Model deteksi emosi tidak berhasil dimuat.")
+
+    processed_image = preprocess_image(image)
+    
+    expected_size = input_details[0]['shape'][1]
+    actual_size = processed_image.shape[1]
+    
+    if actual_size != expected_size:
+        raise ValueError(f"Ukuran data tidak cocok! Model mengharapkan {expected_size}, tapi kode menghasilkan {actual_size}.")
+
+    interpreter.set_tensor(input_details[0]['index'], processed_image)
+    interpreter.invoke()
+    
+    predictions = interpreter.get_tensor(output_details[0]['index'])[0]
+    
+    predicted_index = np.argmax(predictions)
+    predicted_label = labels[predicted_index]
+    confidence = float(predictions[predicted_index])
+
+    return {
+        'emotion': predicted_label.capitalize(),
+        'confidence': f"{confidence:.1%}"
+    }
+
+load_emotion_model()
 
 def analyze_realtime_frame_service(base64_frame_data: str):
     try:

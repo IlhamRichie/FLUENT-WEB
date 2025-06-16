@@ -1,9 +1,55 @@
 # FLUENTSERVICE/backend/interview/services.py
+import io
 from flask import current_app
 from datetime import datetime, timezone
 from bson.objectid import ObjectId
+import os
+import json
+import base64
+from PIL import Image
+import google.generativeai as genai
+from backend.config import GEMINI_API_KEY
 # --- UBAH IMPOR INI ---
 from backend.database import get_questions_collection, get_sessions_collection
+
+# Inisialisasi Google Generative AI
+genai.configure(api_key=GEMINI_API_KEY)
+model_gemini = genai.GenerativeModel('gemini-1.5-flash')
+
+def clean_json_response(text):
+    """Membersihkan string respons agar menjadi JSON yang valid."""
+    return text.strip().replace("```json", "").replace("```", "")
+
+def generate_interview_question(topic: str):
+    """Membuat pertanyaan wawancara berdasarkan topik."""
+    prompt = f"""Anda adalah hiring manager. Buat SATU pertanyaan wawancara untuk topik: "{topic}".
+    Berikan jawaban HANYA dalam format JSON: {{"question": "<pertanyaan Anda>"}}"""
+    response = model_gemini.generate_content(prompt)
+    return json.loads(clean_json_response(response.text))
+
+def analyze_realtime_chunk(audio_base64: str, video_base64: str):
+    """Menganalisis audio dan video secara real-time."""
+    audio_content = base64.b64decode(audio_base64 + '=' * (-len(audio_base64) % 4))
+    audio_part = {"mime_type": "audio/wav", "data": audio_content}
+    
+    image_bytes = base64.b64decode(video_base64)
+    image = Image.open(io.BytesIO(image_bytes))
+    
+    analysis_prompt = """Anda adalah seorang pelatih wawancara 'FLUENT'.
+    Lakukan dua hal bersamaan: 1. Transkripsikan audio ke teks Bahasa Indonesia. 2. Amati gambar dan teks, lalu berikan satu kalimat umpan balik singkat (maks 15 kata).
+    Berikan output HANYA dalam format JSON valid: {"transcribed_text": "<Teks>", "live_feedback": "<Umpan balik>"}"""
+
+    response = model_gemini.generate_content([analysis_prompt, audio_part, image])
+    return json.loads(clean_json_response(response.text))
+
+def generate_final_report(full_transcript: str):
+    """Membuat laporan akhir berdasarkan transkrip lengkap."""
+    prompt = f"""Anda adalah pelatih karir 'FLUENT'. Berikan analisis akhir dari transkrip ini: "{full_transcript}".
+    Berikan output HANYA dalam format JSON dengan kunci: "overallScore", "summary", "strengthAnalysis", "improvementSuggestion", "suggestedAnswerExample".
+    Semua teks harus dalam Bahasa Indonesia."""
+    
+    response = model_gemini.generate_content(prompt)
+    return json.loads(clean_json_response(response.text))
 
 def start_interview_session_service(user_id: ObjectId, category: str = 'general', num_questions: int = 5):
     questions_coll = get_questions_collection() # Gunakan fungsi getter

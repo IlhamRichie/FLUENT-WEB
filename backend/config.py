@@ -5,6 +5,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Konfigurasi Kunci API
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY tidak diatur dalam file .env")
+
+    # Konfigurasi Model TFLite
+MODEL_PATH = 'backend/static/models/face_expression_model.tflite'
+LABELS_PATH = 'backend/static/labels.txt'
+INPUT_HEIGHT = 31
+INPUT_WIDTH = 31
+
 class Config:
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY', 'a-very-secret-key-for-flask-sessions-dev')
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'a-very-secret-jwt-key-dev')

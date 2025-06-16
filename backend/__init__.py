@@ -6,7 +6,7 @@ from .config import Config
 from .database import init_db, get_questions_collection # Impor fungsi getter
 # Hapus impor 'Flask, render_template' yang duplikat jika ada
 from flask import request, jsonify # Pastikan ini diimpor di atas
-
+from flask_cors import CORS
 
 # HAPUS DEFINISI ERROR HANDLER DARI SINI
 

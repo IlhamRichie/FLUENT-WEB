@@ -943,6 +943,11 @@ def interview_simulation_page():
     current_app.logger.info(f"Pengguna {session.get('user_id')} mengakses simulasi interview.")
     return render_template('web/gimmick.html', user=user_info, app_name=current_app.config.get("APP_NAME", "FLUENT"))
 
+@web_bp.route("/predict_page")
+def predict_page():
+    """Menyajikan halaman deteksi ekspresi TFLite."""
+    return render_template('predict.html')
+
 @web_bp.route('/static/<path:filename>')
 def web_serve_static(filename):
     static_folder = os.path.join(current_app.root_path, 'static')

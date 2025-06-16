@@ -1,8 +1,32 @@
+import base64
+import io
 from flask import Blueprint, request, jsonify, current_app
 from backend.utils.decorators import token_required
 from .services import analyze_realtime_frame_service, analyze_speech_audio_service
+from backend.analysis import services as analysis_service
+from PIL import Image
 
 analysis_api_bp = Blueprint('analysis_api', __name__)
+
+@analysis_api_bp.route("/predict_emotion", methods=['POST'])
+def handle_predict_emotion():
+    if 'image' not in request.json:
+        return jsonify({'error': 'Tidak ada gambar yang dikirim'}), 400
+
+    try:
+        base64_image = request.json['image']
+        image_bytes = base64.b64decode(base64_image)
+        image = Image.open(io.BytesIO(image_bytes))
+        
+        result = analysis_service.predict_emotion(image)
+        return jsonify(result)
+
+    except (RuntimeError, ValueError) as e:
+        print(f"Error prediksi: {e}")
+        return jsonify({'error': str(e)}), 500
+    except Exception as e:
+        print(f"Terjadi error tidak terduga saat prediksi: {e}")
+        return jsonify({'error': f'Terjadi error server: {e}'}), 500
 
 @analysis_api_bp.route('/realtime', methods=['POST'])
 @token_required

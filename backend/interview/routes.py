@@ -5,8 +5,62 @@ from .services import (
     submit_interview_answer_service,
     get_interview_results_service
 )
+from flask import Blueprint, request, jsonify
+from backend.interview import services as interview_service
 
 interview_api_bp = Blueprint('interview_api', __name__)
+
+@interview_api_bp.route("/generate_question", methods=["POST"])
+def handle_generate_question():
+    if not request.is_json:
+        return jsonify({"error": "Request harus JSON"}), 400
+    topic = request.get_json().get("topic")
+    if not topic:
+        return jsonify({"error": "Request harus mengandung 'topic'"}), 400
+    
+    try:
+        result = interview_service.generate_interview_question(topic)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": "Gagal membuat pertanyaan", "details": str(e)}), 500
+
+@interview_api_bp.route("/analyze_realtime_chunk", methods=["POST"])
+def handle_analyze_chunk():
+    if not request.is_json:
+        return jsonify({"error": "Request harus JSON"}), 400
+    data = request.get_json()
+    audio_base64, video_base64 = data.get("audio"), data.get("video")
+    if not audio_base64 or not video_base64:
+        return jsonify({"error": "Request harus mengandung 'audio' dan 'video'"}), 400
+        
+    try:
+        result = interview_service.analyze_realtime_chunk(audio_base64, video_base64)
+        return jsonify(result)
+    except Exception as e:
+        print(f"Error pada analisis real-time: {e}")
+        return jsonify({"error": "Analisis AI gagal", "details": str(e)}), 500
+
+@interview_api_bp.route("/save_report", methods=["POST"])
+def handle_save_report():
+    # NOTE: Bagian penyimpanan ke Firestore diabaikan sesuai permintaan.
+    # Jika ingin diaktifkan, Anda bisa memanggil service dari sini.
+    # Contoh: db_service.save_report(uid, report_data, analysis_result)
+    
+    if not request.is_json: return jsonify({"error": "Request harus JSON"}), 400
+    report_data = request.get_json()
+    full_transcript = report_data.get("transcript")
+    if not full_transcript: return jsonify({"error": "Request harus mengandung 'transcript'"}), 400
+
+    try:
+        # Panggil service untuk menghasilkan analisis akhir
+        analysis_result = interview_service.generate_final_report(full_transcript)
+        
+        # Di sini seharusnya ada logika penyimpanan ke database
+        print("Analisis berhasil dibuat. Penyimpanan ke DB dilewati.")
+        
+        return jsonify(analysis_result)
+    except Exception as e:
+        return jsonify({"error": "Gagal menghasilkan analisis akhir", "details": str(e)}), 500
 
 @interview_api_bp.route('/start', methods=['POST'])
 @token_required
