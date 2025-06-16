@@ -4,6 +4,10 @@ from datetime import datetime, timedelta, timezone
 from bson.objectid import ObjectId
 from flask import send_from_directory
 import os
+import uuid # <-- TAMBAHKAN
+from ua_parser import user_agent_parser
+import jwt
+
 
 from backend.auth.services import (
     get_google_client,
@@ -18,8 +22,42 @@ from backend.auth.services import (
 from backend.database import get_users_collection
 from backend.utils.decorators import web_login_required
 # Placeholder JWT (jika belum ada, untuk API)
-def create_access_token(identity): return f"dummy_access_token_for_{identity.get('id') if isinstance(identity, dict) else identity}"
-def create_refresh_token(identity): return f"dummy_refresh_token_for_{identity.get('id') if isinstance(identity, dict) else identity}"
+def create_access_token(identity):
+    """Membuat Access Token JWT yang valid."""
+    try:
+        payload = {
+            'exp': datetime.now(timezone.utc) + current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES', timedelta(minutes=15)),
+            'iat': datetime.now(timezone.utc),
+            'identity': identity # identity adalah dictionary berisi id, username, dll.
+        }
+        token = jwt.encode(
+            payload,
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
+        return token
+    except Exception as e:
+        current_app.logger.error(f"Error creating access token: {e}")
+        return None
+    
+def create_refresh_token(identity_id):
+    """Membuat Refresh Token JWT yang valid."""
+    try:
+        payload = {
+            'exp': datetime.now(timezone.utc) + current_app.config.get('JWT_REFRESH_TOKEN_EXPIRES', timedelta(days=30)),
+            'iat': datetime.now(timezone.utc),
+            'identity': {'id': identity_id} # Refresh token cukup berisi id
+        }
+        token = jwt.encode(
+            payload,
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
+        return token
+    except Exception as e:
+        current_app.logger.error(f"Error creating refresh token: {e}")
+        return None
+
 
 web_bp = Blueprint('web', __name__, template_folder='../templates')
 
@@ -437,24 +475,82 @@ def api_auth_verify_otp_route():
 
 @web_bp.route('/api/auth/login', methods=['POST'])
 def api_auth_login_route():
-    # ... (kode dari jawaban sebelumnya, sudah benar untuk alur API) ...
     data = request.get_json()
     if not data: return jsonify({"status": "error", "message": "Request body harus JSON"}), 400
     email = data.get('email', '').lower()
     password = data.get('password')
     if not email or not password: return jsonify({"status": "error", "message": "Email dan password wajib diisi"}), 400
+    
     user = get_user_by_email(email)
     if not user: return jsonify({"status": "error", "message": "Kredensial salah"}), 401
     if not user.get('is_active', False) or not user.get('email_verified', False): return jsonify({"status": "error", "message": "Akun belum aktif atau email belum diverifikasi. Selesaikan verifikasi OTP atau hubungi support."}), 403
     if user.get("auth_provider") == "google": return jsonify({"status": "error", "message": "Silakan gunakan Google Sign-In untuk akun ini."}), 400
     if not user.get("password") or not current_app.bcrypt.check_password_hash(user['password'], password): return jsonify({"status": "error", "message": "Kredensial salah"}), 401
+
+    # --- AWAL TAMBAHAN: MANAJEMEN SESI & LOG AKTIVITAS ---
+    now = datetime.now(timezone.utc)
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+    user_agent_string = request.headers.get('User-Agent', 'Unknown')
+    parsed_ua = user_agent_parser.Parse(user_agent_string)
+    device_info = f"{parsed_ua['os']['family']} on {parsed_ua['user_agent']['family']}"
+    
+    session_id = str(uuid.uuid4())
+    
+    new_session = {
+        "session_id": session_id,
+        "ip_address": ip_address,
+        "device_info": device_info,
+        "login_time": now,
+        "last_seen": now
+    }
+    
+    new_activity = {
+        "activity": "User Logged In",
+        "timestamp": now,
+        "ip_address": ip_address,
+        "device_info": device_info
+    }
+
     users_coll = get_users_collection()
-    users_coll.update_one({"_id": user["_id"]}, {"$set": {"last_login": datetime.now(timezone.utc)}})
+    users_coll.update_one(
+        {"_id": user["_id"]},
+        {
+            "$set": {"last_login": now},
+            "$push": {
+                "active_sessions": {"$each": [new_session], "$slice": -10}, # Simpan 10 sesi terakhir
+                "activity_log": {"$each": [new_activity], "$slice": -50} # Simpan 50 log terakhir
+            }
+        }
+    )
+    # --- AKHIR TAMBAHAN ---
+
     identity_data = {"id": str(user["_id"]), "username": user["username"], "email": user["email"]}
     access_token = create_access_token(identity_data)
     refresh_token = create_refresh_token(str(user["_id"]))
-    user_data_for_client = {"id": str(user["_id"]),"username": user["username"],"email": user["email"],"gender": user.get("gender"),"occupation": user.get("occupation"),"profile_picture": user.get("profile_picture"),"is_admin": user.get("is_admin", False),"auth_provider": user.get("auth_provider"),"created_at": user.get("created_at").isoformat() if user.get("created_at") else None,"last_login": user.get("last_login").isoformat() if user.get("last_login") else None,}
-    return jsonify({"status": "success","message": "Login berhasil","access_token": access_token,"refresh_token": refresh_token,"user": user_data_for_client}), 200
+    
+    user_data_for_client = {
+        "id": str(user["_id"]),
+        "username": user["username"],
+        "email": user["email"],
+        "gender": user.get("gender"),
+        "occupation": user.get("occupation"),
+        "profile_picture": user.get("profile_picture"),
+        "is_admin": user.get("is_admin", False),
+        "auth_provider": user.get("auth_provider"),
+        "created_at": user.get("created_at").isoformat() if user.get("created_at") else None,
+        "last_login": now.isoformat() # Kirim waktu login terbaru
+    }
+    
+    return jsonify({
+        "status": "success",
+        "message": "Login berhasil",
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "session_id": session_id,  # <-- KIRIM SESSION ID KE FLUTTER
+        "user": user_data_for_client
+    }), 200
+
 
 @web_bp.route('/api/auth/request-otp', methods=['POST'])
 def api_auth_request_otp_route():

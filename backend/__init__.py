@@ -5,6 +5,8 @@ from flask import Flask, render_template # Hapus 'app' dari impor ini
 from .config import Config
 from .database import init_db, get_questions_collection # Impor fungsi getter
 # Hapus impor 'Flask, render_template' yang duplikat jika ada
+from flask import request, jsonify # Pastikan ini diimpor di atas
+
 
 # HAPUS DEFINISI ERROR HANDLER DARI SINI
 
@@ -20,6 +22,10 @@ def create_app(config_class=Config):
         # Untuk mengakses request, impor `request` dari flask jika belum
         # from flask import request, current_app
         # current_app.logger.warning(f"Page not found: {request.url} - {e}")
+        # Jika request ke path API, kembalikan JSON
+        if request.path.startswith('/api/'):
+            return jsonify({'status': 'error', 'message': 'Endpoint tidak ditemukan.'}), 404
+        # Jika tidak, baru kembalikan halaman HTML
         return render_template('errors/404.html'), 404
 
     @app.errorhandler(500)
@@ -33,6 +39,24 @@ def create_app(config_class=Config):
     from flask_cors import CORS
     from flask_mail import Mail
     from .auth.services import init_app_oauth
+    from datetime import timezone, timedelta
+    
+    def format_datetime_to_wib(utc_dt):
+        """Custom filter untuk mengubah datetime UTC ke format string WIB."""
+        if not utc_dt:
+            return "N/A"
+        
+        # Buat timezone untuk WIB (UTC+7)
+        wib_tz = timezone(timedelta(hours=7))
+        
+        # Ubah datetime ke zona waktu WIB
+        wib_dt = utc_dt.astimezone(wib_tz)
+        
+        # Format ke string yang mudah dibaca
+        return wib_dt.strftime('%d %b %Y, %H:%M:%S WIB')
+
+    # Daftarkan fungsi sebagai filter Jinja2
+    app.jinja_env.filters['to_wib'] = format_datetime_to_wib
 
     app.bcrypt = Bcrypt(app)
     CORS(app, resources={
@@ -58,7 +82,7 @@ def create_app(config_class=Config):
     from .web.routes import web_bp # Pastikan web_bp diimpor
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    app.register_blueprint(users_api_bp, url_prefix='/api/users')
+    app.register_blueprint(users_api_bp, url_prefix='/api/user')
     app.register_blueprint(interview_api_bp, url_prefix='/api/interview')
     app.register_blueprint(analysis_api_bp, url_prefix='/api/analysis')
     app.register_blueprint(admin_bp, url_prefix='/admin')

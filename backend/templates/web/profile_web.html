@@ -71,7 +71,7 @@
                                     <span class="lang-id">Bergabung</span><span class="lang-en">Joined</span>
                                 </small>
                                 <span class="fw-medium">
-                                    {{ user.created_at.strftime('%d %B %Y') if user.created_at else 'N/A' }}
+                                    {{ user.created_at | to_wib }}
                                 </span>
                             </div>
                             <div class="detail-item">
@@ -80,7 +80,7 @@
                                 </small>
                                 <span class="fw-medium">
                                     {% if user.last_login %}
-                                        {{ user.last_login.strftime('%d %B %Y, %H:%M') }}
+                                        {{ user.last_login | to_wib }}
                                     {% else %}
                                         <span class="lang-id">Tidak Pernah</span><span class="lang-en">Never</span>
                                     {% endif %}

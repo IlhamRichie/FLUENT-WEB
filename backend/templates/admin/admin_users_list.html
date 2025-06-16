@@ -92,16 +92,10 @@
                             </td>
                             <td>{{ user.occupation|default('N/A', True)|truncate(20, True) }}</td>
                             <td>
-                                <div class="fw-medium">{{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</div>
-                                <small class="text-muted">{{ user.created_at.strftime('%H:%M') if user.created_at else '' }}</small>
+                                {{ user.created_at | to_wib }}
                             </td>
                             <td>
-                                {% if user.last_login %}
-                                <div class="fw-medium">{{ user.last_login.strftime('%d %b %Y') }}</div>
-                                <small class="text-muted">{{ user.last_login.strftime('%H:%M') }}</small>
-                                {% else %}
-                                <span class="text-muted small"><span class="lang-id">Tidak pernah</span><span class="lang-en">Never</span></span>
-                                {% endif %}
+                                {{ user.last_login | to_wib }}
                             </td>
                              <td>
                                 <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'light') }}-subtle text-{{ 'info' if user.auth_provider == 'google' else ('secondary' if user.auth_provider == 'local' else 'dark') }}-emphasis">
@@ -228,11 +222,17 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <small class="text-muted d-block"><span class="lang-id">Terdaftar Pada</span><span class="lang-en">Registered On</span></small>
-                        <span class="fw-medium">{{ user.created_at.strftime('%d %B %Y, %H:%M') if user.created_at else 'N/A' }}</span>
+                        <span class="fw-medium">{{ user.created_at | to_wib }}</span>
                     </div>
                     <div class="col-md-6 mb-3">
                         <small class="text-muted d-block"><span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span></small>
-                        <span class="fw-medium">{{ user.last_login.strftime('%d %B %Y, %H:%M') if user.last_login else "<span class='lang-id'>Tidak pernah login</span><span class='lang-en'>Never logged in</span>"|safe }}</span>
+                        <span class="fw-medium">
+                            {% if user.last_login %}
+                                {{ user.last_login | to_wib }}
+                            {% else %}
+                                <span class='lang-id'>Tidak pernah login</span><span class='lang-en'>Never logged in</span>
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
             </div>

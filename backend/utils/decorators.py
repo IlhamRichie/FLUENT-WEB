@@ -12,32 +12,61 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         auth_header = request.headers.get('Authorization')
-        if auth_header:
-            try:
-                token = auth_header.split(" ")[1]
-            except IndexError:
-                return jsonify({'message': 'Bearer token malformed'}), 401
-        
-        if not token:
-            return jsonify({'message': 'Token is missing!'}), 401
-        
+
+        if not auth_header:
+            return jsonify({'status': 'fail', 'message': 'Authorization header is missing!'}), 401
+
         try:
-            data = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
-            # get_user_by_id sudah handle lookup ke DB
-            current_user_from_db = get_user_by_id(data['user_id'])
+            # Pastikan formatnya "Bearer <token>"
+            token_parts = auth_header.split(" ")
+            if len(token_parts) != 2 or token_parts[0].lower() != 'bearer':
+                raise jwt.InvalidTokenError("Token malformed, must be 'Bearer <token>'.")
+            token = token_parts[1]
+        except Exception:
+            return jsonify({'status': 'fail', 'message': 'Token malformed!'}), 401
+
+        try:
+            # --- PERBAIKAN 1: Gunakan 'SECRET_KEY' untuk konsistensi ---
+            # Pastikan 'SECRET_KEY' ada di file config.py Anda
+            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
+
+            # --- PERBAIKAN 2: Cara mengambil user_id yang benar dari payload ---
+            # Akses 'identity' dulu, baru 'id'
+            identity_payload = data.get('identity')
+            if not isinstance(identity_payload, dict):
+                 # Fallback jika identity bukan dictionary (misal dari flask-jwt-extended lama)
+                 identity_payload = data.get('sub')
+                 if not identity_payload:
+                     return jsonify({'status': 'fail', 'message': 'Invalid token payload structure.'}), 401
+                 user_id = identity_payload['id']
+            else:
+                 user_id = identity_payload.get('id')
+
+
+            if not user_id:
+                return jsonify({'status': 'fail', 'message': 'User ID not found in token identity.'}), 401
+
+            # Panggil fungsi yang sudah ada untuk mengambil data user dari DB
+            current_user_from_db = get_user_by_id(user_id)
+            
             if not current_user_from_db:
-                return jsonify({'message': 'User not found for token'}), 401
+                return jsonify({'status': 'fail', 'message': 'User for this token not found.'}), 401
+            
+            # (Opsional) Cek jika akun aktif
             if not current_user_from_db.get('is_active', True):
-                return jsonify({'message': 'Your account is inactive'}), 403
+                return jsonify({'status': 'fail', 'message': 'Your account is inactive.'}), 403
+
         except jwt.ExpiredSignatureError:
-            return jsonify({'message': 'Token has expired!'}), 401
-        except jwt.InvalidTokenError:
-            return jsonify({'message': 'Token is invalid!'}), 401
+            return jsonify({'status': 'fail', 'message': 'Token has expired! Please log in again.'}), 401
+        except jwt.InvalidTokenError as e:
+            return jsonify({'status': 'fail', 'message': f'Token is invalid! {e}'}), 401
         except Exception as e:
-            current_app.logger.error(f"Token processing error: {str(e)}")
-            return jsonify({'message': f'Token processing error: {str(e)}'}), 401
+            current_app.logger.error(f"An unexpected error occurred during token processing: {str(e)}")
+            return jsonify({'status': 'error', 'message': 'An internal error occurred during authentication.'}), 500
         
+        # Jika semua valid, teruskan ke fungsi route dengan data user
         return f(current_user_from_db, *args, **kwargs)
+
     return decorated
 
 def web_login_required(f):

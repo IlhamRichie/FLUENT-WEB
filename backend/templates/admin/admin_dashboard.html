@@ -191,8 +191,7 @@
                                 </span>
                             </td>
                             <td class="pe-4">
-                                <div class="fw-medium">{{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</div>
-                                <small class="text-muted">{{ user.created_at.strftime('%H:%M') if user.created_at else '' }}</small>
+                                {{ user.created_at | to_wib }}
                             </td>
                         </tr>
                         {% endfor %}
