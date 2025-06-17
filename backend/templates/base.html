@@ -1,213 +1,221 @@
 <!DOCTYPE html>
-<html lang="id"> {# Default ke Bahasa Indonesia #}
-  <head>
+<html lang="id">
+{# Default ke Bahasa Indonesia, bisa diubah oleh JavaScript #}
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <meta name="description" content="FLUENT adalah platform latihan wawancara berbasis AI untuk membantu Anda sukses dalam karir.">
-    <meta name="keywords" content="Interview AI, Latihan Wawancara, AI Coach, Persiapan Karir">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:title" content="FLUENT - {% block og_title %}Halaman{% endblock %}">
-    <meta property="og:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu.">
-    <meta property="og:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ request.url }}">
-    <meta property="twitter:title" content="FLUENT - {% block twitter_title %}Halaman{% endblock %}">
-    <meta property="twitter:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu.">
-    <meta property="twitter:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}">
 
+    <meta name="description" content="FLUENT adalah platform latihan wawancara berbasis AI untuk membantu Anda sukses dalam karir." />
+    <meta name="keywords" content="Interview AI, Latihan Wawancara, AI Coach, Persiapan Karir" />
     <title>FLUENT - {% block title %}Selamat Datang{% endblock %}</title>
-    
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:title" content="FLUENT - {% block og_title %}Halaman{% endblock %}" />
+    <meta property="og:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu." />
+    <meta property="og:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}" />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="{{ request.url }}" />
+    <meta property="twitter:title" content="FLUENT - {% block twitter_title %}Halaman{% endblock %}" />
+    <meta property="twitter:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu." />
+    <meta property="twitter:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}" />
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/fluent-logo.png') }}" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/fluent-logo.png') }}" />
-    
+
     {% block head_extra %}{% endblock %}
+</head>
 
-    <style>
-      /* --- PERBAIKAN UTAMA --- */
-      /* 1. Mencegah konten tertutup oleh navbar yang `fixed` */
-      body {
-        padding-top: 120px; /* Sesuaikan nilai ini jika tinggi navbar Anda berubah */
-      }
-
-      /* 2. CSS untuk multi-bahasa (tetap di sini agar cepat dimuat) */
-      .lang-en, .lang-id { display: none; }
-      html[lang="id"] .lang-id { display: inline-block; }
-      html[lang="en"] .lang-en { display: inline-block; }
-      .lang-en.d-block, .lang-id.d-block { display: none; }
-      html[lang="id"] .lang-id.d-block { display: block; }
-      html[lang="en"] .lang-en.d-block { display: block; }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg fluent-navbar">
-        <div class="container">
-          <div class="navbar-content-wrapper">
-            <a class="navbar-brand fw-bold" href="{{ url_for('web.index_route') }}">
-              <img src="{{ url_for('static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" height="32" class="me-2" />
-              FLUENT
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'web.index_route' %}active{% endif %}" href="{{ url_for('web.index_route') }}"><i class="fas fa-house me-2"></i><span class="lang-id">Beranda</span><span class="lang-en">Home</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'web.features_route' %}active{% endif %}" href="{{ url_for('web.features_route') }}"><i class="fas fa-star me-2"></i><span class="lang-id">Fitur</span><span class="lang-en">Features</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint == 'web.blog_index_route' %}active{% endif %}" href="{{ url_for('web.blog_index_route') }}"><i class="fas fa-newspaper me-2"></i><span>Blog</span></a>
-                </li>
-              </ul>
-              <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item dropdown me-2">
-                  <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-globe me-1"></i> <span id="currentLangDisplay">ID</span>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-                    <li><a class="dropdown-item lang-switcher" href="#" data-lang="id">Bahasa Indonesia (ID)</a></li>
-                    <li><a class="dropdown-item lang-switcher" href="#" data-lang="en">English (EN)</a></li>
-                  </ul>
-                </li>
-                {% if session.is_web_user %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle me-2"></i><span class="lang-id">Profil Saya</span><span class="lang-en">My Profile</span>
-                    </a>
-                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                        <li><a class="dropdown-item" href="{{ url_for('web.web_profile_route') }}"><i class="fas fa-user-edit me-2"></i><span class="lang-id">Lihat Profil</span><span class="lang-en">View Profile</span></a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('web.interview_simulation_page') }}"><i class="fas fa-microphone-lines me-2"></i><span class="lang-id">Simulasi AI</span><span class="lang-en">AI Simulation</span></a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="{{ url_for('web.web_logout_route') }}"><i class="fas fa-sign-out-alt me-2"></i><span class="lang-id">Keluar</span><span class="lang-en">Logout</span></a></li>
+<body>
+    <nav class="navbar navbar-expand-lg fluent-navbar fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-content-wrapper d-flex align-items-center">
+                <a class="navbar-brand fw-bold" href="{{ url_for('web.index_route') }}">
+                    <img src="{{ url_for('static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" height="32" class="me-2" />
+                    FLUENT
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'web.index_route' %}active{% endif %}" href="{{ url_for('web.index_route') }}">
+                                <i class="fas fa-house me-2"></i><span class="lang-id">Beranda</span><span class="lang-en">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'web.features_route' %}active{% endif %}" href="{{ url_for('web.features_route') }}">
+                                <i class="fas fa-star me-2"></i><span class="lang-id">Fitur</span><span class="lang-en">Features</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'web.blog_index_route' %}active{% endif %}" href="{{ url_for('web.blog_index_route') }}">
+                                <i class="fas fa-newspaper me-2"></i><span>Blog</span>
+                            </a>
+                        </li>
                     </ul>
-                </li>
-                {% elif session.is_admin %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.endpoint and 'admin.' in request.endpoint %}active{% endif %}" href="{{ url_for('admin.admin_dashboard_route') }}"><i class="fas fa-tachometer-alt me-2"></i><span>Admin</span></a>
-                </li>
-                <li class="nav-item"><a class="btn btn-sm nav-btn-cta-dark" href="{{ url_for('admin.admin_logout_route') }}"><i class="fas fa-sign-out-alt me-2"></i><span>Logout</span></a></li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="btn btn-sm nav-btn-cta-dark" href="{{ url_for('web.web_login_page_route') }}"><i class="fas fa-sign-in-alt me-2"></i><span class="lang-id">Masuk Aplikasi</span><span class="lang-en">Enter App</span></a>
-                </li>
-                {% endif %}
-              </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-globe me-1"></i>
+                                <span id="currentLangDisplay">ID</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                                <li>
+                                    <a class="dropdown-item lang-switcher" href="#" data-lang="id">Bahasa Indonesia (ID)</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item lang-switcher" href="#" data-lang="en">English (EN)</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        {% if session.is_web_user %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-2"></i><span class="lang-id">Profil Saya</span><span class="lang-en">My Profile</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('web.web_profile_route') }}">
+                                        <i class="fas fa-user-edit me-2"></i><span class="lang-id">Lihat Profil</span><span class="lang-en">View Profile</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('web.interview_simulation_page') }}">
+                                        <i class="fas fa-microphone-lines me-2"></i><span class="lang-id">Simulasi AI</span><span class="lang-en">AI Simulation</span>
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ url_for('web.web_logout_route') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i><span class="lang-id">Keluar</span><span class="lang-en">Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% elif session.is_admin %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint and 'admin.' in request.endpoint %}active{% endif %}" href="{{ url_for('admin.admin_dashboard_route') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i><span>Admin</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm nav-btn-cta-dark" href="{{ url_for('admin.admin_logout_route') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i><span>Logout</span>
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-sm nav-btn-cta-dark" href="{{ url_for('web.web_login_page_route') }}">
+                                <i class="fas fa-sign-in-alt me-2"></i><span class="lang-id">Masuk Aplikasi</span><span class="lang-en">Enter App</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-          </div>
         </div>
     </nav>
 
-    <main role="main" class="main-content-wrapper">
-      {% block content_hero %}{% endblock %} 
-      {% block content %}{% endblock %}
+    <main role="main">
+        {% block content_hero %}{% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
     <footer class="fluent-footer py-5 bg-light border-top">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-            <h5 class="fw-semibold">FLUENT</h5>
-            <p class="small text-muted">
-              <span class="lang-id">Merevolusi persiapan wawancara dengan analisis bertenaga AI.</span>
-              <span class="lang-en">Revolutionizing interview preparation with AI-powered analysis.</span>
-            </p>
-          </div>
-          <div class="col-lg-2 col-6">
-            <h5 class="fw-semibold"><span class="lang-id">Tautan</span><span class="lang-en">Links</span></h5>
-            <ul class="list-unstyled">
-              <li><a href="{{ url_for('web.index_route') }}" class="text-decoration-none text-muted small footer-link"><span class="lang-id">Beranda</span><span class="lang-en">Home</span></a></li>
-              <li><a href="{{ url_for('web.features_route') }}" class="text-decoration-none text-muted small footer-link"><span class="lang-id">Fitur</span><span class="lang-en">Features</span></a></li>
-              <li><a href="{{ url_for('web.blog_index_route') }}" class="text-decoration-none text-muted small footer-link"><span>Blog</span></a></li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-6">
-             <h5 class="fw-semibold"><span class="lang-id">Legal</span><span class="lang-en">Legal</span></h5>
-             <ul class="list-unstyled">
-                <li><a href="#" class="text-decoration-none text-muted small footer-link" ><span class="lang-id">Kebijakan Privasi</span><span class="lang-en">Privacy Policy</span></a></li>
-                <li><a href="#" class="text-decoration-none text-muted small footer-link" ><span class="lang-id">Ketentuan Layanan</span><span class="lang-en">Terms of Service</span></a></li>
-            </ul>
-          </div>
-          <div class="col-lg-3 col-md-12 mt-4 mt-lg-0">
-            <h5 class="fw-semibold"><span class="lang-id">Kontak</span><span class="lang-en">Contact</span></h5>
-            <p class="small text-muted"><i class="fas fa-envelope me-2"></i>contact@fluentapp.com</p>
-            <div class="social-icons mt-3">
-              <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon" aria-label="Link to our Twitter profile"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon" aria-label="Link to our LinkedIn profile"><i class="fab fa-linkedin"></i></a>
-              <a href="#" class="text-decoration-none text-muted fs-5 social-icon" aria-label="Link to our Github profile"><i class="fab fa-github"></i></a>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                    <h5 class="fw-semibold">FLUENT</h5>
+                    <p class="small text-muted">
+                        <span class="lang-id">Merevolusi persiapan wawancara dengan analisis bertenaga AI.</span>
+                        <span class="lang-en">Revolutionizing interview preparation with AI-powered analysis.</span>
+                    </p>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5 class="fw-semibold">
+                        <span class="lang-id">Tautan</span><span class="lang-en">Links</span>
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="{{ url_for('web.index_route') }}" class="text-decoration-none text-muted small footer-link">
+                                <span class="lang-id">Beranda</span><span class="lang-en">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('web.features_route') }}" class="text-decoration-none text-muted small footer-link">
+                                <span class="lang-id">Fitur</span><span class="lang-en">Features</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('web.blog_index_route') }}" class="text-decoration-none text-muted small footer-link">
+                                <span>Blog</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <h5 class="fw-semibold">
+                        <span class="lang-id">Legal</span><span class="lang-en">Legal</span>
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="#" class="text-decoration-none text-muted small footer-link">
+                                <span class="lang-id">Kebijakan Privasi</span><span class="lang-en">Privacy Policy</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="text-decoration-none text-muted small footer-link">
+                                <span class="lang-id">Ketentuan Layanan</span><span class="lang-en">Terms of Service</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-12 mt-4 mt-lg-0">
+                    <h5 class="fw-semibold">
+                        <span class="lang-id">Kontak</span><span class="lang-en">Contact</span>
+                    </h5>
+                    <p class="small text-muted">
+                        <i class="fas fa-envelope me-2"></i>contact@fluentapp.com
+                    </p>
+                    <div class="social-icons mt-3">
+                        <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon" aria-label="Link to our Twitter profile"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-decoration-none text-muted me-3 fs-5 social-icon" aria-label="Link to our LinkedIn profile"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-decoration-none text-muted fs-5 social-icon" aria-label="Link to our Github profile"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
             </div>
-          </div>
+            <hr class="my-4" />
+            <div class="text-center">
+                <p class="small text-muted">
+                    &copy; <span id="current-year">2025</span> FLUENT.
+                    <span class="lang-id">Hak cipta dilindungi.</span>
+                    <span class="lang-en">All rights reserved.</span>
+                </p>
+            </div>
         </div>
-        <hr class="my-4" />
-        <div class="text-center">
-          <p class="small text-muted">
-            &copy; <span id="current-year">2025</span> FLUENT.
-            <span class="lang-id">Hak cipta dilindungi.</span>
-            <span class="lang-en">All rights reserved.</span>
-          </p>
-        </div>
-      </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous" defer></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js" defer></script>
-    
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // --- Efek scroll pada Navbar ---
-        const actualNavbar = document.querySelector(".fluent-navbar");
-        if (actualNavbar) {
-          window.addEventListener("scroll", function () {
-            if (window.scrollY > 30) {
-              actualNavbar.classList.add("scrolled");
-            } else {
-              actualNavbar.classList.remove("scrolled");
-            }
-          });
-        }
 
-        // --- Logika Pengalih Bahasa (Disederhanakan) ---
-        const langSwitcherLinks = document.querySelectorAll('.lang-switcher');
-        const htmlTag = document.documentElement;
-        const currentLangDisplay = document.getElementById('currentLangDisplay');
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
-        function setLanguage(lang) {
-          htmlTag.setAttribute('lang', lang); // Cukup set atribut, CSS akan menangani sisanya
-          localStorage.setItem('preferredLang', lang);
-          if (currentLangDisplay) {
-            currentLangDisplay.textContent = lang.toUpperCase();
-          }
-        }
-        
-        langSwitcherLinks.forEach(link => {
-          link.addEventListener('click', function(e) {
-            e.preventDefault();
-            setLanguage(this.dataset.lang);
-          });
-        });
-        
-        // Muat bahasa pilihan pengguna atau default ke 'id'
-        const preferredLang = localStorage.getItem('preferredLang') || 'id';
-        setLanguage(preferredLang);
-
-        // --- Update Tahun Copyright Secara Dinamis ---
-        const yearSpan = document.getElementById('current-year');
-        if(yearSpan) {
-            yearSpan.textContent = new Date().getFullYear();
-        }
-      });
-    </script>
     {% block scripts_extra %}{% endblock %}
-  </body>
+</body>
+
 </html>

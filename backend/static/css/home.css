@@ -1,0 +1,132 @@
+/* ======================================================= */
+/* === TEMA UTAMA & STYLING GLOBAL                    === */
+/* ======================================================= */
+:root {
+    --fluent-red-primary: #FF416C;
+    --fluent-red-secondary: #FF4B2B;
+    --fluent-primary-rgb: 255, 65, 108; /* Untuk background transparan */
+    --fluent-text-dark: #212529;
+    --fluent-text-muted: #6c757d;
+    --fluent-bg-light: #f8f9fa;
+    --fluent-bg-white: #ffffff;
+    --fluent-border-color: #dee2e6;
+}
+
+/* Efek Gradasi Teks Merah (Bisa dipakai di mana saja) */
+.gradient-text {
+    background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+/* Base untuk section dengan blur */
+.section-with-blur {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Template untuk bentuk blur abstrak */
+.abstract-blur {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+}
+
+/* ======================================================= */
+/* === HERO SECTION                                   === */
+/* ======================================================= */
+.hero-section-styled {
+    background-color: var(--fluent-bg-white);
+    padding: 8rem 0;
+    text-align: center;
+}
+.hero-section-styled .abstract-blur {
+    width: 600px; height: 600px; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-tag { display: inline-block; border: 1px solid var(--fluent-border-color); border-radius: 50rem; padding: 0.3rem 1rem; font-size: 0.8rem; font-weight: 500; color: var(--fluent-text-muted); margin-bottom: 1.5rem; }
+.hero-title { font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.2; color: var(--fluent-text-dark); }
+.hero-title .fa-key { font-size: 0.8em; vertical-align: middle; color: var(--fluent-red-primary); margin: 0 0.25em; }
+.hero-subtitle { font-size: 1.1rem; color: var(--fluent-text-muted); max-width: 600px; margin: 1.5rem auto 0; }
+.cta-buttons { margin-top: 2rem; }
+.btn-gradient-red { background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary)); border: none; color: white; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
+.btn-gradient-red:hover { color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3); }
+
+/* ======================================================= */
+/* === CHALLENGE / MASONRY SECTION                      === */
+/* ======================================================= */
+.challenge-section { background-color: var(--fluent-bg-light); padding: 6rem 0; }
+.challenge-eyebrow { display: block; font-weight: 600; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.challenge-main-title { font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 700; color: var(--fluent-text-dark); line-height: 1.2; }
+.challenge-icon { color: var(--fluent-red-primary); font-size: 1.5rem; vertical-align: middle; }
+.challenge-description { font-size: 1.1rem; color: var(--fluent-text-muted); line-height: 1.8; }
+.masonry-gallery { column-count: 3; column-gap: 1.25rem; }
+.masonry-item { width: 100%; height: auto; display: inline-block; margin-bottom: 1.25rem; border-radius: 0.75rem; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.masonry-item:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); }
+
+/* ======================================================= */
+/* === HOW IT WORKS V2 SECTION                        === */
+/* ======================================================= */
+.how-it-works-v2 { background-color: var(--fluent-bg-white); color: var(--fluent-text-dark); padding: 6rem 0; }
+.how-it-works-v2 .section-title { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 1rem; }
+.how-it-works-v2 .section-subtitle { color: var(--fluent-text-muted); max-width: 700px; margin: 0 auto 4rem; }
+.how-it-works-v2 .column-title { font-weight: 600; color: var(--fluent-text-dark); margin-bottom: 2rem; font-size: 1.25rem; }
+.metrics-wrapper { display: flex; justify-content: space-around; gap: 2rem; }
+.metric-item { text-align: center; }
+.metric-label { font-size: 0.9rem; text-transform: uppercase; color: var(--fluent-text-muted); letter-spacing: 0.5px; }
+.metric-number { font-size: clamp(3.5rem, 10vw, 5.5rem); font-weight: 800; line-height: 1.1; }
+.metric-desc { font-size: 1rem; color: var(--fluent-text-dark); font-weight: 500; }
+.bar-chart-item { display: flex; align-items: center; margin-bottom: 1.25rem; }
+.bar-label { flex-shrink: 0; width: 140px; font-size: 0.95rem; color: var(--fluent-text-muted); padding-right: 1rem; }
+.bar-container { flex-grow: 1; height: 20px; background-color: #e9ecef; border-radius: 5px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, #FF4B2B, #FF416C); border-radius: 5px; animation: fillBar 1.5s ease-out forwards; }
+.bar-percentage { padding-left: 1rem; font-weight: 600; color: var(--fluent-text-dark); }
+.cta-wrapper { margin-top: 4rem; }
+
+/* ======================================================= */
+/* === FEATURE FOCUS SECTION                          === */
+/* ======================================================= */
+.feature-focus-section { background-color: var(--fluent-bg-light); color: var(--fluent-text-dark); padding: 6rem 0; }
+.feature-focus-section .feature-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; line-height: 1.2; color: var(--fluent-text-dark); }
+.feature-focus-section .feature-short-desc { color: var(--fluent-text-muted); font-size: 0.95rem; margin-top: 1rem; border-left: 3px solid var(--fluent-red-primary); padding-left: 1rem; }
+.feature-focus-section .feature-long-desc p { color: #495057; line-height: 1.8; margin-bottom: 1.5rem; }
+
+/* ======================================================= */
+/* === CTA & STATS SECTION                            === */
+/* ======================================================= */
+.cta-stats-section { background-color: var(--fluent-bg-white); color: var(--fluent-text-dark); padding: 6rem 0; text-align: center; }
+.stat-item { margin-bottom: 3rem; }
+.stat-number { font-size: clamp(3rem, 10vw, 5rem); font-weight: 800; line-height: 1; color: var(--fluent-text-dark); }
+.stat-description { font-size: 0.95rem; color: var(--fluent-text-muted); line-height: 1.5; margin-top: 0.5rem; max-width: 250px; margin: 0.5rem auto 0; }
+.cta-stats-section .final-cta-button { margin-top: 2rem; }
+
+/* ======================================================= */
+/* === FAQ SECTION                                    === */
+/* ======================================================= */
+.faq-section { background-color: var(--fluent-bg-light); padding: 6rem 0; }
+.faq-title { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 4rem; text-align: center; }
+.faq-section .accordion { --bs-accordion-border-width: 0; --bs-accordion-border-radius: 0; --bs-accordion-inner-border-radius: 0; background-color: transparent; }
+.faq-section .accordion-item { background-color: transparent; border-bottom: 1px solid var(--fluent-border-color); }
+.faq-section .accordion-header { margin-bottom: 0; }
+.faq-section .accordion-button { background-color: transparent !important; color: var(--fluent-text-dark); font-weight: 600; padding: 1.5rem 1rem; display: flex; align-items: center; gap: 1.25rem; }
+.faq-section .accordion-button:focus { box-shadow: none; }
+.faq-number { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(90deg, #FF4B2B, #FF416C); color: white; border-radius: 0.5rem; font-size: 1rem; font-weight: 700; }
+.faq-section .accordion-button::after { content: '\f067'; font-family: 'Font Awesome 6 Free'; font-weight: 900; background-image: none; margin-left: auto; transition: transform 0.3s ease; color: var(--fluent-red-primary); }
+.faq-section .accordion-button:not(.collapsed)::after { content: '\f068'; transform: rotate(180deg); }
+.faq-section .accordion-collapse { position: relative; overflow: hidden; }
+.faq-section .accordion-body { padding: 0.5rem 1rem 2rem calc(36px + 1.25rem + 1rem); color: var(--fluent-text-muted); line-height: 1.7; }
+.faq-section .accordion-item:first-of-type { border-top: 1px solid var(--fluent-border-color); }
+.faq-section .accordion-button:not(.collapsed) { background: rgba(var(--fluent-primary-rgb), 0.05) !important; }
+.faq-open-number { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); font-size: 6rem; font-weight: 800; color: rgba(220, 53, 69, 0.08); z-index: 0; user-select: none; }
+.faq-open-number .times-symbol { font-size: 0.5em; vertical-align: super; margin-left: 0.1em; color: rgba(220, 53, 69, 0.15); }
+
+/* === KEYFRAMES & MEDIA QUERIES === */
+@keyframes fillBar { from { width: 0%; } }
+@media (max-width: 991.98px) { .challenge-section .row { flex-direction: column-reverse; } .challenge-section .col-lg-5 { text-align: center; margin-bottom: 3rem; } .masonry-gallery { column-count: 2; } }
+@media (max-width: 576px) { .masonry-gallery { column-count: 1; } }

@@ -1,0 +1,113 @@
+/* === STYLING GLOBAL (Disalin dari halaman lain untuk konsistensi) === */
+:root {
+    --fluent-red-primary: #FF416C;
+    --fluent-red-secondary: #FF4B2B;
+    --fluent-primary-rgb: 255, 65, 108;
+    --fluent-text-dark: #212529;
+    --fluent-text-muted: #6c757d;
+    --fluent-bg-light: #f8f9fa;
+    --fluent-bg-white: #ffffff;
+    --fluent-border-color: #dee2e6;
+}
+.gradient-text {
+    background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+    -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block;
+}
+.section-with-blur { position: relative; overflow: hidden; }
+.abstract-blur {
+    content: ''; position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0;
+    background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+}
+
+/* === STYLING BARU UNTUK HALAMAN PROFIL === */
+.profile-header {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--fluent-border-color);
+    margin-bottom: 2rem;
+}
+.profile-header h1 {
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.profile-tabs .nav-pills .nav-link {
+    color: var(--fluent-text-muted);
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+}
+.profile-tabs .nav-pills .nav-link.active {
+    background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary));
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+}
+
+.profile-card {
+    background-color: var(--fluent-bg-white);
+    border: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-radius: 1rem;
+}
+
+.profile-avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--fluent-border-color);
+}
+.profile-avatar-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.avatar-initials {
+    width: 90px;
+    height: 90px;
+    font-size: 2.5rem;
+    background: linear-gradient(45deg, var(--fluent-red-secondary), var(--fluent-red-primary));
+}
+.profile-details-list .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.detail-label {
+    color: var(--fluent-text-muted);
+}
+.detail-value {
+    font-weight: 600;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--fluent-border-color);
+}
+.history-item:last-child {
+    border-bottom: none;
+}
+.history-icon {
+    font-size: 1.5rem;
+    color: var(--fluent-red-primary);
+    margin-right: 1.5rem;
+}
+.history-info {
+    flex-grow: 1;
+}
+.history-title {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.history-date {
+    font-size: 0.85rem;
+    color: var(--fluent-text-muted);
+}
+.settings-section h5 {
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}

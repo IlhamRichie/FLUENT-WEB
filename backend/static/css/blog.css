@@ -1,0 +1,171 @@
+/* === STYLING GLOBAL === */
+:root {
+    --fluent-red-primary: #FF416C;
+    --fluent-red-secondary: #FF4B2B;
+    --fluent-text-dark: #212529;
+    --fluent-text-muted: #6c757d;
+    --fluent-bg-light: #f8f9fa;
+    --fluent-bg-white: #ffffff;
+    --fluent-border-color: #dee2e6;
+}
+.gradient-text {
+    background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+    -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block;
+}
+.section-with-blur { position: relative; overflow: hidden; }
+.abstract-blur {
+    content: ''; position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0;
+    background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+}
+.page-content-container { padding-top: 120px; }
+
+
+/* === STYLING UNTUK HALAMAN BLOG INDEX === */
+.blog-hero {
+    background-color: var(--fluent-bg-light);
+    text-align: center;
+    padding-top: 6rem;
+    padding-bottom: 4rem;
+}
+.blog-hero .hero-title {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    color: var(--fluent-text-dark);
+}
+.blog-hero .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--fluent-text-muted);
+    max-width: 650px;
+    margin: 1rem auto 0;
+}
+.blog-listing-section {
+    padding: 4rem 0;
+    background-color: var(--fluent-bg-white);
+}
+.blog-card {
+    border: none;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+.blog-card-img-wrapper {
+    height: 200px;
+    overflow: hidden;
+}
+.blog-card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.blog-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+.blog-card .card-title {
+    font-weight: 700;
+    color: var(--fluent-text-dark);
+    margin-bottom: 0.75rem;
+}
+.blog-card .card-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.blog-card .card-title a:hover {
+    color: var(--fluent-red-primary);
+}
+.blog-card .card-text {
+    font-size: 0.95rem;
+    color: var(--fluent-text-muted);
+    flex-grow: 1; /* Mendorong tombol ke bawah */
+}
+.blog-card-meta {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+.blog-card-category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+
+/* === STYLING SPESIFIK UNTUK HALAMAN DETAIL ARTIKEL === */
+.post-header {
+    text-align: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+.post-category {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.post-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: var(--fluent-text-dark);
+    margin: 0.5rem 0;
+}
+.post-meta {
+    font-size: 0.9rem;
+    color: var(--fluent-text-muted);
+}
+.post-featured-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin-top: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.post-content-section {
+    padding: 3rem 0;
+}
+.post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #343a40;
+}
+.post-content h2, .post-content h3 {
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--fluent-text-dark);
+}
+.post-content blockquote {
+    border-left: 4px solid var(--fluent-red-primary);
+    padding-left: 1.5rem;
+    font-style: italic;
+    color: var(--fluent-text-muted);
+    margin: 2rem 0;
+}
+.sidebar .widget {
+    margin-bottom: 2rem;
+    background-color: var(--fluent-bg-light);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+.sidebar .widget-title {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+.sidebar .list-unstyled li a {
+    color: var(--fluent-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+ .sidebar .list-unstyled li a:hover {
+    color: var(--fluent-red-primary);
+ }

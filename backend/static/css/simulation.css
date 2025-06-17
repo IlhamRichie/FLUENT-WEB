@@ -1,0 +1,82 @@
+/* === STYLING GLOBAL & UTILITIES === */
+:root {
+    --fluent-red-primary: #FF416C;
+    --fluent-red-secondary: #FF4B2B;
+    --fluent-text-dark: #212529;
+    --fluent-text-muted: #6c757d;
+    --fluent-bg-light: #f8f9fa;
+    --fluent-bg-white: #ffffff;
+    --fluent-border-color: #dee2e6;
+}
+.gradient-text {
+    background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+    -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block;
+}
+.page-content-container { padding-top: 120px; }
+
+/* === STYLING SPESIFIK UNTUK HALAMAN SIMULASI === */
+.simulation-header { text-align: center; margin-bottom: 2rem; }
+.simulation-header h1 { font-weight: 800; }
+
+.simulation-card {
+    background-color: var(--fluent-bg-white);
+    border: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border-radius: 1rem;
+    padding: 2rem;
+}
+
+/* Video Player & Indikator */
+#video-feed {
+    width: 100%;
+    border-radius: 0.75rem;
+    background-color: #000;
+    transform: scaleX(-1); /* Efek cermin */
+}
+.recording-indicator {
+    display: none; /* Tampil saat merekam */
+    align-items: center;
+    background-color: #dc3545;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.rec-dot {
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    animation: blink 1.5s infinite;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Area Pertanyaan dan Feedback */
+.question-box {
+    background-color: var(--fluent-bg-light);
+    border-left: 5px solid var(--fluent-red-primary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    min-height: 100px;
+}
+.feedback-box {
+    margin-top: 1.5rem;
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+}
+.feedback-box h5 {
+    font-weight: 700;
+}
+
+/* Laporan Akhir */
+.report-card {
+    border-left: 5px solid var(--fluent-red-primary);
+}
