@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
+from flask_jwt_extended import current_user
 from backend.utils.decorators import token_required
 from backend.interview import services as interview_service
 
@@ -12,11 +13,13 @@ interview_api_bp = Blueprint('interview_api', __name__, url_prefix='/interview')
 # ===================================================================
 
 @interview_api_bp.route("/generate_question", methods=["POST"])
-def handle_generate_question():
+@token_required
+def handle_generate_question(current_user):
     """Endpoint untuk menghasilkan satu pertanyaan wawancara berdasarkan topik."""
     if not request.is_json:
         return jsonify({"error": "Request harus JSON"}), 400
     
+    print(f"User {current_user['username']} is generating a question.")
     topic = request.json.get("topic")
     if not topic:
         return jsonify({"error": "Request harus mengandung 'topic'"}), 400
@@ -30,7 +33,8 @@ def handle_generate_question():
         return jsonify({"error": "Gagal membuat pertanyaan", "details": str(e)}), 500
 
 @interview_api_bp.route("/analyze_realtime_chunk", methods=["POST"])
-def handle_analyze_chunk():
+@token_required # <-- TAMBAHKAN INI
+def handle_analyze_chunk(current_user): # <-- TAMBAHKAN current_user
     """Endpoint untuk menganalisis potongan audio & video secara real-time."""
     if not request.is_json:
         return jsonify({"error": "Request harus JSON"}), 400
@@ -50,32 +54,42 @@ def handle_analyze_chunk():
         return jsonify({"error": "Analisis AI gagal", "details": str(e)}), 500
 
 @interview_api_bp.route("/save_report", methods=["POST"])
-@token_required # Sebaiknya endpoint ini dilindungi
+@token_required
 def handle_save_report(current_user):
     """Endpoint untuk menghasilkan dan menyimpan laporan akhir dari transkrip."""
-    if not request.is_json: 
+    if not request.is_json:
         return jsonify({"error": "Request harus JSON"}), 400
-        
-    report_data = request.json
-    full_transcript = report_data.get("transcript")
+         
+    data = request.json
+    full_transcript = data.get("transcript")
+    question_text = data.get("question") # Ambil juga pertanyaannya dari frontend
 
-    if not full_transcript: 
-        return jsonify({"error": "Request harus mengandung 'transcript'"}), 400
+    if not full_transcript or not question_text:
+        return jsonify({"error": "Request harus mengandung 'transcript' dan 'question'"}), 400
 
     try:
+        # 1. Hasilkan laporan analisis dari AI
         analysis_result = interview_service.generate_final_report(full_transcript)
         
-        # Di sini Anda bisa menambahkan logika untuk menyimpan `analysis_result`
-        # ke database (MongoDB) yang terhubung dengan `current_user['_id']`.
-        # Contoh: db_service.save_final_report(current_user['_id'], report_data, analysis_result)
-        
-        print(f"Analisis berhasil dibuat untuk user {current_user['username']}. Penyimpanan ke DB dilewati.")
-        
+        # 2. Siapkan data lengkap untuk disimpan
+        report_to_save = {
+            "question": question_text,
+            "transcript": full_transcript,
+            "analysis": analysis_result # Hasil dari langkah 1
+        }
+
+        # 3. Panggil servis untuk menyimpan ke database
+        # Hubungkan dengan ID pengguna yang sedang login
+        interview_service.save_final_report_to_db(current_user['_id'], report_to_save)
+         
+        print(f"Laporan berhasil dibuat DAN DISIMPAN untuk user {current_user['username']}.")
+         
+        # 4. Kembalikan hasil analisis ke frontend untuk ditampilkan
         return jsonify(analysis_result)
+
     except Exception as e:
         current_app.logger.error(f"Error saving final report: {e}")
         return jsonify({"error": "Gagal menghasilkan atau menyimpan analisis akhir", "details": str(e)}), 500
-
 
 # ===================================================================
 # == ENDPOINTS UNTUK ALUR WAWANCARA BERBASIS SESI (TERSTRUKTUR) ==

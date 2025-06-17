@@ -55,7 +55,11 @@ if (document.getElementById('get-question-btn')) {
             try {
                 const response = await fetch('/api/interview/generate_question', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+                    // TAMBAHKAN BAGIAN HEADERS INI
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
+                    },
                     body: JSON.stringify({ topic: topic })
                 });
                 
@@ -161,7 +165,10 @@ if (document.getElementById('get-question-btn')) {
                 try {
                     const response = await fetch('/api/interview/analyze_realtime_chunk', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+                        headers: { 
+                            'Content-Type': 'application/json', 
+                            'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
+                        },
                         body: JSON.stringify({ audio: audioBase64, video: videoBase64 })
                     });
 
@@ -196,10 +203,15 @@ if (document.getElementById('get-question-btn')) {
             try {
                 const response = await fetch('/api/interview/save_report', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
+                    // PASTIKAN HEADERS INI SUDAH ADA
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
+                    },
+                    // PASTIKAN ANDA MENGIRIM "question" DAN "transcript"
                     body: JSON.stringify({ 
                         transcript: fullTranscript,
-                        question: questionText.textContent
+                        question: questionText.textContent // <-- KIRIM PERTANYAAN
                     })
                 });
 

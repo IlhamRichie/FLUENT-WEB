@@ -10,7 +10,7 @@ from PIL import Image
 import google.generativeai as genai
 from backend.config import GEMINI_API_KEY
 # --- UBAH IMPOR INI ---
-from backend.database import get_questions_collection, get_sessions_collection
+from backend.database import get_db, get_questions_collection, get_sessions_collection
 
 # Inisialisasi Google Generative AI
 genai.configure(api_key=GEMINI_API_KEY)
@@ -164,3 +164,28 @@ def get_interview_results_service(session_id_str: str, user_id: ObjectId):
     session_doc["overall_score"] = overall_score_val # Tambahkan ke dokumen untuk konsistensi
 
     return {"status": "success"}, session_doc, 200
+
+def save_final_report_to_db(user_id, report_data):
+    """
+    Menyimpan hasil laporan wawancara ke database.
+    """
+    db = get_db()
+    reports_collection = db.interview_reports # Membuat atau menggunakan koleksi 'interview_reports'
+
+    # Struktur dokumen yang akan disimpan
+    new_report = {
+        "user_id": ObjectId(user_id),
+        "question": report_data.get("question"),
+        "transcript": report_data.get("transcript"),
+        "analysis": report_data.get("analysis"), # Hasil dari generate_final_report
+        "created_at": datetime.now(timezone.utc)
+    }
+
+    result = reports_collection.insert_one(new_report)
+    
+    if not result.inserted_id:
+        raise Exception("Gagal menyimpan laporan ke database.")
+
+    # Mengembalikan dokumen yang baru saja dibuat (opsional)
+    created_document = reports_collection.find_one({"_id": result.inserted_id})
+    return created_document
