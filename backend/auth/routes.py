@@ -101,3 +101,38 @@ def google_authorize_api_callback():
     flutter_redirect_url = (f"{flutter_target_url_base}"
                             f"?status=success&access_token={access_token}&refresh_token={refresh_token}&user={user_data_encoded}")
     return redirect(flutter_redirect_url)
+
+debug_bp = Blueprint('debug', __name__)
+
+@debug_bp.route("/debug-time")
+def debug_time():
+    """Endpoint ini hanya untuk debugging, untuk melihat waktu server."""
+    server_utc_time = datetime.now(timezone.utc)
+    server_local_time = datetime.now() # Waktu lokal naive server
+    
+    # Dapatkan waktu sekarang dari sisi client (browser) menggunakan sedikit JavaScript
+    client_side_script = """
+        <script>
+            document.getElementById('clientTime').innerText = new Date().toString();
+            document.getElementById('clientTimeUTC').innerText = new Date().toUTCString();
+        </script>
+    """
+    
+    return f"""
+        <html>
+            <head><title>Debug Waktu</title></head>
+            <body>
+                <h1>Analisis Waktu Server vs Client</h1>
+                <p>Ini adalah alat untuk membandingkan jam di server (tempat Flask berjalan) dengan jam di browser Anda.</p>
+                <hr>
+                <h2>Waktu Menurut Server (Python/Flask)</h2>
+                <p>Waktu UTC Server: <strong>{server_utc_time.isoformat()}</strong></p>
+                <p>Waktu Lokal Server (Naive): <strong>{server_local_time.isoformat()}</strong></p>
+                <hr>
+                <h2>Waktu Menurut Browser Anda (JavaScript)</h2>
+                <p>Waktu Lokal Browser: <strong id="clientTime"></strong></p>
+                <p>Waktu UTC Browser: <strong id="clientTimeUTC"></strong></p>
+                {client_side_script}
+            </body>
+        </html>
+    """

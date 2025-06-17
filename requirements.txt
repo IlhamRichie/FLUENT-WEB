@@ -25,3 +25,17 @@ tensorflow
 
 # Firebase (jika masih ada bagian yang menggunakannya)
 firebase-admin
+
+Flask-JWT-Extended
+
+opencv-python
+
+SpeechRecognition
+
+plotly
+
+ua-parser
+
+pandas
+
+flask-swagger-ui

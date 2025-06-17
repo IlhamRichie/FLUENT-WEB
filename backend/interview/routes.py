@@ -1,7 +1,9 @@
+import datetime
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import current_user
 from backend.utils.decorators import token_required
 from backend.interview import services as interview_service
+from backend.database import get_db
 
 # --- Blueprint Definition ---
 # Nama Blueprint disatukan menjadi satu.
@@ -54,39 +56,48 @@ def handle_analyze_chunk(current_user): # <-- TAMBAHKAN current_user
         return jsonify({"error": "Analisis AI gagal", "details": str(e)}), 500
 
 @interview_api_bp.route("/save_report", methods=["POST"])
-@token_required
+@token_required # Endpoint ini sudah dilindungi
 def handle_save_report(current_user):
-    """Endpoint untuk menghasilkan dan menyimpan laporan akhir dari transkrip."""
-    if not request.is_json:
+    """
+    Endpoint untuk menghasilkan dan menyimpan laporan akhir dari transkrip.
+    Ini juga bisa diadaptasi untuk menyimpan hasil dari sebuah sesi wawancara.
+    """
+    if not request.is_json:  
         return jsonify({"error": "Request harus JSON"}), 400
          
-    data = request.json
-    full_transcript = data.get("transcript")
-    question_text = data.get("question") # Ambil juga pertanyaannya dari frontend
+    report_data = request.json
+    full_transcript = report_data.get("transcript")
+    question = report_data.get("question") # Ambil pertanyaan
+    session_id = report_data.get("session_id") # Ambil session_id jika ada
 
-    if not full_transcript or not question_text:
-        return jsonify({"error": "Request harus mengandung 'transcript' dan 'question'"}), 400
+    if not full_transcript:  
+        return jsonify({"error": "Request harus mengandung 'transcript'"}), 400
 
     try:
-        # 1. Hasilkan laporan analisis dari AI
+        # 1. Hasilkan analisis/evaluasi dari jawaban
         analysis_result = interview_service.generate_final_report(full_transcript)
         
-        # 2. Siapkan data lengkap untuk disimpan
-        report_to_save = {
-            "question": question_text,
+        # 2. Siapkan data yang akan disimpan
+        db = get_db()
+        user_id = current_user["_id"]
+        
+        # Buat dokumen riwayat baru
+        history_doc = {
+            "user_id": user_id,
+            "username": current_user.get("username"),
+            "question": question,
             "transcript": full_transcript,
-            "analysis": analysis_result # Hasil dari langkah 1
+            "evaluation": analysis_result, # Simpan hasil analisis
+            "created_at": datetime.now(datetime.timezone.utc)
         }
 
-        # 3. Panggil servis untuk menyimpan ke database
-        # Hubungkan dengan ID pengguna yang sedang login
-        interview_service.save_final_report_to_db(current_user['_id'], report_to_save)
+        # 3. Simpan ke koleksi 'interview_history' atau sejenisnya
+        db.interview_history.insert_one(history_doc)
+        
+        current_app.logger.info(f"Laporan berhasil disimpan untuk user {current_user['username']}.")
          
-        print(f"Laporan berhasil dibuat DAN DISIMPAN untuk user {current_user['username']}.")
-         
-        # 4. Kembalikan hasil analisis ke frontend untuk ditampilkan
         return jsonify(analysis_result)
-
+        
     except Exception as e:
         current_app.logger.error(f"Error saving final report: {e}")
         return jsonify({"error": "Gagal menghasilkan atau menyimpan analisis akhir", "details": str(e)}), 500
