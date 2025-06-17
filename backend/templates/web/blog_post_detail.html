@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Detail Artikel Blog{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* ... STYLING GLOBAL (Sama seperti halaman blog_index.html) ... */
+    :root {
+        --fluent-red-primary: #FF416C;
+        --fluent-red-secondary: #FF4B2B;
+        --fluent-text-dark: #212529;
+        --fluent-text-muted: #6c757d;
+        --fluent-bg-light: #f8f9fa;
+        --fluent-bg-white: #ffffff;
+        --fluent-border-color: #dee2e6;
+    }
+    .gradient-text {
+        background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+        -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block;
+    }
+    .page-content-container { padding-top: 120px; }
+
+    /* === STYLING SPESIFIK UNTUK HALAMAN DETAIL ARTIKEL === */
+    .post-header {
+        text-align: center;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    .post-category {
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .post-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        color: var(--fluent-text-dark);
+        margin: 0.5rem 0;
+    }
+    .post-meta {
+        font-size: 0.9rem;
+        color: var(--fluent-text-muted);
+    }
+    .post-featured-image {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        border-radius: 1rem;
+        margin-top: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .post-content-section {
+        padding: 3rem 0;
+    }
+    .post-content {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #343a40;
+    }
+    .post-content h2, .post-content h3 {
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        color: var(--fluent-text-dark);
+    }
+    .post-content blockquote {
+        border-left: 4px solid var(--fluent-red-primary);
+        padding-left: 1.5rem;
+        font-style: italic;
+        color: var(--fluent-text-muted);
+        margin: 2rem 0;
+    }
+    .sidebar .widget {
+        margin-bottom: 2rem;
+        background-color: var(--fluent-bg-light);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+    }
+    .sidebar .widget-title {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    .sidebar .list-unstyled li a {
+        color: var(--fluent-text-muted);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+     .sidebar .list-unstyled li a:hover {
+        color: var(--fluent-red-primary);
+     }
+</style>
+{% endblock %}
+
+{% block content_hero %}
+{% endblock %}
+
+
+{% block content %}
+<div class="page-content-container">
+    <header class="post-header">
+        <div class="container">
+            <p class="post-category gradient-text"><span class="lang-id">Tips Wawancara</span><span class="lang-en">Interview Tips</span></p>
+            <h1 class="post-title"><span class="lang-id">5 Kesalahan Umum Bahasa Tubuh Saat Wawancara</span><span class="lang-en">5 Common Body Language Mistakes During Interviews</span></h1>
+            <p class="post-meta">
+                <span class="lang-id">Oleh Tim FLUENT</span><span class="lang-en">By The FLUENT Team</span> &bull; 
+                <time datetime="2025-06-16">16 Juni 2025</time>
+            </p>
+        </div>
+    </header>
+
+    <div class="container">
+         <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1770" class="post-featured-image" alt="Tips Wawancara">
+    </div>
+
+    <section class="post-content-section">
+        <div class="container">
+            <div class="row gx-lg-5">
+                <div class="col-lg-8">
+                    <article class="post-content">
+                        <p>
+                            <span class="lang-id">Saat mempersiapkan wawancara, banyak kandidat fokus pada apa yang akan mereka katakan, namun seringkali melupakan bagaimana mereka menyampaikannya. Bahasa tubuh Anda adalah cerminan langsung dari kepercayaan diri dan ketenangan Anda. Menghindari kesalahan umum bisa menjadi pembeda antara diterima atau ditolak.</span>
+                            <span class="lang-en">When preparing for an interview, many candidates focus on what they will say, often forgetting how they say it. Your body language is a direct reflection of your confidence and composure. Avoiding common mistakes can be the difference between getting hired or rejected.</span>
+                        </p>
+                        
+                        <h3>1. Postur yang Membungkuk</h3>
+                        <p>
+                            <span class="lang-id">Duduk membungkuk mengirimkan sinyal kurangnya kepercayaan diri dan minat. Selalu duduk tegak dengan bahu rileks ke belakang. Ini tidak hanya membuat Anda terlihat lebih percaya diri tetapi juga membantu Anda bernapas lebih baik dan berpikir lebih jernih.</span>
+                            <span class="lang-en">Slouching sends signals of low confidence and lack of interest. Always sit up straight with your shoulders relaxed and back. This not only makes you look more confident but also helps you breathe better and think more clearly.</span>
+                        </p>
+
+                        <blockquote>
+                            <span class="lang-id">"Kepercayaan diri Anda tercermin dari tulang punggung Anda. Jaga agar tetap tegak."</span>
+                            <span class="lang-en">"Your confidence is reflected in your spine. Keep it straight."</span>
+                        </blockquote>
+
+                        <p>...</p>
+                        <p>...</p>
+                    </article>
+                </div>
+                <div class="col-lg-4">
+                    <aside class="sidebar">
+                        <div class="widget">
+                            <h3 class="widget-title"><span class="lang-id">Artikel Terbaru</span><span class="lang-en">Recent Posts</span></h3>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><a href="#"><span class="lang-id">Cara Menjawab "Kelemahan Terbesarmu?"</span><span class="lang-en">How to Answer "Your Weakness?"</span></a></li>
+                                <li class="mb-2"><a href="#"><span class="lang-id">Di Balik Layar: AI FLUENT Bekerja</span><span class="lang-en">Behind the Scenes: FLUENT's AI</span></a></li>
+                                <li class="mb-2"><a href="#"><span class="lang-id">Pentingnya Kontak Mata</span><span class="lang-en">The Importance of Eye Contact</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="widget">
+                            <h3 class="widget-title"><span class="lang-id">Kategori</span><span class="lang-en">Categories</span></h3>
+                             <ul class="list-unstyled">
+                                <li class="mb-2"><a href="#">Tips Wawancara</a></li>
+                                <li class="mb-2"><a href="#">Persiapan Karier</a></li>
+                                <li class="mb-2"><a href="#">Teknologi AI</a></li>
+                                <li class="mb-2"><a href="#">Bahasa Tubuh</a></li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

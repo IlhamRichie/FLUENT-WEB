@@ -74,6 +74,18 @@ def features_route():
 def api_docs_page_route():
     return render_template('web/api_docs.html')
 
+@web_bp.route('/blog')
+def blog_index_route():
+    # Di sini Anda akan mengambil semua artikel dari database Anda
+    # Untuk sekarang, kita hanya render template-nya
+    return render_template('web/blog_index.html')
+
+@web_bp.route('/blog/artikel/<string:slug>') # <slug> adalah ID unik artikel
+def blog_post_route(slug):
+    # Di sini Anda akan mengambil satu artikel spesifik dari database berdasarkan slug
+    # Untuk sekarang, kita hanya render template-nya
+    return render_template('web/blog_post_detail.html')
+
 # --- WEB AUTHENTICATION ---
 
 @web_bp.route('/login', methods=['GET'])

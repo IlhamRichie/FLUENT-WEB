@@ -1,23 +1,129 @@
 {% extends "base.html" %}
-{% block title %}Fetures{% endblock %}
+{% block title %}Features{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* ======================================================= */
+    /* === STYLING GLOBAL (Disalin dari home.html untuk konsistensi) === */
+    /* ======================================================= */
+    :root {
+        --fluent-red-primary: #FF416C;
+        --fluent-red-secondary: #FF4B2B;
+        --fluent-primary-rgb: 255, 65, 108;
+        --fluent-text-dark: #212529;
+        --fluent-text-muted: #6c757d;
+        --fluent-bg-light: #f8f9fa;
+        --fluent-bg-white: #ffffff;
+        --fluent-border-color: #dee2e6;
+    }
+
+    /* Efek Gradasi Teks Merah */
+    .gradient-text {
+        background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
+    
+    /* Base untuk section dengan blur */
+    .section-with-blur {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Template untuk bentuk blur abstrak */
+    .abstract-blur {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: 0;
+        background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+    }
+
+    /* ======================================================= */
+    /* === HERO SECTION (Mirip dengan home.html)          === */
+    /* ======================================================= */
+    .hero-section-styled {
+        background-color: var(--fluent-bg-white);
+        padding: 8rem 0;
+        text-align: center;
+    }
+    .hero-section-styled .abstract-blur {
+        width: 600px; height: 600px; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-title { font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.2; color: var(--fluent-text-dark); }
+    .hero-title .fa-star { font-size: 0.8em; vertical-align: middle; color: #ffc107; margin: 0 0.25em; } /* Ikon bintang kuning */
+    .hero-subtitle { font-size: 1.1rem; color: var(--fluent-text-muted); max-width: 700px; margin: 1.5rem auto 0; }
+    .cta-buttons { margin-top: 2rem; }
+    .btn-gradient-red { background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary)); border: none; color: white; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
+    .btn-gradient-red:hover { color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3); }
+
+    /* PERBAIKAN: Menghapus <br> dan menggunakan padding yang benar */
+    .page-content-container {
+        padding-top: 120px; /* Sesuaikan dengan tinggi navbar */
+    }
+
+    /* Styling spesifik untuk daftar fitur */
+    .features-list {
+        background-color: var(--fluent-bg-white);
+    }
+    .feature-item .h1 {
+        color: var(--fluent-text-dark);
+        font-weight: 700;
+    }
+    .feature-item .text-primary {
+        color: var(--fluent-red-primary) !important;
+    }
+    .feature-item .text-success {
+        color: #198754 !important; /* Bootstrap success color */
+    }
+    .feature-item img {
+        max-width: 450px; /* Atur ulang ukuran gambar agar lebih pas */
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .cta-section {
+        background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+    }
+
+</style>
+{% endblock %}
 
 {% block content_hero %}
-<section class="features-header-hero py-5 text-center bg-light page-content-container">
-  <div class="container">
-    <br>
-    <br>
-    <br>
-    <h1 class="display-5 fw-bold">
-      <span class="lang-id">Fitur <span class="text-primary">Canggih</span> untuk Asah Keahlianmu</span>
-      <span class="lang-en">Powerful Features to <span class="text-primary">Elevate</span> Your Skills</span>
-    </h1>
-    <p class="lead text-muted col-lg-8 mx-auto">
-      <span class="lang-id">FLUENT menyediakan analisis komprehensif berbasis AI untuk membantumu menguasai setiap aspek wawancara.</span>
-      <span class="lang-en">FLUENT provides comprehensive, AI-driven analysis to help you master every aspect of your interview.</span>
-    </p>
-  </div>
+<section class="hero-section-styled section-with-blur page-content-container">
+    <div class="abstract-blur"></div>
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="hero-title">
+                    <span class="lang-id d-block">
+                        <span class="gradient-text">Fitur Unggulan</span>
+                        <i class="fas fa-star text-warning"></i> Untuk
+                        <br>
+                        Karier Impianmu!
+                    </span>
+                    <span class="lang-en d-block">
+                        <span class="gradient-text">Features</span>
+                        <i class="fas fa-star text-warning"></i> For
+                        <br>
+                        Your Dream Career!
+                    </span>
+                </h1>
+                
+                <p class="lead hero-subtitle">
+                    <span class="lang-id d-block">FLUENT menyediakan serangkaian analisis komprehensif berbasis AI untuk membantumu menguasai setiap aspek penting dalam sebuah wawancara kerja.</span>
+                    <span class="lang-en d-block">FLUENT provides a comprehensive suite of AI-driven analyses to help you master every crucial aspect of a job interview.</span>
+                </p>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}
+
 
 {% block content %}
 <section class="features-list py-5">
@@ -25,13 +131,13 @@
     <div class="row feature-item align-items-center mb-5 pb-lg-5">
       <div class="col-lg-6 text-center">
         <img
-          src="{{ url_for('web.web_serve_static', filename='images/2.png') }}"
+          src="{{ url_for('static', filename='images/features/emotion-analysis.png') }}" {# Ganti path gambar jika perlu #}
           alt="Emotion Analysis"
-          style="max-width: 1000px"
+          class="img-fluid"
         />
       </div>
       <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
-        <h2 class="fw-semibold h1 mb-3">
+        <h2 class="h1 mb-3">
           <i class="fas fa-smile-beam text-primary me-2"></i><span class="lang-id">Deteksi Emosi</span><span class="lang-en">Emotion Detection</span>
         </h2>
         <p class="text-muted mb-4">
@@ -57,13 +163,13 @@
     <div class="row feature-item align-items-center mb-5 pb-lg-5">
       <div class="col-lg-6 order-lg-2 text-center">
         <img
-          src="{{ url_for('web.web_serve_static', filename='images/3.png') }}"
+          src="{{ url_for('static', filename='images/features/speech-analysis.png') }}" {# Ganti path gambar jika perlu #}
           alt="Speech Analysis"
-          style="max-width: 1000px"
+          class="img-fluid"
         />
       </div>
       <div class="col-lg-6 order-lg-1 pe-lg-5 mt-4 mt-lg-0">
-        <h2 class="fw-semibold h1 mb-3">
+        <h2 class="h1 mb-3">
           <i class="fas fa-microphone-alt text-primary me-2"></i><span class="lang-id">Analisis Ucapan</span><span class="lang-en">Speech Analysis</span>
         </h2>
         <p class="text-muted mb-4">
@@ -78,7 +184,7 @@
             <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Deteksi kata pengisi & tips pengurangan</span><span class="lang-en">Filler word detection & reduction tips</span>
           </li>
           <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Penilaian kejelasan dan keringkasan ucapan</span><span class="lang-en">Speech clarity and conciseness scoring</span>
+            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Penilaian kejelasan dan keringkasan</span><span class="lang-en">Clarity and conciseness scoring</span>
           </li>
         </ul>
       </div>
@@ -89,22 +195,22 @@
     <div class="row feature-item align-items-center">
       <div class="col-lg-6 text-center">
         <img
-          src="{{ url_for('web.web_serve_static', filename='images/4.png') }}"
+          src="{{ url_for('static', filename='images/features/body-language.png') }}" {# Ganti path gambar jika perlu #}
           alt="Pose Analysis"
-          style="max-width: 1000px"
+          class="img-fluid"
         />
       </div>
       <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
-        <h2 class="fw-semibold h1 mb-3">
+        <h2 class="h1 mb-3">
           <i class="fas fa-user-tie text-primary me-2"></i><span class="lang-id">Analisis Bahasa Tubuh</span><span class="lang-en">Body Language Analysis</span>
         </h2>
         <p class="text-muted mb-4">
-          <span class="lang-id">Tingkatkan komunikasi nonverbalmu dengan analisis postur dan gestur kami. Buat kehadiranmu terasa positif.</span>
-          <span class="lang-en">Improve your nonverbal communication with our posture and gesture analysis. Make your presence felt positively.</span>
+          <span class="lang-id">Tingkatkan komunikasi nonverbalmu dengan analisis postur dan gestur kami. Buat kehadiranmu terasa positif dan meyakinkan.</span>
+          <span class="lang-en">Improve your nonverbal communication with our posture and gesture analysis. Make your presence felt positively and convincingly.</span>
         </p>
         <ul class="list-unstyled">
           <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Evaluasi postur (mis., tegak, membungkuk)</span><span class="lang-en">Posture evaluation (e.g., upright, slouching)</span>
+            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Evaluasi postur (tegak, membungkuk)</span><span class="lang-en">Posture evaluation (upright, slouching)</span>
           </li>
           <li class="mb-2">
             <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Gerakan kepala dan isyarat keterlibatan</span><span class="lang-en">Head movement and engagement cues</span>
@@ -118,7 +224,7 @@
   </div>
 </section>
 
-<section class="cta-section py-5 bg-primary text-white text-center">
+<section class="cta-section py-5 text-white text-center">
   <div class="container">
     <h2 class="fw-bold h1 mb-3">
         <span class="lang-id">Siap Ubah Skill Wawancaramu?</span>

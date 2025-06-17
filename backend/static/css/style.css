@@ -279,41 +279,53 @@ h6 {
 }
 
 /*--------------------------------------------------------------
-# Navbar Styling (Konsisten dengan Tema Merah)
+# Navbar Styling (Versi Perbaikan)
 --------------------------------------------------------------*/
+
+/* Variabel untuk konsistensi, bisa diletakkan di :root di base.html */
+:root {
+  --navbar-padding-vertical: 0.5rem; /* Padding vertikal untuk wrapper saat scroll */
+  --navbar-padding-desktop: 1.5rem;  /* Padding kiri-kanan untuk container navbar */
+}
+
+/* Container utama navbar.
+  Selalu transparan dan fixed di atas.
+*/
 .fluent-navbar {
-  background: transparent !important;
-  padding-top: var(--navbar-outer-padding-top-desktop) !important;
-  padding-bottom: var(--navbar-outer-padding-bottom-desktop) !important;
+  background: transparent;
+  padding: var(--navbar-padding-vertical) 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1030;
-  transition: padding 0.3s ease, background-color 0.4s ease-out;
-  box-shadow: none !important;
+  transition: padding 0.3s ease;
+  /* DIHAPUS: !important dan box-shadow tidak diperlukan di sini */
 }
 
+/*
+  Wrapper konten "pill" yang terlihat.
+  Ini yang akan memiliki background, shadow, dan efek blur.
+*/
 .navbar-content-wrapper {
-  background-color: var(--fluent-background);
+  background-color: white; /* Diubah dari var(--fluent-background) agar lebih eksplisit */
   border-radius: 50px;
   padding: 0.75rem 1.25rem;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
   display: flex;
   align-items: center;
+  justify-content: space-between; /* PENTING: Untuk menata elemen di dalamnya */
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  z-index: 1;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease,
-    padding 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
 }
 
+/* Brand/Logo */
 .fluent-navbar .navbar-brand {
-  color: var(--fluent-text-dark) !important;
+  color: #212529; /* Warna teks gelap */
   font-size: 1.35rem;
   font-weight: 600;
+  flex-shrink: 0; /* Mencegah brand menyusut */
+  /* DIHAPUS: !important */
 }
 .fluent-navbar .navbar-brand img {
   max-height: 32px;
@@ -321,72 +333,82 @@ h6 {
   transition: transform 0.3s ease;
 }
 
-.fluent-navbar .navbar-nav .nav-link {
-  color: var(--fluent-text-light) !important;
+/* Link Navigasi.
+  Spesifisitas selector ditingkatkan untuk menghindari !important
+*/
+.navbar.fluent-navbar .navbar-nav .nav-link {
+  color: #555; /* Warna teks abu-abu gelap */
   font-weight: 500;
   padding: 0.5rem 0.9rem;
   font-size: 0.9rem;
   border-radius: 0.3rem;
-  margin: auto;
+  /* DIHAPUS: !important */
 }
-.fluent-navbar .navbar-nav .nav-link:hover,
-.fluent-navbar .navbar-nav .nav-link.active {
-  color: var(
-    --fluent-primary
-  ) !important; /* Tautan aktif/hover berwarna merah */
-  background-color: rgba(
-    var(--fluent-primary-rgb),
-    0.08
-  ) !important; /* Background hover merah transparan */
+.navbar.fluent-navbar .navbar-nav .nav-link:hover,
+.navbar.fluent-navbar .navbar-nav .nav-link.active {
+  color: var(--fluent-primary); /* Warna merah dari variabel Anda */
+  background-color: rgba(var(--fluent-primary-rgb), 0.08);
+  /* DIHAPUS: !important */
 }
 
+/* DIPERBAIKI: Menghapus hack "left: 90px".
+  Bootstrap `mx-auto` akan bekerja dengan benar jika `justify-content` diatur.
+*/
 .fluent-navbar .navbar-nav.mx-auto {
-  position: relative;
-  left: 90px; /* atau 2%, 30px, dll. Sesuaikan nilainya */
+  /* Aturan `position: relative` dan `left: 90px` dihapus */
 }
 
-/* Tombol CTA di navbar jika ada yang gelap, biarkan kontras. Jika ada yang primary, akan mengikuti .btn-primary */
+/* Tombol CTA (Call to Action) */
 .fluent-navbar .nav-btn-cta-dark {
-  background-color: var(--fluent-text-dark) !important;
-  color: #ffffff !important;
-  border-radius: 30px !important;
-  padding: 0.5rem 1.1rem !important;
+  background-color: #212529; /* Warna hitam/gelap standar */
+  color: #ffffff;
+  border-radius: 30px;
+  padding: 0.5rem 1.1rem;
   font-weight: 500;
   font-size: 0.85rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  /* DIHAPUS: !important */
 }
 .fluent-navbar .nav-btn-cta-dark:hover {
-  background-color: #313538 !important;
+  background-color: #313538;
   transform: translateY(-1px);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
 }
 
+/* --- State Saat di-Scroll --- */
 .fluent-navbar.scrolled {
-  background: transparent !important;
-  padding-top: var(--navbar-scrolled-outer-padding-vertical-desktop) !important;
-  padding-bottom: var(
-    --navbar-scrolled-outer-padding-vertical-desktop
-  ) !important;
-  box-shadow: none !important;
+  padding: var(--navbar-padding-vertical) 0;
+  /* DISEDERHANAKAN: Tidak perlu lagi deklarasi background/shadow di sini */
 }
 .fluent-navbar.scrolled .navbar-content-wrapper {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.9); /* Latar belakang putih transparan */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px); /* Efek Kaca Buram (Frost Glass) */
+  -webkit-backdrop-filter: blur(8px); /* Untuk support Safari */
 }
 
-/* Ikon Toggler Navbar */
-.fluent-navbar:not(.scrolled) .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+/* --- Tampilan Mobile (Toggler) ---
+  DIPERBAIKI: Warna ikon toggler disamakan (gelap) karena background halaman cerah.
+  Ikon putih tidak akan terlihat di atas hero section yang cerah.
+*/
+.fluent-navbar .navbar-toggler {
+  border: none; /* Hapus border default dari toggler */
 }
-.fluent-navbar.scrolled .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(33, 37, 41, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+.fluent-navbar .navbar-toggler:focus {
+  box-shadow: none; /* Hapus box-shadow saat di-klik */
+}
+.fluent-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(33, 37, 41, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  /* DIHAPUS: !important dan state .scrolled yang redundan */
 }
 
 /*--------------------------------------------------------------
 # Hero Section (Gradasi Merah Mengkilap Putih)
 --------------------------------------------------------------*/
+.main-content-wrapper {
+    padding-top: 120px; /* Sesuaikan angka ini jika perlu */
+}
+
 .hero-section {
   background: linear-gradient(
     135deg,

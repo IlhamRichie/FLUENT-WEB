@@ -2,174 +2,251 @@
 
 {% block title %}User Profile{% endblock %}
 
+{% block head_extra %}
+<style>
+    /* === STYLING GLOBAL (Disalin dari halaman lain untuk konsistensi) === */
+    :root {
+        --fluent-red-primary: #FF416C;
+        --fluent-red-secondary: #FF4B2B;
+        --fluent-primary-rgb: 255, 65, 108;
+        --fluent-text-dark: #212529;
+        --fluent-text-muted: #6c757d;
+        --fluent-bg-light: #f8f9fa;
+        --fluent-bg-white: #ffffff;
+        --fluent-border-color: #dee2e6;
+    }
+    .gradient-text {
+        background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+        -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block;
+    }
+    .section-with-blur { position: relative; overflow: hidden; }
+    .abstract-blur {
+        content: ''; position: absolute; border-radius: 50%; filter: blur(100px); z-index: 0;
+        background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+    }
+
+    /* === STYLING BARU UNTUK HALAMAN PROFIL === */
+    .profile-header {
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--fluent-border-color);
+        margin-bottom: 2rem;
+    }
+    .profile-header h1 {
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .profile-tabs .nav-pills .nav-link {
+        color: var(--fluent-text-muted);
+        font-weight: 600;
+        padding: 0.75rem 1.25rem;
+    }
+    .profile-tabs .nav-pills .nav-link.active {
+        background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary));
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+    }
+
+    .profile-card {
+        background-color: var(--fluent-bg-white);
+        border: none;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border-radius: 1rem;
+    }
+
+    .profile-avatar-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid var(--fluent-border-color);
+    }
+    .profile-avatar-img {
+        width: 90px;
+        height: 90px;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .avatar-initials {
+        width: 90px;
+        height: 90px;
+        font-size: 2.5rem;
+        background: linear-gradient(45deg, var(--fluent-red-secondary), var(--fluent-red-primary));
+    }
+    .profile-details-list .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .detail-label {
+        color: var(--fluent-text-muted);
+    }
+    .detail-value {
+        font-weight: 600;
+    }
+
+    .history-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--fluent-border-color);
+    }
+    .history-item:last-child {
+        border-bottom: none;
+    }
+    .history-icon {
+        font-size: 1.5rem;
+        color: var(--fluent-red-primary);
+        margin-right: 1.5rem;
+    }
+    .history-info {
+        flex-grow: 1;
+    }
+    .history-title {
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+    .history-date {
+        font-size: 0.85rem;
+        color: var(--fluent-text-muted);
+    }
+    .settings-section h5 {
+        font-weight: 700;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="container my-5 profile-page page-content-container">
-    <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-12 mb-4 mb-lg-0">
-            <div class="card shadow-sm border-0 h-100 fluent-card">
-                <div class="card-header bg-transparent pt-4 px-4 border-0">
-                    <h3 class="fw-bold mb-0">
-                        <span class="lang-id">Profil Pengguna</span><span class="lang-en">User Profile</span>
-                    </h3>
-                </div>
-                <div class="card-body p-4">
-                    {% if user %}
-                        <div class="text-center mb-4">
-                            {% if user.profile_picture %}
-                                <img src="{{ user.profile_picture }}"
-                                     alt="Profile picture of {{ user.username }}" {# PERBAIKAN DI SINI #}
-                                     class="rounded-circle shadow-sm profile-avatar-img mb-3"
-                                     style="width: 120px; height: 120px; object-fit: cover" />
-                            {% else %}
-                                <div class="avatar-initials rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm mx-auto mb-3"
-                                     style="width: 120px; height: 120px; font-size: 3rem">
-                                    {{ user.username[0]|upper if user.username else 'U' }}
-                                </div>
-                            {% endif %}
-                            <h4 class="mt-3 mb-1 fw-semibold">{{ user.username }}</h4>
-                            <p class="text-muted small">{{ user.email }}</p>
-                        </div>
-
-                        <hr class="my-4" />
-
-                        <h5 class="text-primary fw-semibold mb-3">
-                            <span class="lang-id">Detail Akun:</span><span class="lang-en">Account Details:</span>
-                        </h5>
-                        <div class="profile-details-grid mb-4">
-                            <div class="detail-item">
-                                <small class="text-muted d-block mb-1">
-                                    <span class="lang-id">Jenis Kelamin</span><span class="lang-en">Gender</span>
-                                </small>
-                                <span class="fw-medium">
-                                    {% if user.gender %}
-                                        {% if user.gender|lower == 'male' %}
-                                            <span class="lang-id">Pria</span><span class="lang-en">Male</span>
-                                        {% elif user.gender|lower == 'female' %}
-                                            <span class="lang-id">Wanita</span><span class="lang-en">Female</span>
-                                        {% else %}
-                                            {{ user.gender }}
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <small class="text-muted d-block mb-1">
-                                    <span class="lang-id">Pekerjaan</span><span class="lang-en">Occupation</span>
-                                </small>
-                                <span class="fw-medium">
-                                    {% if user.occupation %}
-                                        {{ user.occupation }}
-                                    {% else %}
-                                        <span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <small class="text-muted d-block mb-1">
-                                    <span class="lang-id">Bergabung</span><span class="lang-en">Joined</span>
-                                </small>
-                                <span class="fw-medium">
-                                    {{ user.created_at | to_wib }}
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <small class="text-muted d-block mb-1">
-                                    <span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span>
-                                </small>
-                                <span class="fw-medium">
-                                    {% if user.last_login %}
-                                        {{ user.last_login | to_wib }}
-                                    {% else %}
-                                        <span class="lang-id">Tidak Pernah</span><span class="lang-en">Never</span>
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <small class="text-muted d-block mb-1">
-                                    <span class="lang-id">Penyedia Auth</span><span class="lang-en">Auth Provider</span>
-                                </small>
-                                <span class="badge rounded-pill text-bg-{{ 'info' if user.auth_provider == 'google' else 'light' }}">
-                                    {{ user.auth_provider|capitalize }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <hr class="my-4" />
-
-                        <div class="mobile-app-promo text-center p-3 bg-light rounded mb-4">
-                            <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}"
-                                 alt="FLUENT Mobile App"
-                                 style="max-width: 60px"
-                                 class="mb-2" />
-                            <h5 class="fw-semibold fluent-red-text mb-2">
-                                <span class="lang-id">Coba Aplikasi Mobile <span class="text-primary">FLUENT</span>!</span>
-                                <span class="lang-en">Experience <span class="text-primary">FLUENT</span> Mobile!</span>
-                            </h5>
-                            <p class="small text-muted mb-2">
-                                <span class="lang-id d-block">Untuk pengalaman wawancara yang lebih interaktif dan analisis mendalam, unduh aplikasi mobile FLUENT.</span>
-                                <span class="lang-en d-block">For a more interactive interview experience and in-depth analysis, download the FLUENT mobile app.</span>
-                            </p>
-                            <p class="small text-muted">
-                                <em>(<span class="lang-id">Segera hadir di Play Store & App Store</span><span class="lang-en">Coming soon to Play Store & App Store</span>)</em>
-                            </p>
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <a href="{{ url_for('web.web_logout_route') }}" class="btn btn-outline-danger btn-lg">
-                                <i class="fas fa-sign-out-alt me-2"></i>
-                                <span class="lang-id">Keluar</span><span class="lang-en">Logout</span>
-                            </a>
-                        </div>
-
-                    {% else %}
-                        <div class="alert alert-warning d-flex align-items-center" role="alert">
-                            <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
-                            <div>
-                                <span class="lang-id">Informasi pengguna tidak ditemukan. Mohon <a href="{{ url_for('web.web_login_page_route') }}" class="alert-link fw-semibold">login kembali</a>.</span>
-                                <span class="lang-en">User information not found. Please <a href="{{ url_for('web.web_login_page_route') }}" class="alert-link fw-semibold">login again</a>.</span>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
+<div class="container my-5 page-content-container section-with-blur">
+    <div class="abstract-blur" style="top: -150px; left: -250px;"></div>
+    
+    <div class="position-relative">
+        {% if user %}
+            <div class="profile-header">
+                <h1 class="mb-0">
+                    <span class="lang-id">Selamat Datang, <span class="gradient-text">{{ user.username }}!</span></span>
+                    <span class="lang-en">Welcome Back, <span class="gradient-text">{{ user.username }}!</span></span>
+                </h1>
+                <p class="lead text-muted">
+                    <span class="lang-id">Kelola profil Anda dan lihat kemajuan latihan Anda di sini.</span>
+                    <span class="lang-en">Manage your profile and track your practice progress here.</span>
+                </p>
             </div>
-        </div>
 
-        <div class="col-lg-5 col-md-12">
-            <div class="card shadow-sm border-0 h-100 fluent-card">
-                <div class="card-header bg-transparent pt-4 px-4 border-0">
-                    <h3 class="fw-bold mb-0">
-                        <span class="lang-id">Unduh Aplikasi Mobile</span><span class="lang-en">Download Mobile App</span>
-                    </h3>
+            <div class="profile-tabs">
+                <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="true"><i class="fas fa-user-circle me-2"></i><span class="lang-id">Profil</span><span class="lang-en">Profile</span></button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-history-tab" data-bs-toggle="pill" data-bs-target="#pills-history" type="button" role="tab" aria-controls="pills-history" aria-selected="false"><i class="fas fa-history me-2"></i><span class="lang-id">Riwayat Latihan</span><span class="lang-en">Practice History</span></button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-settings-tab" data-bs-toggle="pill" data-bs-target="#pills-settings" type="button" role="tab" aria-controls="pills-settings" aria-selected="false"><i class="fas fa-cog me-2"></i><span class="lang-id">Pengaturan</span><span class="lang-en">Settings</span></button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tab-content" id="pills-tabContent">
+                
+                <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <div class="card profile-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <div class="profile-avatar-wrapper">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture }}" alt="Profile picture of {{ user.username }}" class="rounded-circle profile-avatar-img" />
+                                {% else %}
+                                    <div class="avatar-initials rounded-circle text-white d-flex align-items-center justify-content-center mx-auto shadow-sm">
+                                        {{ user.username[0]|upper if user.username else 'U' }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h4 class="mb-0 fw-bold">{{ user.username }}</h4>
+                                    <p class="text-muted mb-0">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <ul class="list-group list-group-flush profile-details-list">
+                                <li class="list-group-item"><span class="detail-label"><i class="fas fa-venus-mars me-2 text-muted"></i> <span class="lang-id">Jenis Kelamin</span><span class="lang-en">Gender</span></span> <span class="detail-value">{% if user.gender %}{% if user.gender|lower == 'male' %}<span class="lang-id">Pria</span><span class="lang-en">Male</span>{% elif user.gender|lower == 'female' %}<span class="lang-id">Wanita</span><span class="lang-en">Female</span>{% else %}{{ user.gender }}{% endif %}{% else %}<span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>{% endif %}</span></li>
+                                <li class="list-group-item"><span class="detail-label"><i class="fas fa-briefcase me-2 text-muted"></i> <span class="lang-id">Pekerjaan</span><span class="lang-en">Occupation</span></span> <span class="detail-value">{% if user.occupation %}{{ user.occupation }}{% else %}<span class="lang-id">Tidak disebutkan</span><span class="lang-en">Not specified</span>{% endif %}</span></li>
+                                <li class="list-group-item"><span class="detail-label"><i class="fas fa-calendar-alt me-2 text-muted"></i> <span class="lang-id">Bergabung</span><span class="lang-en">Joined</span></span> <span class="detail-value">{{ user.created_at | to_wib }}</span></li>
+                                <li class="list-group-item"><span class="detail-label"><i class="fas fa-clock me-2 text-muted"></i> <span class="lang-id">Login Terakhir</span><span class="lang-en">Last Login</span></span> <span class="detail-value">{% if user.last_login %}{{ user.last_login | to_wib }}{% else %}Never{% endif %}</span></li>
+                                <li class="list-group-item"><span class="detail-label"><i class="fas fa-shield-alt me-2 text-muted"></i> <span class="lang-id">Penyedia Auth</span><span class="lang-en">Auth Provider</span></span> <span class="detail-value"><span class="badge rounded-pill text-bg-{{ 'info' if user.auth_provider == 'google' else 'secondary' }}">{{ user.auth_provider|capitalize }}</span></span></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center">
-                    <p class="text-muted mb-3">
-                        <span class="lang-id d-block">Pindai kode QR di bawah untuk mengunduh aplikasi FLUENT di perangkat mobile Anda.</span>
-                        <span class="lang-en d-block">Scan the QR code below to download the FLUENT app on your mobile device.</span>
-                    </p>
-                    <img src="{{ url_for('web.web_serve_static', filename='images/hihi.jpg') }}"
-                         alt="QR Code for FLUENT App"
-                         class="img-fluid mb-3 rounded border p-1"
-                         style="max-width: 400px" />
-                    <p class="small text-muted mb-4">
-                        <span class="lang-id">Arahkan kamera ponsel Anda ke kode ini.</span>
-                        <span class="lang-en">Point your phone camera at this code.</span>
-                    </p>
-                    <div class="mt-auto app-store-buttons">
-                        <a href="#" class="btn btn-outline-primary btn-lg me-2 disabled" aria-disabled="true">
-                            <i class="fab fa-google-play me-2"></i> Google Play
-                        </a>
-                        <a href="#" class="btn btn-outline-dark btn-lg disabled" aria-disabled="true">
-                            <i class="fab fa-apple me-2"></i> App Store
-                        </a>
-                        <p class="small text-muted mt-2">
-                            <em>(<span class="lang-id">Segera Hadir</span><span class="lang-en">Coming Soon</span>)</em>
-                        </p>
+
+                <div class="tab-pane fade" id="pills-history" role="tabpanel" aria-labelledby="pills-history-tab">
+                    <div class="card profile-card">
+                         <div class="card-body p-4 p-lg-5">
+                            <h4 class="fw-bold mb-4"><span class="lang-id">Laporan Analisis Wawancara Anda</span><span class="lang-en">Your Interview Analysis Reports</span></h4>
+                            <div class="history-item">
+                                <div class="history-icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="history-info">
+                                    <h6 class="history-title"><span class="lang-id">Latihan untuk Posisi "Software Engineer"</span><span class="lang-en">Practice for "Software Engineer" Position</span></h6>
+                                    <p class="history-date">15 Juni 2025</p>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-danger ms-auto"><span class="lang-id">Lihat Laporan</span><span class="lang-en">View Report</span></a>
+                            </div>
+                            <div class="history-item">
+                                <div class="history-icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="history-info">
+                                    <h6 class="history-title"><span class="lang-id">Latihan Umum: "Ceritakan tentang dirimu"</span><span class="lang-en">General Practice: "Tell me about yourself"</span></h6>
+                                    <p class="history-date">12 Juni 2025</p>
+                                </div>
+                                <a href="#" class="btn btn-sm btn-outline-danger ms-auto"><span class="lang-id">Lihat Laporan</span><span class="lang-en">View Report</span></a>
+                            </div>
+                            <div class="text-center py-5 text-muted d-none">
+                                <i class="fas fa-box-open fa-3x mb-3"></i>
+                                <p><span class="lang-id">Anda belum memiliki riwayat latihan.</span><span class="lang-en">You don't have any practice history yet.</span></p>
+                                <a href="{{ url_for('web.interview_simulation_page') }}" class="btn btn-gradient-red"><span class="lang-id">Mulai Latihan Sekarang</span><span class="lang-en">Start Practicing Now</span></a>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="pills-settings" role="tabpanel" aria-labelledby="pills-settings-tab">
+                    <div class="card profile-card">
+                         <div class="card-body p-4 p-lg-5">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="settings-section">
+                                        <h5><span class="lang-id">Manajemen Akun</span><span class="lang-en">Account Management</span></h5>
+                                        <div class="d-grid gap-2">
+                                            <a href="#" class="btn btn-outline-secondary"><i class="fas fa-edit me-2"></i> <span class="lang-id">Ubah Detail Profil</span><span class="lang-en">Edit Profile Details</span></a>
+                                            <a href="#" class="btn btn-outline-secondary"><i class="fas fa-key me-2"></i> <span class="lang-id">Ubah Kata Sandi</span><span class="lang-en">Change Password</span></a>
+                                            <a href="{{ url_for('web.web_logout_route') }}" class="btn btn-danger"><i class="fas fa-sign-out-alt me-2"></i> <span class="lang-id">Keluar dari Akun</span><span class="lang-en">Logout from Account</span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 mt-4 mt-lg-0">
+                                     <div class="settings-section">
+                                        <h5><span class="lang-id">Unduh Aplikasi Mobile</span><span class="lang-en">Download Mobile App</span></h5>
+                                        <p class="small text-muted"><span class="lang-id">Pindai untuk mendapatkan pengalaman terbaik.</span><span class="lang-en">Scan for the best experience.</span></p>
+                                        <img src="{{ url_for('static', filename='images/hihi.jpg') }}" alt="QR Code for FLUENT App" class="img-fluid rounded border p-1" style="max-width: 200px" />
+                                        <p class="small text-muted mt-2"><em>(<span class="lang-id">Segera Hadir</span><span class="lang-en">Coming Soon</span>)</em></p>
+                                     </div>
+                                </div>
+                            </div>
+                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        {% else %}
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                <div>
+                    <span class="lang-id">Informasi pengguna tidak ditemukan. Mohon <a href="{{ url_for('web.web_login_page_route') }}" class="alert-link fw-semibold">login kembali</a>.</span>
+                    <span class="lang-en">User information not found. Please <a href="{{ url_for('web.web_login_page_route') }}" class="alert-link fw-semibold">login again</a>.</span>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

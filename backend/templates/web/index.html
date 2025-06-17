@@ -2,36 +2,180 @@
 
 {% block title %}Home{% endblock %}
 
+{% block head_extra %}
+<style>
+    /* ======================================================= */
+    /* === TEMA UTAMA & STYLING GLOBAL                    === */
+    /* ======================================================= */
+    :root {
+        --fluent-red-primary: #FF416C;
+        --fluent-red-secondary: #FF4B2B;
+        --fluent-primary-rgb: 255, 65, 108; /* Untuk background transparan */
+        --fluent-text-dark: #212529;
+        --fluent-text-muted: #6c757d;
+        --fluent-bg-light: #f8f9fa;
+        --fluent-bg-white: #ffffff;
+        --fluent-border-color: #dee2e6;
+    }
+
+    /* Efek Gradasi Teks Merah (Bisa dipakai di mana saja) */
+    .gradient-text {
+        background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+    }
+    
+    /* Base untuk section dengan blur */
+    .section-with-blur {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Template untuk bentuk blur abstrak */
+    .abstract-blur {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: 0;
+        background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+    }
+
+    /* ======================================================= */
+    /* === HERO SECTION                                   === */
+    /* ======================================================= */
+    .hero-section-styled {
+        background-color: var(--fluent-bg-white);
+        padding: 8rem 0;
+        text-align: center;
+    }
+    .hero-section-styled .abstract-blur {
+        width: 600px; height: 600px; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-tag { display: inline-block; border: 1px solid var(--fluent-border-color); border-radius: 50rem; padding: 0.3rem 1rem; font-size: 0.8rem; font-weight: 500; color: var(--fluent-text-muted); margin-bottom: 1.5rem; }
+    .hero-title { font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.2; color: var(--fluent-text-dark); }
+    .hero-title .fa-key { font-size: 0.8em; vertical-align: middle; color: var(--fluent-red-primary); margin: 0 0.25em; }
+    .hero-subtitle { font-size: 1.1rem; color: var(--fluent-text-muted); max-width: 600px; margin: 1.5rem auto 0; }
+    .cta-buttons { margin-top: 2rem; }
+    .btn-gradient-red { background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary)); border: none; color: white; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
+    .btn-gradient-red:hover { color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3); }
+
+    /* ======================================================= */
+    /* === CHALLENGE / MASONRY SECTION                      === */
+    /* ======================================================= */
+    .challenge-section { background-color: var(--fluent-bg-light); padding: 6rem 0; }
+    .challenge-eyebrow { display: block; font-weight: 600; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+    .challenge-main-title { font-size: clamp(2.5rem, 6vw, 3.5rem); font-weight: 700; color: var(--fluent-text-dark); line-height: 1.2; }
+    .challenge-icon { color: var(--fluent-red-primary); font-size: 1.5rem; vertical-align: middle; }
+    .challenge-description { font-size: 1.1rem; color: var(--fluent-text-muted); line-height: 1.8; }
+    .masonry-gallery { column-count: 3; column-gap: 1.25rem; }
+    .masonry-item { width: 100%; height: auto; display: inline-block; margin-bottom: 1.25rem; border-radius: 0.75rem; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .masonry-item:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12); }
+    
+    /* ======================================================= */
+    /* === HOW IT WORKS V2 SECTION                        === */
+    /* ======================================================= */
+    .how-it-works-v2 { background-color: var(--fluent-bg-white); color: var(--fluent-text-dark); padding: 6rem 0; }
+    .how-it-works-v2 .section-title { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 1rem; }
+    .how-it-works-v2 .section-subtitle { color: var(--fluent-text-muted); max-width: 700px; margin: 0 auto 4rem; }
+    .how-it-works-v2 .column-title { font-weight: 600; color: var(--fluent-text-dark); margin-bottom: 2rem; font-size: 1.25rem; }
+    .metrics-wrapper { display: flex; justify-content: space-around; gap: 2rem; }
+    .metric-item { text-align: center; }
+    .metric-label { font-size: 0.9rem; text-transform: uppercase; color: var(--fluent-text-muted); letter-spacing: 0.5px; }
+    .metric-number { font-size: clamp(3.5rem, 10vw, 5.5rem); font-weight: 800; line-height: 1.1; }
+    .metric-desc { font-size: 1rem; color: var(--fluent-text-dark); font-weight: 500; }
+    .bar-chart-item { display: flex; align-items: center; margin-bottom: 1.25rem; }
+    .bar-label { flex-shrink: 0; width: 140px; font-size: 0.95rem; color: var(--fluent-text-muted); padding-right: 1rem; }
+    .bar-container { flex-grow: 1; height: 20px; background-color: #e9ecef; border-radius: 5px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #FF4B2B, #FF416C); border-radius: 5px; animation: fillBar 1.5s ease-out forwards; }
+    .bar-percentage { padding-left: 1rem; font-weight: 600; color: var(--fluent-text-dark); }
+    .cta-wrapper { margin-top: 4rem; }
+    
+    /* ======================================================= */
+    /* === FEATURE FOCUS SECTION                          === */
+    /* ======================================================= */
+    .feature-focus-section { background-color: var(--fluent-bg-light); color: var(--fluent-text-dark); padding: 6rem 0; }
+    .feature-focus-section .feature-title { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; line-height: 1.2; color: var(--fluent-text-dark); }
+    .feature-focus-section .feature-short-desc { color: var(--fluent-text-muted); font-size: 0.95rem; margin-top: 1rem; border-left: 3px solid var(--fluent-red-primary); padding-left: 1rem; }
+    .feature-focus-section .feature-long-desc p { color: #495057; line-height: 1.8; margin-bottom: 1.5rem; }
+
+    /* ======================================================= */
+    /* === CTA & STATS SECTION                            === */
+    /* ======================================================= */
+    .cta-stats-section { background-color: var(--fluent-bg-white); color: var(--fluent-text-dark); padding: 6rem 0; text-align: center; }
+    .stat-item { margin-bottom: 3rem; }
+    .stat-number { font-size: clamp(3rem, 10vw, 5rem); font-weight: 800; line-height: 1; color: var(--fluent-text-dark); }
+    .stat-description { font-size: 0.95rem; color: var(--fluent-text-muted); line-height: 1.5; margin-top: 0.5rem; max-width: 250px; margin: 0.5rem auto 0; }
+    .cta-stats-section .final-cta-button { margin-top: 2rem; }
+
+    /* ======================================================= */
+    /* === FAQ SECTION                                    === */
+    /* ======================================================= */
+    .faq-section { background-color: var(--fluent-bg-light); padding: 6rem 0; }
+    .faq-title { font-size: clamp(2.2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 4rem; text-align: center; }
+    .faq-section .accordion { --bs-accordion-border-width: 0; --bs-accordion-border-radius: 0; --bs-accordion-inner-border-radius: 0; background-color: transparent; }
+    .faq-section .accordion-item { background-color: transparent; border-bottom: 1px solid var(--fluent-border-color); }
+    .faq-section .accordion-header { margin-bottom: 0; }
+    .faq-section .accordion-button { background-color: transparent !important; color: var(--fluent-text-dark); font-weight: 600; padding: 1.5rem 1rem; display: flex; align-items: center; gap: 1.25rem; }
+    .faq-section .accordion-button:focus { box-shadow: none; }
+    .faq-number { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(90deg, #FF4B2B, #FF416C); color: white; border-radius: 0.5rem; font-size: 1rem; font-weight: 700; }
+    .faq-section .accordion-button::after { content: '\f067'; font-family: 'Font Awesome 6 Free'; font-weight: 900; background-image: none; margin-left: auto; transition: transform 0.3s ease; color: var(--fluent-red-primary); }
+    .faq-section .accordion-button:not(.collapsed)::after { content: '\f068'; transform: rotate(180deg); }
+    .faq-section .accordion-collapse { position: relative; overflow: hidden; }
+    .faq-section .accordion-body { padding: 0.5rem 1rem 2rem calc(36px + 1.25rem + 1rem); color: var(--fluent-text-muted); line-height: 1.7; }
+    .faq-section .accordion-item:first-of-type { border-top: 1px solid var(--fluent-border-color); }
+    .faq-section .accordion-button:not(.collapsed) { background: rgba(var(--fluent-primary-rgb), 0.05) !important; }
+    .faq-open-number { position: absolute; top: 50%; right: 2rem; transform: translateY(-50%); font-size: 6rem; font-weight: 800; color: rgba(220, 53, 69, 0.08); z-index: 0; user-select: none; }
+    .faq-open-number .times-symbol { font-size: 0.5em; vertical-align: super; margin-left: 0.1em; color: rgba(220, 53, 69, 0.15); }
+    
+    /* === KEYFRAMES & MEDIA QUERIES === */
+    @keyframes fillBar { from { width: 0%; } }
+    @media (max-width: 991.98px) { .challenge-section .row { flex-direction: column-reverse; } .challenge-section .col-lg-5 { text-align: center; margin-bottom: 3rem; } .masonry-gallery { column-count: 2; } }
+    @media (max-width: 576px) { .masonry-gallery { column-count: 1; } }
+</style>
+{% endblock %}
+
+
 {% block content_hero %}
-<section class="hero-section text-white py-5">
-    <div class="container">
-        <div class="row align-items-center py-lg-5">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-3">
-                    <span class="lang-id">Kuasai Wawancaramu dengan <span class="text-primary">FLUENT</span></span>
-                    <span class="lang-en">Master Your Interview with <span class="text-primary">FLUENT</span></span>
+<section class="hero-section-styled section-with-blur">
+    <div class="abstract-blur"></div>
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-12">
+                <div class="hero-tag">
+                    <span class="lang-id">Pelatih Wawancara Berbasis AI</span>
+                    <span class="lang-en">AI-Powered Interview Coach</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="lang-id d-block">
+                        <span class="gradient-text">FLUENT</span>  adalah <br> Kunci <i class="fas fa-key"></i> Suksesmu!
+                    </span>
+                    <span class="lang-en d-block">
+                        <span class="gradient-text">FLUENT</span>  is the <br> Key <i class="fas fa-key"></i> to Your Success!
+                    </span>
                 </h1>
-                <p class="lead mb-4">
-                    <span class="lang-id d-block">Analisis wawancara berbasis AI untuk membantumu tampil maksimal. Dapatkan feedback real-time tentang bahasa tubuh, pola bicara, dan kondisi emosionalmu.</span>
-                    <span class="lang-en d-block">AI-powered interview analysis to help you perform at your best. Get real-time feedback on your body language, speech patterns, and emotional state.</span>
+                <p class="lead hero-subtitle mt-3 mb-4">
+                    <span class="lang-id d-block">Analisis wawancara untuk membantumu tampil maksimal. Dapatkan feedback real-time tentang bahasa tubuh, pola bicara, dan kondisi emosionalmu.</span>
+                    <span class="lang-en d-block">AI-powered analysis to help you perform at your best. Get real-time feedback on your body language, speech patterns, and emotional state.</span>
                 </p>
                 <div class="cta-buttons">
                     {% if not session.is_web_user and not session.is_admin %}
-                    <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-primary btn-lg px-4 me-md-2 mb-2 mb-md-0">
-                        <span class="lang-id">Mulai Sekarang</span><span class="lang-en">Get Started</span>
+                    <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-gradient-red btn-lg px-4 me-md-2 mb-2 mb-md-0">
+                        <i class="fas fa-rocket me-2"></i> <span class="lang-id">Mulai Sekarang</span><span class="lang-en">Get Started</span>
                     </a>
                     {% else %}
-                    <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-primary btn-lg px-4 me-md-2 mb-2 mb-md-0">
-                        <span class="lang-id">Buka Profil</span><span class="lang-en">Go to Profile</span>
+                    <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-gradient-red btn-lg px-4 me-md-2 mb-2 mb-md-0">
+                        <i class="fas fa-user-circle me-2"></i> <span class="lang-id">Buka Profil</span><span class="lang-en">Go to Profile</span>
                     </a>
                     {% endif %}
-                    <a href="{{ url_for('web.features_route') }}" class="btn btn-outline-light btn-lg px-4">
-                        <span class="lang-id">Pelajari Lebih Lanjut</span><span class="lang-en">Learn More</span>
+                    <a href="{{ url_for('web.features_route') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        <span class="lang-id">Pelajari Fitur</span><span class="lang-en">Learn More</span>
                     </a>
                 </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-end mt-5 mt-lg-0">
-                <img src="{{ url_for('web.web_serve_static', filename='images/hero.png') }}" alt="Interview Analysis" class="img-fluid hero-image-custom rounded" style="max-width: 350px" />
             </div>
         </div>
     </div>
@@ -39,227 +183,136 @@
 {% endblock %}
 
 {% block content %}
-<section class="stats-section py-5 bg-light">
-    <div class="container">
-        <div class="row text-center gy-4">
-            <div class="col-md-3 col-6">
-                <h2 class="display-5 fw-bold text-primary mb-1 count-up" data-target="10000" data-suffix="K+">0K+</h2>
-                <p class="text-muted"><span class="lang-id">Pengguna Terpercaya</span><span class="lang-en">Users Trusted</span></p>
-            </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-5 fw-bold text-primary mb-1 count-up" data-target="95" data-suffix="%">0%</h2>
-                <p class="text-muted"><span class="lang-id">Tingkat Keberhasilan</span><span class="lang-en">Success Rate</span></p>
-            </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-5 fw-bold text-primary mb-1">24/7</h2>
-                <p class="text-muted"><span class="lang-id">Tersedia</span><span class="lang-en">Available</span></p>
-            </div>
-            <div class="col-md-3 col-6">
-                <h2 class="display-5 fw-bold text-primary mb-1 count-up" data-target="4.8" data-decimals="1">0.0</h2>
-                <p class="text-muted"><span class="lang-id">Rating Rata-rata</span><span class="lang-en">Average Rating</span> <i class="fas fa-star text-warning"></i></p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="how-it-works py-5">
-    <div class="container">
-        <h2 class="text-center fw-bold display-6 mb-5">
-            <span class="lang-id">Bagaimana <span class="text-primary">FLUENT</span> Bekerja</span>
-            <span class="lang-en">How <span class="text-primary">FLUENT</span> Works</span>
-        </h2>
-        <div class="row gy-4">
-            <div class="col-lg-4 d-flex">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift w-100">
-                    <div class="mb-4 how-it-works-icon-container">
-                        <i class="fas fa-video fa-3x text-primary"></i>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Rekam Jawabanmu</span><span class="lang-en">Record Your Response</span></h3>
-                    <p class="small text-muted">
-                        <span class="lang-id d-block">Jawab pertanyaan wawancara pakai kamera dan mikrofonmu. Platform kami akan memandumu.</span>
-                        <span class="lang-en d-block">Answer interview questions using your camera and microphone. Our platform guides you through.</span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 d-flex">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift w-100">
-                    <div class="mb-4 how-it-works-icon-container">
-                        <i class="fas fa-brain fa-3x text-primary"></i>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Analisis Real-Time</span><span class="lang-en">Real-Time Analysis</span></h3>
-                    <p class="small text-muted">
-                        <span class="lang-id d-block">AI kami menganalisis bahasa tubuh, nuansa bicara, dan kondisi emosionalmu dengan cermat.</span>
-                        <span class="lang-en d-block">Our AI meticulously analyzes your body language, speech nuances, and emotional state.</span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-lg-4 d-flex">
-                <div class="card h-100 shadow-sm border-0 text-center p-4 fluent-card hover-lift w-100">
-                    <div class="mb-4 how-it-works-icon-container">
-                        <i class="fas fa-clipboard-check fa-3x text-primary"></i>
-                    </div>
-                    <h3 class="h5 fw-semibold mb-2"><span class="lang-id">Dapatkan Feedback Detail</span><span class="lang-en">Get Detailed Feedback</span></h3>
-                    <p class="small text-muted">
-                        <span class="lang-id d-block">Terima wawasan komprehensif yang bisa langsung diterapkan untuk meningkatkan performa wawancaramu.</span>
-                        <span class="lang-en d-block">Receive comprehensive, actionable insights to elevate your interview performance.</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="reviews-section py-5 bg-dark text-light">
-    <div class="container">
-        <div class="row mb-5 align-items-end">
+<section class="challenge-section section-with-blur">
+    <div class="abstract-blur" style="top: -150px; right: -250px; width: 700px; height: 700px;"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center gy-5">
             <div class="col-lg-7">
-                <button class="btn btn-outline-light btn-sm mb-3 review-section-tag" disabled>
-                    <span class="lang-id">Kata Mereka</span><span class="lang-en">What People Say?</span>
-                </button>
-                <h2 class="display-5 fw-bold mb-0">
-                    <span class="lang-id">Simak Pendapat Pengguna Tentang Manfaat <span class="text-primary">FLUENT</span></span>
-                    <span class="lang-en">Explore User Insights on <span class="text-primary">FLUENT</span>'s Benefits</span>
+                <h2 class="challenge-main-title mb-4">
+                    <span class="challenge-eyebrow gradient-text">
+                        <span class="lang-id">Tantangan Sebenarnya</span><span class="lang-en">The Real Challenge</span>
+                    </span>
+                    <span class="lang-id d-block">Bukan Sekadar Jawaban Tepat <i class="fas fa-comment-dots challenge-icon"></i></span>
+                    <span class="lang-en d-block">It's More Than Just Right Answers <i class="fas fa-comment-dots challenge-icon"></i></span>
                 </h2>
+                <div class="masonry-gallery">
+                    <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=1974&h=1316&auto=format&fit=crop" alt="Interview Setting 1" class="masonry-item">
+                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=1769&h=2654&auto=format&fit=crop" alt="Team Discussion" class="masonry-item">
+                    <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=1770&h=1180&auto=format&fit=crop" alt="Presentation" class="masonry-item">
+                    <img src="https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=1769&h=1179&auto=format&fit=crop" alt="Professional Woman" class="masonry-item">
+                    <img src="https://images.unsplash.com/photo-1549923746-c502d488b3ea?q=80&w=1771&h=1181&auto=format&fit=crop" alt="Office Brainstorming" class="masonry-item">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1770&h=1180&auto=format&fit=crop" alt="Man Explaining on Whiteboard" class="masonry-item">
+                </div>
             </div>
-            <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
-                <p class="lead-sm text-light opacity-75">
-                    <span class="lang-id d-block">Cari tahu apa kata pengguna kami tentang pengalaman mereka dengan FLUENT, dan lihat bagaimana FLUENT membantu persiapan wawancara mereka.</span>
-                    <span class="lang-en d-block">Discover what our users say about their experience with FLUENT, and see how it has improved their interview preparation.</span>
+            <div class="col-lg-5">
+                <p class="challenge-description">
+                    <span class="lang-id d-block">Sukses dalam wawancara tidak hanya tentang jawaban yang benar. Bahasa tubuh, intonasi suara, dan ketenangan emosional memegang peranan krusial. Banyak kandidat berbakat gagal karena kurang persiapan di area non-verbal ini.<br><br>FLUENT hadir untuk menjembatani kesenjangan tersebut, memberikan Anda analisis mendalam untuk membangun kepercayaan diri yang sesungguhnya.</span>
+                    <span class="lang-en d-block">Success in an interview is not just about the right answers. Body language, voice intonation, and emotional composure play a crucial role. Many talented candidates fail due to a lack of preparation in these non-verbal areas.<br><br>FLUENT is here to bridge that gap, providing you with deep analysis to build true confidence.</span>
                 </p>
             </div>
         </div>
-
-        <div class="swiper review-swiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="review-card h-100">
-                        <div class="review-card-header">
-                            <img src="{{ url_for('static', filename='images/grk (4).png') }}" alt="User Avatar" class="avatar" />
-                            <div class="user-info">
-                                <h5 class="username mb-0">Ariana Putri</h5>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <span class="rating-text ms-1">5/5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-card-body">
-                            <p>
-                                <span class="lang-id d-block">"FLUENT bener-bener ngebantu aku jadi lebih PD pas wawancara. Fitur analisis emosinya keren banget!"</span>
-                                <span class="lang-en d-block">"FLUENT really helped me become more confident during interviews. The emotion analysis feature is amazing!"</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="review-card h-100">
-                        <div class="review-card-header">
-                            <img src="{{ url_for('static', filename='images/grk (23).png') }}" alt="User Avatar" class="avatar" />
-                            <div class="user-info">
-                                <h5 class="username mb-0">Budi Santoso</h5>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                    <span class="rating-text ms-1">4.5/5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-card-body">
-                            <p>
-                                <span class="lang-id d-block">"Analisis kecepatan bicara dan kata pengisi sangat berguna. Aku jadi sadar kekuranganku."</span>
-                                <span class="lang-en d-block">"The speech pace and filler word analysis were very helpful. I became aware of my weaknesses."</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="review-card h-100">
-                        <div class="review-card-header">
-                            <img src="{{ url_for('static', filename='images/grk (63).png') }}" alt="User Avatar" class="avatar" />
-                            <div class="user-info">
-                                <h5 class="username mb-0">Citra Lestari</h5>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <span class="rating-text ms-1">5/5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-card-body">
-                            <p>
-                                <span class="lang-id d-block">"Awalnya ragu, tapi setelah coba, feedback bahasa tubuhnya detail banget. Recommended!"</span>
-                                <span class="lang-en d-block">"I was hesitant at first, but after trying it, the body language feedback is very detailed. Recommended!"</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="review-card h-100">
-                        <div class="review-card-header">
-                            <img src="{{ url_for('static', filename='images/grk (76).png') }}" alt="User Avatar" class="avatar" />
-                            <div class="user-info">
-                                <h5 class="username mb-0">Rahmat Hidayat</h5>
-                                <div class="rating">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    <span class="rating-text ms-1">4/5</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="review-card-body">
-                            <p>
-                                <span class="lang-id d-block">"Suka banget sama fitur simulasi wawancaranya, jadi bisa latihan kapan aja. Mantap!"</span>
-                                <span class="lang-en d-block">"Love the interview simulation feature, I can practice anytime. Awesome!"</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
     </div>
 </section>
+
+<section class="how-it-works-v2 section-with-blur">
+    <div class="abstract-blur" style="bottom: -250px; left: -300px; width: 800px; height: 800px;"></div>
+    <div class="container position-relative text-center">
+        <h2 class="section-title">
+            <span class="gradient-text">Cara</span> Kerja Analisis AI Kami <i class="fas fa-brain" style="font-size: 0.8em;"></i>
+        </h2>
+        <p class="section-subtitle">
+            <span class="lang-id">FLUENT tidak hanya mendengar, tapi memahami. Kami memecah setiap aspek komunikasimu menjadi data yang bisa diukur untuk memberikan feedback yang akurat.</span>
+            <span class="lang-en">FLUENT doesn't just listen, it understands. We break down every aspect of your communication into measurable data to provide accurate feedback.</span>
+        </p>
+        <div class="row gy-5 align-items-center">
+            <div class="col-lg-6">
+                <h4 class="column-title"><span class="lang-id">Performa & Kecepatan</span><span class="lang-en">Performance & Speed</span></h4>
+                <div class="metrics-wrapper">
+                    <div class="metric-item"><span class="metric-label">Akurasi</span><div class="metric-number gradient-text">95%</div><div class="metric-desc">Analisis</div></div>
+                    <div class="metric-item"><span class="metric-label">Respons</span><div class="metric-number gradient-text">&lt;3</div><div class="metric-desc">Detik</div></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="column-title"><span class="lang-id">Faktor yang Dianalisis</span><span class="lang-en">Analyzed Factors</span></h4>
+                <div class="bar-chart-wrapper text-start">
+                    <div class="bar-chart-item"><div class="bar-label">Bahasa Tubuh</div><div class="bar-container"><div class="bar-fill" style="width: 35%;"></div></div><div class="bar-percentage">35%</div></div>
+                    <div class="bar-chart-item"><div class="bar-label">Kejelasan Bicara</div><div class="bar-container"><div class="bar-fill" style="width: 25%;"></div></div><div class="bar-percentage">25%</div></div>
+                    <div class="bar-chart-item"><div class="bar-label">Intonasi & Emosi</div><div class="bar-container"><div class="bar-fill" style="width: 20%;"></div></div><div class="bar-percentage">20%</div></div>
+                    <div class="bar-chart-item"><div class="bar-label">Struktur Jawaban</div><div class="bar-container"><div class="bar-fill" style="width: 15%;"></div></div><div class="bar-percentage">15%</div></div>
+                    <div class="bar-chart-item"><div class="bar-label">Lainnya</div><div class="bar-container"><div class="bar-fill" style="width: 5%;"></div></div><div class="bar-percentage">5%</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="cta-wrapper">
+            <a href="{{ url_for('web.features_route') }}" class="btn btn-gradient-red btn-lg px-4"><span class="lang-id">Lihat Detail Fitur</span><span class="lang-en">See Feature Details</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="feature-focus-section section-with-blur">
+    <div class="abstract-blur" style="top: 0; left: -250px; width: 700px; height: 700px;"></div>
+    <div class="container position-relative">
+        <div class="row gx-lg-5 align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1770&auto=format&fit=crop" alt="Professional presenting with confident body language" class="img-fluid rounded-3 shadow-lg">
+                <div class="mt-4">
+                    <h2 class="feature-title"><span class="gradient-text">Analisis</span> Bahasa Tubuh Anda</h2>
+                    <p class="feature-short-desc"><span class="lang-id">Kami menganalisis postur, kontak mata, dan gestur tangan Anda secara real-time untuk memberikan cerminan objektif dari kepercayaan diri Anda.</span><span class="lang-en">We analyze your posture, eye contact, and hand gestures in real-time to provide an objective reflection of your confidence.</span></p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="feature-long-desc">
+                    <p><span class="lang-id d-block">Tahukah Anda bahwa lebih dari 55% komunikasi bersifat non-verbal? Cara Anda membawa diri seringkali berbicara lebih keras daripada kata-kata yang Anda ucapkan. Kegugupan, keraguan, atau antusiasme—semuanya terpancar melalui bahasa tubuh.</span><span class="lang-en d-block">Did you know that over 55% of communication is non-verbal? The way you carry yourself often speaks louder than the words you say. Nervousness, doubt, or enthusiasm—it's all conveyed through body language.</span></p>
+                    <p><span class="lang-id d-block">AI canggih FLUENT dilatih untuk mendeteksi pola-pola kunci ini. Kami melacak posisi bahu, kemiringan kepala, frekuensi kedipan mata, hingga gerakan tangan yang tidak disadari. Data ini kemudian diolah menjadi metrik yang mudah dipahami.</span><span class="lang-en d-block">FLUENT's advanced AI is trained to detect these key patterns. We track shoulder position, head tilt, blink frequency, and even unconscious hand movements. This data is then processed into easy-to-understand metrics.</span></p>
+                    <p><span class="lang-id d-block">Hasilnya bukan sekadar "baik" atau "buruk". Anda akan mendapatkan feedback yang bisa ditindaklanjuti, seperti "Anda terlihat sering menunduk saat menjawab pertanyaan sulit," memungkinkan Anda untuk berlatih dan memperbaiki aspek spesifik untuk tampil lebih percaya diri dan meyakinkan.</span><span class="lang-en d-block">The result isn't just "good" or "bad." You'll get actionable feedback, like "You tend to look down when answering difficult questions," allowing you to practice and improve specific aspects to appear more confident and convincing.</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-stats-section section-with-blur">
+    <div class="abstract-blur" style="bottom: -200px; right: -200px; width: 600px; height: 600px;"></div>
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-md-4"><div class="stat-item"><h3 class="stat-number">250+</h3><p class="stat-description"><span class="lang-id">Pelamar Rata-rata Bersaing untuk Satu Posisi Pekerjaan</span><span class="lang-en">Average Applicants Competing for a Single Job Position</span></p></div></div>
+            <div class="col-md-4"><div class="stat-item"><h3 class="stat-number">85%</h3><p class="stat-description"><span class="lang-id">Kandidat Berkualitas Gagal pada Tahap Wawancara</span><span class="lang-en">Qualified Candidates Fail at the Interview Stage</span></p></div></div>
+            <div class="col-md-4"><div class="stat-item"><h3 class="stat-number">7s</h3><p class="stat-description"><span class="lang-id">Waktu yang Anda Miliki untuk Menciptakan Kesan Pertama yang Kuat</span><span class="lang-en">Seconds You Have to Make a Strong First Impression</span></p></div></div>
+        </div>
+        <div class="final-cta-button">
+             <a href="{{ url_for('web.web_register_page_route') if not session.is_web_user else url_for('web.interview_simulation_page') }}" class="btn btn-gradient-red btn-lg px-5 py-3"><span class="lang-id">Jangan Jadi Statistik, Mulai Berlatih!</span><span class="lang-en">Don't Be a Statistic, Start Practicing!</span></a>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section section-with-blur">
+    <div class="abstract-blur" style="top: 50%; left: 50%; transform: translate(-50%,-50%); width: 900px; height: 900px; background: radial-gradient(circle, rgba(255, 82, 82, 0.1) 0%, rgba(255, 128, 128, 0) 60%);"></div>
+    <div class="container position-relative">
+        <h2 class="faq-title">
+            <span class="lang-id">Biasa Di<span class="gradient-text">tanyakan</span> 🤔</span>
+            <span class="lang-en">Frequently Asked <span class="gradient-text">Questions</span> 🤔</span>
+        </h2>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item"><h2 class="accordion-header" id="headingOne"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"><span class="faq-number">01</span><span class="lang-id">Apa itu FLUENT?</span><span class="lang-en">What is FLUENT?</span></button></h2><div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion"><div class="accordion-body"><div class="faq-open-number">01<span class="times-symbol">×</span></div><span class="lang-id">FLUENT adalah platform latihan wawancara cerdas yang menggunakan teknologi AI untuk menganalisis komunikasi verbal dan non-verbal Anda. Tujuannya adalah untuk memberikan feedback objektif agar Anda bisa tampil lebih percaya diri dan efektif saat wawancara kerja.</span><span class="lang-en">FLUENT is an intelligent interview practice platform that uses AI technology to analyze your verbal and non-verbal communication. Its purpose is to provide objective feedback so you can perform more confidently and effectively during job interviews.</span></div></div></div>
+            <div class="accordion-item"><h2 class="accordion-header" id="headingTwo"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"><span class="faq-number">02</span><span class="lang-id">Bagaimana cara AI menganalisis video saya?</span><span class="lang-en">How does the AI analyze my video?</span></button></h2><div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion"><div class="accordion-body"><div class="faq-open-number">02<span class="times-symbol">×</span></div><span class="lang-id">AI kami menggunakan model *computer vision* untuk melacak titik-titik kunci pada wajah dan tubuh Anda untuk menganalisis bahasa tubuh. Untuk suara, kami menggunakan pemrosesan bahasa alami (NLP) untuk menganalisis kecepatan bicara, kata pengisi (filler words), dan sentimen emosional.</span><span class="lang-en">Our AI uses computer vision models to track key points on your face and body to analyze body language. For audio, we use Natural Language Processing (NLP) to analyze speech pace, filler words, and emotional sentiment.</span></div></div></div>
+            <div class="accordion-item"><h2 class="accordion-header" id="headingThree"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"><span class="faq-number">03</span><span class="lang-id">Apakah data saya aman dan privasinya terjaga?</span><span class="lang-en">Is my data safe and my privacy protected?</span></button></h2><div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion"><div class="accordion-body"><div class="faq-open-number">03<span class="times-symbol">×</span></div><span class="lang-id">Tentu saja. Keamanan dan privasi adalah prioritas utama kami. Video rekaman Anda hanya dapat diakses oleh Anda sendiri melalui akun Anda. Kami tidak membagikan data pribadi Anda kepada pihak ketiga. Semua data dienkripsi baik saat transit maupun saat disimpan.</span><span class="lang-en">Absolutely. Security and privacy are our top priorities. Your recorded videos are only accessible by you through your account. We do not share your personal data with third parties. All data is encrypted both in transit and at rest.</span></div></div></div>
+            <div class="accordion-item"><h2 class="accordion-header" id="headingFour"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"><span class="faq-number">04</span><span class="lang-id">Apakah layanan ini berbayar?</span><span class="lang-en">Is this a paid service?</span></button></h2><div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion"><div class="accordion-body"><div class="faq-open-number">04<span class="times-symbol">×</span></div><span class="lang-id">FLUENT menawarkan model freemium. Anda dapat mencoba beberapa fitur inti secara gratis untuk merasakan manfaatnya. Untuk akses ke semua fitur analisis mendalam dan riwayat latihan tanpa batas, kami menawarkan paket langganan premium yang terjangkau.</span><span class="lang-en">FLUENT offers a freemium model. You can try several core features for free to experience the benefits. For access to all in-depth analysis features and unlimited practice history, we offer affordable premium subscription plans.</span></div></div></div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
+
 
 {% block scripts_extra %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Inisialisasi Swiper untuk testimoni
-    if (document.querySelector('.review-swiper')) {
-        const reviewSwiper = new Swiper('.review-swiper', {
-            loop: true,
-            grabCursor: true,
-            slidesPerView: 1, // Default untuk mobile
-            spaceBetween: 20,
-            autoplay: {
-                delay: 3500, // Waktu tunda antar slide (misalnya 3.5 detik)
-                disableOnInteraction: false, // Tetap autoplay setelah interaksi user
-                pauseOnMouseEnter: true,    // Jeda saat mouse hover
-            },
-            // Tidak ada pagination atau navigation sesuai permintaan
-            breakpoints: {
-                576: { // Small devices (landscape phones, 576px and up)
-                    slidesPerView: 1,
-                    spaceBetween: 20
-                },
-                768: { // Medium devices (tablets, 768px and up)
-                    slidesPerView: 2,
-                    spaceBetween: 25
-                },
-                992: { // Large devices (desktops, 992px and up)
-                    slidesPerView: 3,
-                    spaceBetween: 30
-                },
-                1200: { // Extra large devices (large desktops, 1200px and up)
-                    slidesPerView: 3, // Atau 4 jika desain kartu memungkinkan dan terlihat bagus
-                    spaceBetween: 30
-                }
-            },
-        });
-    }
-
     // Fungsi animasi angka (CountUp)
     const animateCountUp = (el) => {
-        const target = parseFloat(el.dataset.target);
+        const target = parseFloat(el.dataset.target) || (el.innerText.includes('K+') ? parseFloat(el.dataset.target) : parseFloat(el.innerText));
         const decimals = parseInt(el.dataset.decimals) || 0;
         const suffix = el.dataset.suffix || '';
-        const duration = 1800; // Durasi animasi sedikit lebih lama untuk kesan lebih smooth
+        const duration = 1800;
         const framesPerSecond = 60;
         const totalFrames = Math.round((duration / 1000) * framesPerSecond);
         let currentFrame = 0;
@@ -267,19 +320,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const count = () => {
             currentFrame++;
             const progress = currentFrame / totalFrames;
-            const easeOutProgress = 1 - Math.pow(1 - progress, 4); // easeOutQuart (sedikit lebih halus dari Quint untuk angka)
+            const easeOutProgress = 1 - Math.pow(1 - progress, 4);
             let currentValue = easeOutProgress * target;
             let displayValue;
 
-            if (target === 10000 && suffix === "K+") {
-                if (currentValue >= 10000) {
-                    displayValue = Math.floor(target / 1000) + suffix; // Tampilkan 10K+
-                } else if (currentValue >= 1000) { // Tambahkan format K saat animasi berjalan
-                     displayValue = (currentValue / 1000).toFixed(1) + "K";
-                }
-                else {
-                    displayValue = Math.round(currentValue).toLocaleString();
-                }
+            if (suffix === "K+") {
+                displayValue = (currentValue / 1000).toFixed(1) + "K+";
+                if(currentValue >= target) displayValue = (target / 1000) + "K+";
             } else if (decimals > 0) {
                 displayValue = currentValue.toFixed(decimals) + suffix;
             } else {
@@ -290,11 +337,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentFrame < totalFrames) {
                 requestAnimationFrame(count);
             } else {
-                // Pastikan nilai akhir tepat
-                if (target === 10000 && suffix === "K+") {
-                    el.innerText = Math.floor(target / 1000) + suffix;
+                if (suffix === "K+") {
+                     el.innerText = (target / 1000) + "K+";
                 } else {
-                    el.innerText = target.toFixed(decimals) + suffix;
+                     el.innerText = target.toFixed(decimals) + suffix;
                 }
             }
         };
@@ -309,22 +355,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }, {
-        threshold: 0.3 // Mulai animasi sedikit lebih awal (30% elemen terlihat)
+        threshold: 0.3
     });
 
     document.querySelectorAll('.count-up').forEach(el => {
-        const decimals = parseInt(el.dataset.decimals) || 0;
-        const suffix = el.dataset.suffix || '';
-        let initialText = "0";
-
-        if (el.dataset.target === "10000" && suffix === "K+") {
-            initialText = "0K+";
-        } else if (decimals > 0) {
-            initialText = (0).toFixed(decimals) + suffix;
-        } else {
-            initialText = "0" + suffix;
-        }
-        el.innerText = initialText;
         countUpObserver.observe(el);
     });
 });
