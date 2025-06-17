@@ -1,24 +1,18 @@
-{% extends "base.html" %} {# Anda bisa menggunakan base template Anda agar tampilan konsisten #}
+{% extends "base.html" %}
 
 {% block title %}
     <span class="lang-id">Halaman Tidak Ditemukan</span><span class="lang-en">Page Not Found</span> - {{ app_name | default('FLUENT') }}
 {% endblock %}
 
 {% block content_hero %}
-{# Anda bisa memilih untuk tidak memiliki hero section di halaman error, atau buat yang lebih simpel #}
 {% endblock %}
 
 {% block content %}
-<section class="error-page-section py-5 text-center page-content-container">
+<section class="error-page-section text-center">
     <div class="container">
         <div class="row justify-content-center">
-            <br>
-            <br>
             <div class="col-md-8 col-lg-6">
-                {# Anda bisa menambahkan gambar atau ilustrasi yang menarik di sini #}
-                {# Contoh: <img src="{{ url_for('static', filename='images/4.png) }}" alt="Error 404" class="img-fluid mb-4" style="max-height: 300px;"> #}
-                
-                <h1 class="display-1 fw-bold text-primary mb-3 error-code">404</h1>
+                <h1 class="display-1 fw-bold mb-3 error-code">404</h1>
                 <h2 class="fw-bold mb-3">
                     <span class="lang-id">Oops! Halaman Tidak Ditemukan.</span>
                     <span class="lang-en">Oops! Page Not Found.</span>
@@ -33,14 +27,6 @@
                         <span class="lang-id">Kembali ke Beranda</span>
                         <span class="lang-en">Back to Homepage</span>
                     </a>
-                    {# Anda bisa menambahkan tombol lain, misalnya "Hubungi Dukungan" #}
-                    {#
-                    <a href="#" class="btn btn-outline-secondary btn-lg px-4">
-                        <i class="fas fa-question-circle me-2"></i>
-                        <span class="lang-id">Bantuan</span>
-                        <span class="lang-en">Help</span>
-                    </a>
-                    #}
                 </div>
             </div>
         </div>

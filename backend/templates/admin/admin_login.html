@@ -3,24 +3,14 @@
 {% block title %}Admin Login{% endblock %}
 
 {% block head_extra %}
-<style>
-  body {
-    background-color: #f8f9fa;
-  }
-  .main-content-wrapper {
-    padding-top: 0 !important;
-  }
-  .fluent-navbar, .fluent-footer {
-    display: none !important;
-  }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="admin-login-page vh-100 d-flex align-items-center justify-content-center px-3">
     <div class="admin-login-card card shadow-lg border-0 rounded-3" style="width: 100%; max-width: 420px;">
         <div class="card-body p-4 p-lg-5 text-center">
-            <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-4">
+            <img src="{{ url_for('static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-4">
             <h2 class="h3 fw-bold mb-1">
                 <span class="lang-id">Login Panel Admin</span><span class="lang-en">Admin Panel Login</span>
             </h2>
@@ -32,7 +22,7 @@
                 {% if messages %}
                     {% for category, message in messages %}
                         <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show small py-2 text-start" role="alert">
-                            {{ message }} {# Pesan flash biasanya dari backend, biarkan apa adanya #}
+                            {{ message }}
                             <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endfor %}
@@ -68,11 +58,7 @@
 
 {% block scripts_extra %}
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const mainContentWrapper = document.querySelector('.main-content-wrapper');
-      if (mainContentWrapper && document.querySelector('.admin-login-page')) {
-            mainContentWrapper.style.paddingTop = '0px';
-      }
-    });
+    // Menambahkan kelas khusus ke body untuk halaman ini
+    document.body.classList.add('admin-login-body');
 </script>
 {% endblock %}

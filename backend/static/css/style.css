@@ -97,3 +97,16 @@ html[lang="en"] .lang-en.d-block {
     color: transparent;
     display: inline-block;
 }
+
+/* Style for 404 Page */
+.error-page-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+.error-page-section .error-code {
+    background: linear-gradient(90deg, #FF416C, #FF4B2B);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}

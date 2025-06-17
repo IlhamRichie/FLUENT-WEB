@@ -2,6 +2,10 @@
 
 {% block title %}Verify OTP{% endblock %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container my-5 auth-page-container">
     <div class="row justify-content-center">
@@ -9,7 +13,7 @@
             <div class="card shadow-lg border-0 fluent-card auth-card rounded-3">
                 <div class="card-body p-4 p-lg-5">
                     <div class="text-center mb-4">
-                        <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
+                        <img src="{{ url_for('static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
                         <h2 class="card-title h3 fw-bold mb-1">
                             <span class="lang-id">Verifikasi Email Anda</span><span class="lang-en">Verify Your Email</span>
                         </h2>

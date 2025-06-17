@@ -1,0 +1,14 @@
+.auth-page-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.auth-card .card-body {
+    padding: 2rem;
+}
+
+@media (min-width: 992px) {
+    .auth-card .card-body {
+        padding: 2.5rem;
+    }
+}

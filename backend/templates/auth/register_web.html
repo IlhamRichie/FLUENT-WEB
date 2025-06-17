@@ -2,15 +2,18 @@
 
 {% block title %}Register{% endblock %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container my-5 auth-page-container">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6 col-xl-5">
-            <br>
             <div class="card shadow-lg border-0 fluent-card auth-card rounded-3">
                 <div class="card-body p-4 p-lg-5">
                     <div class="text-center mb-4">
-                        <img src="{{ url_for('web.web_serve_static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
+                        <img src="{{ url_for('static', filename='images/fluent-logo.png') }}" alt="FLUENT Logo" style="height: 48px;" class="mb-3">
                         <h2 class="card-title h3 fw-bold mb-1">
                             <span class="lang-id">Buat Akunmu</span><span class="lang-en">Create Your Account</span>
                         </h2>
@@ -23,7 +26,6 @@
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                             {% for category, message in messages %}
-                            {# Pesan flash akan tetap dalam bahasa backend, kecuali Anda punya sistem i18n di backend #}
                             <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show small py-2" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -50,18 +52,20 @@
                             <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Konfirmasi kata sandi" required>
                             <label for="confirm_password"><span class="lang-id">Konfirmasi Kata Sandi</span><span class="lang-en">Confirm Password</span></label>
                         </div>
+                        
                         <div class="form-floating mb-3">
                             <select class="form-select" id="gender" name="gender">
-                                <option value="" selected><span class="lang-id">Pilih Jenis Kelamin (Opsional)</span><span class="lang-en"></span></option>
-                                <option value="Male"><span class="lang-id">Pria</span><span class="lang-en"></span></option>
-                                <option value="Female"><span class="lang-id">Wanita</span><span class="lang-en"></span></option>
-                                <option value="Not specified"><span class="lang-id">Tidak ingin menyebutkan</span><span class="lang-en"></span></option>
+                                <option value="" selected><span class="lang-id">Pilih Jenis Kelamin (Opsional)</span><span class="lang-en">Select Gender (Optional)</span></option>
+                                <option value="Male"><span class="lang-id">Pria</span><span class="lang-en">Male</span></option>
+                                <option value="Female"><span class="lang-id">Wanita</span><span class="lang-en">Female</span></option>
+                                <option value="Not specified"><span class="lang-id">Tidak ingin menyebutkan</span><span class="lang-en">Prefer not to say</span></option>
                             </select>
                             <label for="gender"><span class="lang-id">Jenis Kelamin</span><span class="lang-en">Gender</span></label>
                         </div>
+
                         <div class="form-floating mb-4">
                             <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Contoh: Mahasiswa, Insinyur">
-                            <label for="occupation"><span class="lang-id">Pekerjaan (Opsional)</span><span class="lang-en"></span></label>
+                            <label for="occupation"><span class="lang-id">Pekerjaan (Opsional)</span><span class="lang-en">Occupation (Optional)</span></label>
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary btn-lg fw-semibold">
@@ -79,4 +83,47 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fungsi untuk memperbaiki teks pada dropdown
+    function fixLanguageInSelect(selectElement) {
+        // Dapatkan bahasa yang sedang aktif dari tag <html>
+        const currentLang = document.documentElement.lang || 'id';
+        const options = selectElement.options;
+
+        // Loop melalui setiap <option>
+        for (let i = 0; i < options.length; i++) {
+            const option = options[i];
+            // Cari span bahasa yang sesuai di dalam option
+            const langSpan = option.querySelector('.lang-' + currentLang);
+            
+            // Jika span ditemukan, ubah teks option menjadi teks dari span tersebut
+            if (langSpan) {
+                option.text = langSpan.textContent;
+            }
+        }
+    }
+
+    // Jalankan fungsi perbaikan pada dropdown 'Jenis Kelamin'
+    const genderSelect = document.getElementById('gender');
+    if (genderSelect) {
+        fixLanguageInSelect(genderSelect);
+
+        // Tambahan: Pastikan dropdown juga ikut berubah saat bahasa di-switch
+        // tanpa perlu refresh halaman.
+        const languageSwitcher = document.querySelector('.navbar');
+        if(languageSwitcher) {
+            languageSwitcher.addEventListener('click', function(e) {
+                if(e.target.closest('.lang-switcher')) {
+                    // Beri sedikit jeda agar tag <html> selesai di-update
+                    setTimeout(() => fixLanguageInSelect(genderSelect), 50);
+                }
+            });
+        }
+    }
+});
+</script>
 {% endblock %}
