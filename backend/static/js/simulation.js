@@ -31,8 +31,7 @@ if (document.getElementById('get-question-btn')) {
         // === Fungsi Bantuan ===
         function showStatus(message, type = 'info') {
             statusMessage.textContent = message;
-            statusMessage.className = `alert alert-${type}`;
-            statusMessage.classList.remove('d-none');
+            statusMessage.className = `alert alert-${type} d-block`;
         }
         
         function toggleSpinner(button, show) {
@@ -53,9 +52,9 @@ if (document.getElementById('get-question-btn')) {
             showStatus('Sedang membuat pertanyaan untukmu...', 'info');
 
             try {
+                // [FIX] Kembali menggunakan generate_question, tapi dengan token
                 const response = await fetch('/api/interview/generate_question', {
                     method: 'POST',
-                    // TAMBAHKAN BAGIAN HEADERS INI
                     headers: { 
                         'Content-Type': 'application/json', 
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
@@ -86,7 +85,7 @@ if (document.getElementById('get-question-btn')) {
             }
         });
 
-        // === Langkah 2: Memulai Rekaman ===
+        // === Langkah 2 & 3: Logika Rekaman (Tidak ada perubahan) ===
         startRecordBtn.addEventListener('click', async () => {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -95,12 +94,14 @@ if (document.getElementById('get-question-btn')) {
                 mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8,opus' });
                 
                 mediaRecorder.ondataavailable = event => {
-                    if (event.data.size > 0) {
-                        recordedChunks.push(event.data);
-                    }
+                    if (event.data.size > 0) recordedChunks.push(event.data);
                 };
                 
-                mediaRecorder.start(2000);
+                fullTranscript = "";
+                liveTranscript.textContent = "...";
+                liveFeedback.textContent = "...";
+
+                mediaRecorder.start(3000);
                 
                 startRecordBtn.classList.add('d-none');
                 stopRecordBtn.classList.remove('d-none');
@@ -115,7 +116,7 @@ if (document.getElementById('get-question-btn')) {
                     timerDisplay.textContent = `${min}:${sec}`;
                 }, 1000);
 
-                chunkInterval = setInterval(sendChunkForAnalysis, 4000);
+                chunkInterval = setInterval(sendChunkForAnalysis, 5000);
 
             } catch (error) {
                 console.error('Error starting recording:', error);
@@ -123,74 +124,61 @@ if (document.getElementById('get-question-btn')) {
             }
         });
 
-        // === Langkah 3: Menghentikan Rekaman ===
         stopRecordBtn.addEventListener('click', () => {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-            }
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+            if (stream) stream.getTracks().forEach(track => track.stop());
             clearInterval(timerInterval);
             clearInterval(chunkInterval);
             timerDisplay.textContent = "00:00";
-            
             stopRecordBtn.classList.add('d-none');
             startRecordBtn.classList.remove('d-none');
             recIndicator.style.display = 'none';
-            if (fullTranscript.length > 0) {
-                finishBtn.classList.remove('d-none');
-            }
+            if (fullTranscript.length > 5) finishBtn.classList.remove('d-none');
         });
 
-        // === Langkah 4: Mengirim Chunk untuk Analisis Real-time ===
+        // === Langkah 4: Analisis Real-time (Tidak ada perubahan) ===
         async function sendChunkForAnalysis() {
-            if (recordedChunks.length === 0) return;
-
+            if (recordedChunks.length === 0 || videoFeed.videoWidth === 0) return;
             const canvas = document.createElement('canvas');
             canvas.width = videoFeed.videoWidth;
             canvas.height = videoFeed.videoHeight;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
-            const videoBase64 = canvas.toDataURL('image/jpeg').split(',')[1];
-            
+            const videoBase64 = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
             const audioBlob = new Blob(recordedChunks, { type: 'video/webm' });
             recordedChunks = [];
-
             const reader = new FileReader();
             reader.readAsDataURL(audioBlob);
             reader.onloadend = async () => {
                 const audioBase64 = reader.result.split(',')[1];
+                if (!audioBase64) return;
                 try {
                     const response = await fetch('/api/interview/analyze_realtime_chunk', {
                         method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json', 
-                            'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
-                        },
+                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('access_token') },
                         body: JSON.stringify({ audio: audioBase64, video: videoBase64 })
                     });
-
-                    if (response.status === 401) throw new Error("Sesi Anda telah berakhir. Silakan login kembali.");
-                    if (!response.ok) throw new Error(`Server merespons dengan status ${response.status}`);
-                    
+                    if (response.status === 401) throw new Error("Sesi Anda telah berakhir.");
+                    if (!response.ok) {
+                        const errData = await response.json();
+                        throw new Error(errData.details || `Server error ${response.status}`);
+                    }
                     const data = await response.json();
                     if(data.error) throw new Error(data.details || data.error);
-
                     if (data.live_feedback) liveFeedback.textContent = data.live_feedback;
                     if (data.transcribed_text) {
-                        liveTranscript.textContent = data.transcribed_text;
                         fullTranscript += data.transcribed_text + " ";
+                        liveTranscript.textContent = fullTranscript;
                     }
                 } catch (error) {
                     console.error("Error analyzing chunk:", error);
                     liveFeedback.textContent = `Error: ${error.message}`;
+                    clearInterval(chunkInterval);
                 }
             };
         }
         
-        // === Langkah 5: Mendapatkan Laporan Akhir ===
+        // === Langkah 5: Mendapatkan Laporan Akhir & Menyimpan ===
         finishBtn.addEventListener('click', async () => {
             if (!fullTranscript.trim()) {
                 showStatus("Tidak ada transkrip untuk dianalisis.", "warning");
@@ -198,20 +186,19 @@ if (document.getElementById('get-question-btn')) {
             }
 
             toggleSpinner(finishBtn, true);
-            showStatus('Membuat laporan akhir...', 'info');
+            showStatus('Membuat laporan akhir dan menyimpan...', 'info');
             
             try {
+                // [FIX] Menggunakan save_report dengan data yang benar
                 const response = await fetch('/api/interview/save_report', {
                     method: 'POST',
-                    // PASTIKAN HEADERS INI SUDAH ADA
                     headers: { 
                         'Content-Type': 'application/json', 
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token') 
                     },
-                    // PASTIKAN ANDA MENGIRIM "question" DAN "transcript"
                     body: JSON.stringify({ 
                         transcript: fullTranscript,
-                        question: questionText.textContent // <-- KIRIM PERTANYAAN
+                        question: questionText.textContent // Mengirim teks pertanyaan
                     })
                 });
 
@@ -221,6 +208,7 @@ if (document.getElementById('get-question-btn')) {
                 const report = await response.json();
                 if(report.error) throw new Error(report.details || report.error);
 
+                // Tampilkan laporan
                 finalReportContent.innerHTML = `
                     <div class="row">
                         <div class="col-md-3 text-center">
@@ -243,6 +231,7 @@ if (document.getElementById('get-question-btn')) {
                 reportCard.classList.remove('d-none');
                 interviewCard.classList.add('d-none');
                 statusMessage.classList.add('d-none');
+
             } catch(error) {
                 console.error("Error getting final report:", error);
                 showStatus(`Gagal membuat laporan: ${error.message}`, 'danger');

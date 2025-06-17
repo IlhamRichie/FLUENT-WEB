@@ -38,19 +38,36 @@ def login_route():
     auth_response, user_obj, status_code = authenticate_user_service(data['email'], data['password'])
 
     if status_code == 200 and user_obj:
+        # Generate token seperti biasa
         access_token, refresh_token = generate_jwt_tokens(str(user_obj["_id"]))
-        # Jika pakai Pydantic: UserResponse.model_validate(user_obj).model_dump(by_alias=True, exclude_none=True)
+        
+        # [FIX] TAMBAHKAN BLOK INI UNTUK MEMBUAT SESSION COOKIE
+        session.clear() # Hapus session lama jika ada
+        session['is_web_user'] = True
+        session['user_id'] = str(user_obj["_id"])
+        session['username'] = user_obj.get("username")
+        session.modified = True
+        # --- AKHIR DARI BLOK TAMBAHAN ---
+
+        # Siapkan data untuk respons JSON
         user_data_for_response = {
-            "id": str(user_obj["_id"]), "username": user_obj["username"], "email": user_obj["email"],
-            "gender": user_obj.get("gender"), "occupation": user_obj.get("occupation"),
+            "id": str(user_obj["_id"]),
+            "username": user_obj.get("username"),
+            "email": user_obj.get("email"),
+            "gender": user_obj.get("gender"),
+            "occupation": user_obj.get("occupation"),
             "is_active": user_obj.get("is_active", True),
             "profile_picture": user_obj.get("profile_picture")
         }
+        
         return jsonify({
-            "status": "success", "message": "Login successful",
-            "access_token": access_token, "refresh_token": refresh_token,
+            "status": "success",
+            "message": "Login successful",
+            "access_token": access_token,
+            "refresh_token": refresh_token,
             "user": user_data_for_response
         }), 200
+        
     return jsonify(auth_response), status_code
 
 @auth_bp.route("/refresh", methods=["POST"])

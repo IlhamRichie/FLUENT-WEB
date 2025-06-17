@@ -1,27 +1,19 @@
-import datetime
 from flask import Blueprint, request, jsonify, current_app
-from flask_jwt_extended import current_user
 from backend.utils.decorators import token_required
-from backend.interview import services as interview_service
-from backend.database import get_db
+from . import services as interview_service # Gunakan 'from .' jika routes.py selevel dengan services.py
 
-# --- Blueprint Definition ---
-# Nama Blueprint disatukan menjadi satu.
-# URL prefix '/interview' akan berlaku untuk semua route di file ini.
 interview_api_bp = Blueprint('interview_api', __name__, url_prefix='/interview')
 
-# ===================================================================
-# == ENDPOINTS UNTUK SIMULASI AI REAL-TIME (DENGAN GEMINI) ==
-# ===================================================================
-
 @interview_api_bp.route("/generate_question", methods=["POST"])
-@token_required
-def handle_generate_question(current_user):
+@token_required # <-- FIX 1: TAMBAHKAN DECORATOR INI
+def handle_generate_question(current_user): # <-- Tambahkan 'current_user'
     """Endpoint untuk menghasilkan satu pertanyaan wawancara berdasarkan topik."""
     if not request.is_json:
         return jsonify({"error": "Request harus JSON"}), 400
     
-    print(f"User {current_user['username']} is generating a question.")
+    # Log untuk memastikan endpoint dipanggil dengan user yang benar
+    current_app.logger.info(f"User '{current_user['username']}' is generating a question.")
+    
     topic = request.json.get("topic")
     if not topic:
         return jsonify({"error": "Request harus mengandung 'topic'"}), 400
@@ -30,13 +22,12 @@ def handle_generate_question(current_user):
         result = interview_service.generate_interview_question(topic)
         return jsonify(result)
     except Exception as e:
-        # Menambahkan log di server untuk memudahkan debugging
         current_app.logger.error(f"Error generating question: {e}")
         return jsonify({"error": "Gagal membuat pertanyaan", "details": str(e)}), 500
 
 @interview_api_bp.route("/analyze_realtime_chunk", methods=["POST"])
-@token_required # <-- TAMBAHKAN INI
-def handle_analyze_chunk(current_user): # <-- TAMBAHKAN current_user
+@token_required # <-- FIX 2: AMANKAN JUGA ENDPOINT INI
+def handle_analyze_chunk(current_user): # <-- Tambahkan 'current_user'
     """Endpoint untuk menganalisis potongan audio & video secara real-time."""
     if not request.is_json:
         return jsonify({"error": "Request harus JSON"}), 400
@@ -56,47 +47,36 @@ def handle_analyze_chunk(current_user): # <-- TAMBAHKAN current_user
         return jsonify({"error": "Analisis AI gagal", "details": str(e)}), 500
 
 @interview_api_bp.route("/save_report", methods=["POST"])
-@token_required # Endpoint ini sudah dilindungi
+@token_required
 def handle_save_report(current_user):
-    """
-    Endpoint untuk menghasilkan dan menyimpan laporan akhir dari transkrip.
-    Ini juga bisa diadaptasi untuk menyimpan hasil dari sebuah sesi wawancara.
-    """
+    """Endpoint untuk menghasilkan dan menyimpan laporan akhir dari transkrip."""
     if not request.is_json:  
         return jsonify({"error": "Request harus JSON"}), 400
-         
+        
     report_data = request.json
     full_transcript = report_data.get("transcript")
-    question = report_data.get("question") # Ambil pertanyaan
-    session_id = report_data.get("session_id") # Ambil session_id jika ada
+    question_text = report_data.get("question")
 
-    if not full_transcript:  
-        return jsonify({"error": "Request harus mengandung 'transcript'"}), 400
+    if not full_transcript or not question_text:  
+        return jsonify({"error": "Request harus mengandung 'transcript' dan 'question'"}), 400
 
     try:
-        # 1. Hasilkan analisis/evaluasi dari jawaban
+        # 1. Hasilkan analisis dari transkrip
         analysis_result = interview_service.generate_final_report(full_transcript)
         
-        # 2. Siapkan data yang akan disimpan
-        db = get_db()
-        user_id = current_user["_id"]
-        
-        # Buat dokumen riwayat baru
-        history_doc = {
-            "user_id": user_id,
-            "username": current_user.get("username"),
-            "question": question,
+        # 2. Gabungkan semua data untuk disimpan
+        report_to_save = {
+            "question": question_text,
             "transcript": full_transcript,
-            "evaluation": analysis_result, # Simpan hasil analisis
-            "created_at": datetime.now(datetime.timezone.utc)
+            "analysis": analysis_result
         }
-
-        # 3. Simpan ke koleksi 'interview_history' atau sejenisnya
-        db.interview_history.insert_one(history_doc)
+        
+        # 3. Panggil service untuk menyimpan ke DB
+        interview_service.save_final_report_to_db(current_user['_id'], report_to_save)
         
         current_app.logger.info(f"Laporan berhasil disimpan untuk user {current_user['username']}.")
-         
-        return jsonify(analysis_result)
+        
+        return jsonify(analysis_result) # Kembalikan hasil analisisnya saja ke frontend
         
     except Exception as e:
         current_app.logger.error(f"Error saving final report: {e}")

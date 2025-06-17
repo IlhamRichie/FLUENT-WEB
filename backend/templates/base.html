@@ -215,6 +215,13 @@
 
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
+    {% if access_token %}
+    <script>
+        console.log("Token baru diterima dari server, memperbarui localStorage...");
+        localStorage.setItem('access_token', '{{ access_token }}');
+    </script>
+    {% endif %}
+
     {% block scripts_extra %}{% endblock %}
 </body>
 

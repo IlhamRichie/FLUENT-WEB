@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, jsonify, session, flash, redirect, url_for, current_app
+from flask import request, jsonify, session, flash, redirect, url_for, current_app, g
 import jwt
 
 # Impor fungsi get_user_by_id dari auth.services
@@ -11,61 +11,44 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
-        auth_header = request.headers.get('Authorization')
-
-        if not auth_header:
-            return jsonify({'status': 'fail', 'message': 'Authorization header is missing!'}), 401
-
-        try:
-            # Pastikan formatnya "Bearer <token>"
-            token_parts = auth_header.split(" ")
-            if len(token_parts) != 2 or token_parts[0].lower() != 'bearer':
-                raise jwt.InvalidTokenError("Token malformed, must be 'Bearer <token>'.")
-            token = token_parts[1]
-        except Exception:
-            return jsonify({'status': 'fail', 'message': 'Token malformed!'}), 401
+        # 1. Periksa apakah header 'Authorization' ada
+        if 'Authorization' in request.headers:
+            auth_header = request.headers['Authorization']
+            try:
+                # 2. Ambil token dari header "Bearer <token>"
+                token = auth_header.split(" ")[1]
+            except IndexError:
+                return jsonify({'status': 'fail', 'message': 'Bearer token malformed'}), 401
+        
+        if not token:
+            return jsonify({'status': 'fail', 'message': 'Token is missing!'}), 401
 
         try:
-            # --- PERBAIKAN 1: Gunakan 'SECRET_KEY' untuk konsistensi ---
-            # Pastikan 'SECRET_KEY' ada di file config.py Anda
+            # 3. Decode token menggunakan secret key yang sama
+            # PyJWT secara otomatis akan memvalidasi 'exp' (waktu kedaluwarsa)
             data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
-
-            # --- PERBAIKAN 2: Cara mengambil user_id yang benar dari payload ---
-            # Akses 'identity' dulu, baru 'id'
-            identity_payload = data.get('identity')
-            if not isinstance(identity_payload, dict):
-                 # Fallback jika identity bukan dictionary (misal dari flask-jwt-extended lama)
-                 identity_payload = data.get('sub')
-                 if not identity_payload:
-                     return jsonify({'status': 'fail', 'message': 'Invalid token payload structure.'}), 401
-                 user_id = identity_payload['id']
-            else:
-                 user_id = identity_payload.get('id')
-
-
-            if not user_id:
-                return jsonify({'status': 'fail', 'message': 'User ID not found in token identity.'}), 401
-
-            # Panggil fungsi yang sudah ada untuk mengambil data user dari DB
-            current_user_from_db = get_user_by_id(user_id)
             
-            if not current_user_from_db:
-                return jsonify({'status': 'fail', 'message': 'User for this token not found.'}), 401
+            # 4. Cari pengguna di database berdasarkan user_id dari token
+            current_user = get_user_by_id(data['user_id'])
+            if current_user is None:
+                return jsonify({'status': 'fail', 'message': 'User not found for token'}), 404
             
-            # (Opsional) Cek jika akun aktif
-            if not current_user_from_db.get('is_active', True):
-                return jsonify({'status': 'fail', 'message': 'Your account is inactive.'}), 403
+            # Periksa apakah akun aktif
+            if not current_user.get('is_active', True):
+                return jsonify({'status': 'fail', 'message': 'Account is inactive'}), 403
 
         except jwt.ExpiredSignatureError:
-            return jsonify({'status': 'fail', 'message': 'Token has expired! Please log in again.'}), 401
-        except jwt.InvalidTokenError as e:
-            return jsonify({'status': 'fail', 'message': f'Token is invalid! {e}'}), 401
+            return jsonify({'status': 'fail', 'message': 'Token has expired!'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'status': 'fail', 'message': 'Token is invalid!'}), 401
         except Exception as e:
-            current_app.logger.error(f"An unexpected error occurred during token processing: {str(e)}")
-            return jsonify({'status': 'error', 'message': 'An internal error occurred during authentication.'}), 500
-        
-        # Jika semua valid, teruskan ke fungsi route dengan data user
-        return f(current_user_from_db, *args, **kwargs)
+            current_app.logger.error(f"Token processing error: {e}")
+            return jsonify({'status': 'error', 'message': 'Internal server error during token validation'}), 500
+
+        # 5. Lolos validasi, teruskan data pengguna ke fungsi route
+        # dan simpan ke 'g' untuk akses mudah di tempat lain jika perlu
+        g.current_user = current_user
+        return f(current_user, *args, **kwargs)
 
     return decorated
 

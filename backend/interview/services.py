@@ -167,25 +167,34 @@ def get_interview_results_service(session_id_str: str, user_id: ObjectId):
 
 def save_final_report_to_db(user_id, report_data):
     """
-    Menyimpan hasil laporan wawancara ke database.
+    [BARU/PENTING] Menyimpan hasil laporan wawancara ke database.
     """
     db = get_db()
-    reports_collection = db.interview_reports # Membuat atau menggunakan koleksi 'interview_reports'
+    # Gunakan nama koleksi yang konsisten, misal 'interview_history'
+    history_collection = db.interview_history
 
+    # Ambil username dari DB berdasarkan user_id
+    user_info = db.users.find_one({"_id": ObjectId(user_id)}, {"username": 1})
+    username = user_info.get("username") if user_info else "unknown_user"
+    
     # Struktur dokumen yang akan disimpan
-    new_report = {
+    new_history = {
         "user_id": ObjectId(user_id),
-        "question": report_data.get("question"),
-        "transcript": report_data.get("transcript"),
-        "analysis": report_data.get("analysis"), # Hasil dari generate_final_report
+        "username": username,
+        "category": report_data.get("topic", "general"), # Ambil topik jika ada
+        "status": "completed", # Tandai sebagai selesai
+        "questions": [{
+            "question_text": report_data.get("question"),
+            "user_answer": report_data.get("transcript"),
+            "evaluation": report_data.get("analysis") # Hasil dari generate_final_report
+        }],
         "created_at": datetime.now(timezone.utc)
     }
 
-    result = reports_collection.insert_one(new_report)
+    result = history_collection.insert_one(new_history)
     
     if not result.inserted_id:
         raise Exception("Gagal menyimpan laporan ke database.")
-
-    # Mengembalikan dokumen yang baru saja dibuat (opsional)
-    created_document = reports_collection.find_one({"_id": result.inserted_id})
-    return created_document
+    
+    current_app.logger.info(f"History for user {username} saved with ID {result.inserted_id}")
+    return True

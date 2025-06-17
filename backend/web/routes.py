@@ -10,6 +10,7 @@ import jwt
 
 
 from backend.auth.services import (
+    generate_jwt_tokens,
     get_google_client,
     process_google_oauth_callback_service,
     generate_otp_service,
@@ -926,18 +927,26 @@ def web_reset_password_submit_route(token):
     return redirect(url_for('web.web_login_page_route'))
 
 @web_bp.route('/profile')
-@web_login_required
+@web_login_required # Ganti 'web_login_required' menjadi 'login_required' jika nama decorator Anda berbeda
 def web_profile_route():
     user_id_str = session.get('user_id')
     user_data = get_user_by_id(user_id_str)
+
     if not user_data:
         flash("Data pengguna tidak ditemukan. Silakan login lagi.", "danger")
         session.clear()
-        session.modified = True
         return redirect(url_for('web.web_login_page_route'))
+
+    # [FIX] Buat token baru setiap kali halaman profil dimuat
+    access_token, _ = generate_jwt_tokens(user_id_str)
+    
+    # Perbarui session jika perlu
     session['profile_picture'] = user_data.get('profile_picture')
     session['username'] = user_data.get('username')
-    return render_template('web/profile_web.html', user=user_data)
+    
+    # Kirim token ke template
+    return render_template('web/profile_web.html', user=user_data, access_token=access_token)
+
 
 @web_bp.route('/logout')
 @web_login_required
@@ -949,11 +958,16 @@ def web_logout_route():
     return redirect(url_for('web.web_login_page_route'))
 
 @web_bp.route('/interview-simulation')
-@web_login_required
+@web_login_required # Ganti 'web_login_required' menjadi 'login_required' jika perlu
 def interview_simulation_page():
-    user_info = {"username": session.get("username", "Pengguna")}
-    current_app.logger.info(f"Pengguna {session.get('user_id')} mengakses simulasi interview.")
-    return render_template('web/gimmick.html', user=user_info, app_name=current_app.config.get("APP_NAME", "FLUENT"))
+    # [FIX] Buat token baru setiap kali halaman simulasi dimuat
+    user_id_str = session.get('user_id')
+    access_token, _ = generate_jwt_tokens(user_id_str)
+    
+    current_app.logger.info(f"Pengguna {user_id_str} mengakses simulasi interview.")
+    
+    # Kirim token ke template
+    return render_template('web/gimmick.html', access_token=access_token)
 
 @web_bp.route("/predict_page")
 def predict_page():
