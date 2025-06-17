@@ -21,7 +21,7 @@ google-generativeai
 # Analisis Gambar & Data
 Pillow
 numpy
-tensorflow-lite
+tensorflow
 
 # Firebase (jika masih ada bagian yang menggunakannya)
 firebase-admin
