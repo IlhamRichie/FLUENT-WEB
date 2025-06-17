@@ -1,0 +1,27 @@
+# Flask & Web Server
+Flask
+gunicorn
+python-dotenv
+Flask-Cors
+Flask-Bcrypt
+Flask-Mail
+
+# Autentikasi & JWT
+PyJWT
+Authlib
+google-auth-oauthlib
+
+# Database
+pymongo
+dnspython
+
+# Google Generative AI (Gemini)
+google-generativeai
+
+# Analisis Gambar & Data
+Pillow
+numpy
+tensorflow-lite
+
+# Firebase (jika masih ada bagian yang menggunakannya)
+firebase-admin
