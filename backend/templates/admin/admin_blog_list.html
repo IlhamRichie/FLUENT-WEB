@@ -1,0 +1,64 @@
+{% extends "admin/admin_base.html" %}
+{% block title %}Blog Management{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block admin_content %}
+<div class="admin-content-page container-fluid py-4 px-lg-4">
+    <div class="page-header d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold mb-0">Manajemen Blog</h1>
+        <a href="{{ url_for('admin.admin_blog_new_route') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle-fill me-1"></i> Tambah Artikel Baru
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm fluent-dashboard-card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 admin-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 py-3">Judul</th>
+                            <th class="py-3">Kategori</th>
+                            <th class="py-3">Status</th>
+                            <th class="py-3">Dibuat Pada</th>
+                            <th class="pe-4 py-3 text-end">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if posts %}
+                        {% for post in posts %}
+                        <tr>
+                            <td class="ps-4 fw-medium">{{ post.title|truncate(60) }}</td>
+                            <td><span class="badge bg-secondary-subtle text-secondary-emphasis">{{ post.category }}</span></td>
+                            <td>
+                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if post.status == 'published' else 'warning' }}-subtle text-{{ 'success' if post.status == 'published' else 'warning' }}-emphasis">
+                                    {{ post.status|title }}
+                                </span>
+                            </td>
+                            <td>{{ post.created_at.strftime('%d %b %Y') }}</td>
+                            <td class="pe-4 text-end">
+                                <a href="{{ url_for('admin.admin_blog_edit_route', post_id=post._id) }}" class="btn btn-sm btn-outline-secondary btn-icon" title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form action="{{ url_for('admin.admin_blog_delete_route', post_id=post._id) }}" method="POST" class="d-inline" onsubmit="return confirm('Anda yakin ingin menghapus artikel ini?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger btn-icon" title="Hapus">
+                                        <i class="bi bi-trash3-fill"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr><td colspan="5" class="text-center p-5 text-muted">Belum ada artikel. Klik "Tambah Artikel Baru" untuk memulai.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

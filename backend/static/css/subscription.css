@@ -7,11 +7,6 @@
     --fluent-popular-glow: rgba(255, 65, 108, 0.3);
 }
 
-.pricing-hero {
-    padding: 5rem 0;
-    background-color: var(--fluent-light);
-}
-
 .gradient-text {
     background: linear-gradient(90deg, var(--fluent-primary), var(--fluent-secondary));
     -webkit-background-clip: text;
@@ -19,7 +14,31 @@
     color: transparent;
 }
 
-/* Styling untuk Toggle Bulanan/Tahunan */
+/* ... (Kode CSS .hero-section-styled, .hero-title, dll. tetap sama) ... */
+.hero-section-styled {
+    background-color: var(--fluent-light);
+    padding: 6rem 0; 
+}
+.hero-content { 
+    position: relative; 
+    z-index: 1; 
+}
+.hero-title { 
+    font-size: clamp(2.8rem, 8vw, 4.5rem); 
+    font-weight: 800; 
+    line-height: 1.2; 
+    color: var(--fluent-dark); 
+}
+.hero-subtitle { 
+    font-size: 1.1rem; 
+    color: #6c757d; 
+    max-width: 700px; 
+    margin: 1.5rem auto 0; 
+}
+
+/* ======================================================= */
+/* === PERBAIKAN UNTUK TOGGLE BULANAN / TAHUNAN === */
+/* ======================================================= */
 .pricing-toggle-container {
     display: inline-flex;
     align-items: center;
@@ -27,6 +46,15 @@
     padding: 0.5rem;
     border-radius: 50px;
     font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
+}
+.pricing-toggle-container.yearly-active {
+    background-color: #d1ecf1; /* Warna latar berubah saat tahunan aktif */
+}
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0; /* Menghapus margin bawah default */
 }
 .form-check-input {
     width: 3.5em;
@@ -34,6 +62,7 @@
     cursor: pointer;
     background-color: var(--fluent-secondary);
     border-color: var(--fluent-secondary);
+    transition: background-position .15s ease-in-out, background-color .3s ease, border-color .3s ease;
 }
 .form-check-input:focus {
     box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
@@ -44,16 +73,22 @@
 }
 .save-badge {
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 .pricing-toggle-container.yearly-active .save-badge {
     opacity: 1;
+    transform: scale(1);
 }
 
 
-/* Styling untuk Kartu Harga */
+/* ... (Kode CSS .pricing-cards-section, .pricing-card, dll. tetap sama) ... */
 .pricing-cards-section {
     background-color: #fff;
+    padding-top: 0;
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
 }
 .pricing-card {
     border: 1px solid var(--fluent-border);
@@ -86,12 +121,7 @@
     color: var(--fluent-primary);
     margin-bottom: 1.5rem;
 }
-.pricing-card .price-currency {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #6c757d;
-}
-.pricing-card .price-period {
+.pricing-card .price-currency, .pricing-card .price-period {
     font-size: 1rem;
     font-weight: 500;
     color: #6c757d;
@@ -113,8 +143,6 @@
     padding: 0.75rem 1rem;
     border-radius: 50px;
 }
-
-/* Kartu Populer */
 .pricing-card.popular {
     border-color: var(--fluent-primary);
     box-shadow: 0 0 30px var(--fluent-popular-glow);

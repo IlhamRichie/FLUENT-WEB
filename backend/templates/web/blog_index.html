@@ -24,46 +24,46 @@
 <section class="blog-listing-section">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-                <div class="card blog-card">
-                    <div class="blog-card-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1770" class="card-img-top" alt="Tips Wawancara">
-                    </div>
-                    <div class="card-body p-4">
-                        <p class="blog-card-category gradient-text"><span class="lang-id">Tips Wawancara</span><span class="lang-en">Interview Tips</span></p>
-                        <h5 class="card-title"><a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}"><span class="lang-id">5 Kesalahan Umum Bahasa Tubuh Saat Wawancara</span><span class="lang-en">5 Common Body Language Mistakes During Interviews</span></a></h5>
-                        <p class="card-text"><span class="lang-id">Hindari gestur yang dapat diartikan negatif oleh pewawancara. Pelajari cara menampilkan kepercayaan diri...</span><span class="lang-en">Avoid gestures that can be negatively interpreted by interviewers. Learn how to project confidence...</span></p>
-                        <a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}" class="btn btn-sm btn-outline-danger mt-auto"><span class="lang-id">Baca Selengkapnya</span><span class="lang-en">Read More</span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-                <div class="card blog-card">
-                     <div class="blog-card-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1554200876-56c2f25224fa?q=80&w=1770" class="card-img-top" alt="Persiapan Karier">
-                    </div>
-                    <div class="card-body p-4">
-                        <p class="blog-card-category gradient-text"><span class="lang-id">Persiapan Karier</span><span class="lang-en">Career Prep</span></p>
-                        <h5 class="card-title"><a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}"><span class="lang-id">Cara Menjawab "Apa Kelemahan Terbesarmu?"</span><span class="lang-en">How to Answer "What's Your Greatest Weakness?"</span></a></h5>
-                        <p class="card-text"><span class="lang-id">Mengubah pertanyaan sulit menjadi kesempatan untuk menunjukkan kesadaran diri dan kemauan untuk berkembang...</span><span class="lang-en">Turning a tough question into an opportunity to show self-awareness and willingness to grow...</span></p>
-                        <a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}" class="btn btn-sm btn-outline-danger mt-auto"><span class="lang-id">Baca Selengkapnya</span><span class="lang-en">Read More</span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
-                <div class="card blog-card">
-                     <div class="blog-card-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1771" class="card-img-top" alt="Teknologi AI">
-                    </div>
-                    <div class="card-body p-4">
-                        <p class="blog-card-category gradient-text"><span class="lang-id">Teknologi AI</span><span class="lang-en">AI Technology</span></p>
-                        <h5 class="card-title"><a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}"><span class="lang-id">Di Balik Layar: Bagaimana AI FLUENT Bekerja</span><span class="lang-en">Behind the Scenes: How FLUENT's AI Works</span></a></h5>
-                        <p class="card-text"><span class="lang-id">Memahami teknologi Computer Vision dan NLP yang kami gunakan untuk memberikan Anda analisis akurat...</span><span class="lang-en">Understanding the Computer Vision and NLP technology we use to give you accurate analysis...</span></p>
-                        <a href="{{ url_for('web.blog_post_route', slug='contoh-artikel') }}" class="btn btn-sm btn-outline-danger mt-auto"><span class="lang-id">Baca Selengkapnya</span><span class="lang-en">Read More</span></a>
+            {# Mulai perulangan di sini. 'posts' adalah variabel dari Flask #}
+            {% if posts %}
+                {% for post in posts %}
+                <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
+                    <div class="card blog-card">
+                        <div class="blog-card-img-wrapper">
+                            {# Gunakan URL gambar dari database, jika tidak ada, pakai gambar default #}
+                            <a href="{{ url_for('web.blog_post_route', slug=post.slug) }}">
+                                <img src="{{ post.featured_image_url or 'https://images.unsplash.com/photo-1499750310107-5fef28a66643' }}" class="card-img-top" alt="{{ post.title }}">
+                            </a>
+                        </div>
+                        <div class="card-body p-4">
+                            {# Tampilkan kategori dari database #}
+                            <p class="blog-card-category gradient-text">{{ post.category }}</p>
+                            {# Tampilkan judul dan link dari database #}
+                            <h5 class="card-title"><a href="{{ url_for('web.blog_post_route', slug=post.slug) }}">{{ post.title }}</a></h5>
+                            {# Tampilkan kutipan (excerpt) dari database #}
+                            <p class="card-text">{{ post.excerpt }}</p>
+                        </div>
+                         <div class="card-footer blog-card-footer">
+                            <div class="author-meta">
+                                <img src="https://i.pravatar.cc/40?u={{ post.author_name }}" alt="Avatar" class="author-avatar">
+                                <div>
+                                    {# Tampilkan nama penulis dan tanggal dari database #}
+                                    <span class="author-name">{{ post.author_name }}</span>
+                                    <span class="post-date">{{ post.created_at | to_wib }}</span>
+                                </div>
+                            </div>
+                            <a href="{{ url_for('web.blog_post_route', slug=post.slug) }}" class="read-more-link" title="Baca Selengkapnya"><i class="fas fa-arrow-right"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </div>
+                {% endfor %}
+            {% else %}
+                {# Tampilkan pesan ini jika tidak ada post di database #}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted"><span class="lang-id">Belum ada artikel yang dipublikasikan.</span><span class="lang-en">No articles have been published yet.</span></p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </section>
 {% endblock %}

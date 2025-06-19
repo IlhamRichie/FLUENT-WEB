@@ -7,17 +7,21 @@
 {% endblock %}
 
 {% block content %}
-<section class="pricing-hero">
-    <div class="container text-center">
-        <h1 class="display-4 fw-bold">
+<!-- ======================================================= -->
+<!-- HERO SECTION (GAYA BARU YANG KONSISTEN)               -->
+<!-- ======================================================= -->
+<section class="hero-section-styled">
+    <div class="container hero-content text-center">
+        <h1 class="hero-title">
             <span class="lang-id">Pilih Paket yang <span class="gradient-text">Tepat Untukmu</span></span>
             <span class="lang-en">Choose the Right <span class="gradient-text">Plan for You</span></span>
         </h1>
-        <p class="lead text-muted mt-3">
+        <p class="lead hero-subtitle">
             <span class="lang-id">Mulai perjalananmu dengan paket gratis atau buka semua fitur canggih dengan paket premium.</span>
             <span class="lang-en">Start your journey with a free plan or unlock all advanced features with a premium plan.</span>
         </p>
 
+        <!-- Toggle Bulanan/Tahunan -->
         <div class="pricing-toggle-container mt-5">
             <span class="lang-id">Bulanan</span><span class="lang-en">Monthly</span>
             <div class="form-check form-switch mx-3">
@@ -32,9 +36,12 @@
     </div>
 </section>
 
+<!-- ... sisa konten (pricing-cards-section) tidak berubah ... -->
+
 <section class="pricing-cards-section py-5">
     <div class="container">
         <div class="row">
+            <!-- Paket Pencari Kerja: Basic -->
             <div class="col-lg-4 mb-4">
                 <div class="pricing-card">
                     <div class="card-header">
@@ -54,6 +61,7 @@
                 </div>
             </div>
 
+            <!-- Paket Pencari Kerja: Pro (Paling Populer) -->
             <div class="col-lg-4 mb-4">
                 <div class="pricing-card popular">
                     <div class="popular-badge"><span class="lang-id">Paling Populer</span><span class="lang-en">Most Popular</span></div>
@@ -63,7 +71,7 @@
                     </div>
                     <div class="card-body">
                         <div class="price">
-                            <span class="price-value" data-monthly="49.000" data-yearly="490.000">49.000</span>
+                            <span class="price-value" data-monthly="49000" data-yearly="490000">49.000</span>
                             <span class="price-currency">IDR</span>
                             <span class="price-period">/ <span class="lang-id">bulan</span><span class="lang-en">month</span></span>
                         </div>
@@ -78,6 +86,7 @@
                 </div>
             </div>
 
+            <!-- Paket Perekrut: Bisnis -->
             <div class="col-lg-4 mb-4">
                 <div class="pricing-card">
                     <div class="card-header">
