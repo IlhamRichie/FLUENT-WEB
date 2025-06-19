@@ -26,7 +26,7 @@ def token_required(f):
         try:
             # 3. Decode token menggunakan secret key yang sama
             # PyJWT secara otomatis akan memvalidasi 'exp' (waktu kedaluwarsa)
-            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
+            data = jwt.decode(token, current_app.config['JWT_SECRET_KEY'], algorithms=["HS256"])
             
             # 4. Cari pengguna di database berdasarkan user_id dari token
             current_user = get_user_by_id(data['user_id'])

@@ -6,6 +6,7 @@ from flask import send_from_directory
 import os
 import uuid # <-- TAMBAHKAN
 from ua_parser import user_agent_parser
+from backend.auth.services import get_user_by_id, generate_jwt_tokens
 import jwt
 
 
@@ -927,7 +928,7 @@ def web_reset_password_submit_route(token):
     return redirect(url_for('web.web_login_page_route'))
 
 @web_bp.route('/profile')
-@web_login_required # Ganti 'web_login_required' menjadi 'login_required' jika nama decorator Anda berbeda
+@web_login_required 
 def web_profile_route():
     user_id_str = session.get('user_id')
     user_data = get_user_by_id(user_id_str)
@@ -937,16 +938,12 @@ def web_profile_route():
         session.clear()
         return redirect(url_for('web.web_login_page_route'))
 
-    # [FIX] Buat token baru setiap kali halaman profil dimuat
+    # === BAGIAN PENTING 1 ===
+    # Buat token baru setiap kali halaman ini dimuat
     access_token, _ = generate_jwt_tokens(user_id_str)
     
-    # Perbarui session jika perlu
-    session['profile_picture'] = user_data.get('profile_picture')
-    session['username'] = user_data.get('username')
-    
-    # Kirim token ke template
+    # Kirim token ini ke template HTML
     return render_template('web/profile_web.html', user=user_data, access_token=access_token)
-
 
 @web_bp.route('/logout')
 @web_login_required
@@ -958,15 +955,16 @@ def web_logout_route():
     return redirect(url_for('web.web_login_page_route'))
 
 @web_bp.route('/interview-simulation')
-@web_login_required # Ganti 'web_login_required' menjadi 'login_required' jika perlu
+@web_login_required
 def interview_simulation_page():
-    # [FIX] Buat token baru setiap kali halaman simulasi dimuat
     user_id_str = session.get('user_id')
+    current_app.logger.info(f"Pengguna {user_id_str} mengakses simulasi interview.")
+
+    # === BAGIAN PENTING 2 ===
+    # Buat token baru di sini juga
     access_token, _ = generate_jwt_tokens(user_id_str)
     
-    current_app.logger.info(f"Pengguna {user_id_str} mengakses simulasi interview.")
-    
-    # Kirim token ke template
+    # Kirim token ini ke template HTML
     return render_template('web/gimmick.html', access_token=access_token)
 
 @web_bp.route("/predict_page")
