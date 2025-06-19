@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Paket Langganan{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/subscription.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="pricing-hero">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">
+            <span class="lang-id">Pilih Paket yang <span class="gradient-text">Tepat Untukmu</span></span>
+            <span class="lang-en">Choose the Right <span class="gradient-text">Plan for You</span></span>
+        </h1>
+        <p class="lead text-muted mt-3">
+            <span class="lang-id">Mulai perjalananmu dengan paket gratis atau buka semua fitur canggih dengan paket premium.</span>
+            <span class="lang-en">Start your journey with a free plan or unlock all advanced features with a premium plan.</span>
+        </p>
+
+        <div class="pricing-toggle-container mt-5">
+            <span class="lang-id">Bulanan</span><span class="lang-en">Monthly</span>
+            <div class="form-check form-switch mx-3">
+                <input class="form-check-input" type="checkbox" role="switch" id="billing-cycle-switch">
+                <label class="form-check-label" for="billing-cycle-switch"></label>
+            </div>
+            <span class="lang-id">Tahunan</span><span class="lang-en">Yearly</span>
+            <span class="badge bg-success ms-2 save-badge">
+                <i class="fas fa-tag"></i> <span class="lang-id">Hemat 2 Bulan!</span><span class="lang-en">Save 2 Months!</span>
+            </span>
+        </div>
+    </div>
+</section>
+
+<section class="pricing-cards-section py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="pricing-card">
+                    <div class="card-header">
+                        <h3><span class="lang-id">Pencari Kerja</span><span class="lang-en">Job Seeker</span></h3>
+                        <p><span class="lang-id">Untuk memulai persiapan wawancara.</span><span class="lang-en">To get started with interview prep.</span></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="price">Gratis</div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> <span class="lang-id">3 Sesi Latihan / bulan</span><span class="lang-en">3 Practice Sessions / month</span></li>
+                            <li><i class="fas fa-check"></i> <span class="lang-id">Analisis Dasar</span><span class="lang-en">Basic Analysis Report</span></li>
+                            <li><i class="fas fa-times"></i> <span class="lang-id">Riwayat Latihan Terbatas</span><span class="lang-en">Limited Practice History</span></li>
+                            <li><i class="fas fa-times"></i> <span class="lang-id">Contoh Jawaban AI</span><span class="lang-en">AI Ideal Answer Examples</span></li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary w-100"><span class="lang-id">Mulai Gratis</span><span class="lang-en">Get Started</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="pricing-card popular">
+                    <div class="popular-badge"><span class="lang-id">Paling Populer</span><span class="lang-en">Most Popular</span></div>
+                    <div class="card-header">
+                        <h3><span class="lang-id">Pencari Kerja Pro</span><span class="lang-en">Job Seeker Pro</span></h3>
+                        <p><span class="lang-id">Untuk menguasai setiap wawancara.</span><span class="lang-en">To master every interview.</span></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="price">
+                            <span class="price-value" data-monthly="49.000" data-yearly="490.000">49.000</span>
+                            <span class="price-currency">IDR</span>
+                            <span class="price-period">/ <span class="lang-id">bulan</span><span class="lang-en">month</span></span>
+                        </div>
+                        <ul class="features-list">
+                           <li><i class="fas fa-check"></i> <span class="lang-id">Sesi Latihan Tak Terbatas</span><span class="lang-en">Unlimited Practice Sessions</span></li>
+                           <li><i class="fas fa-check"></i> <span class="lang-id">Analisis AI Komprehensif</span><span class="lang-en">Comprehensive AI Analysis</span></li>
+                           <li><i class="fas fa-check"></i> <span class="lang-id">Riwayat Latihan Penuh</span><span class="lang-en">Full Practice History</span></li>
+                           <li><i class="fas fa-check"></i> <span class="lang-id">Contoh Jawaban AI</span><span class="lang-en">AI Ideal Answer Examples</span></li>
+                        </ul>
+                        <a href="#" class="btn btn-primary w-100"><span class="lang-id">Pilih Pro</span><span class="lang-en">Choose Pro</span></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="pricing-card">
+                    <div class="card-header">
+                        <h3><span class="lang-id">Perekrut</span><span class="lang-en">Recruiter</span></h3>
+                        <p><span class="lang-id">Untuk tim rekrutmen modern.</span><span class="lang-en">For modern recruiting teams.</span></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="price"><span class="lang-id">Kustom</span><span class="lang-en">Custom</span></div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> <span class="lang-id">Manajemen Lowongan & Tim</span><span class="lang-en">Job & Team Management</span></li>
+                            <li><i class="fas fa-check"></i> <span class="lang-id">Analisis Kandidat Otomatis</span><span class="lang-en">Automated Candidate Analysis</span></li>
+                            <li><i class="fas fa-check"></i> <span class="lang-id">Dasbor Perekrut Cerdas</span><span class="lang-en">Smart Recruiter Dashboard</span></li>
+                            <li><i class="fas fa-check"></i> <span class="lang-id">Integrasi ATS (Mendatang)</span><span class="lang-en">ATS Integration (Coming Soon)</span></li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary w-100"><span class="lang-id">Hubungi Sales</span><span class="lang-en">Contact Sales</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/subscription.js') }}" defer></script>
+{% endblock %}

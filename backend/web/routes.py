@@ -72,6 +72,13 @@ def index_route():
 def features_route():
     return render_template('web/features.html')
 
+@web_bp.route('/subscription', methods=['GET'], endpoint='subscription_route')
+def for_recruiters_page():
+    """
+    Menampilkan halaman landing khusus untuk perekrut.
+    """
+    return render_template('web/subscription.html')
+
 @web_bp.route('/api-docs-page')
 def api_docs_page_route():
     return render_template('web/api_docs.html')

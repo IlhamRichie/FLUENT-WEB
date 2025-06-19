@@ -6,24 +6,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="description" content="FLUENT adalah platform latihan wawancara berbasis AI untuk membantu Anda sukses dalam karir." />
-    <meta name="keywords" content="Interview AI, Latihan Wawancara, AI Coach, Persiapan Karir" />
+    <meta name="description" content="FLUENT adalah platform latihan wawancara dan rekrutmen berbasis AI untuk membantu Anda sukses dalam karir." />
+    <meta name="keywords" content="Interview AI, Latihan Wawancara, AI Coach, Persiapan Karir, Rekrutmen AI" />
     <title>FLUENT - {% block title %}Selamat Datang{% endblock %}</title>
 
+    {# --- Meta tags (OG, Twitter), Favicon, dan Fonts tidak diubah --- #}
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ request.url }}" />
-    <meta property="og:title" content="FLUENT - {% block og_title %}Halaman{% endblock %}" />
-    <meta property="og:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu." />
-    <meta property="og:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}" />
-
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:title" content="FLUENT - {% block og_title %}Halaman{% endblock %}" />
+    <meta property="og:description" content="Latih wawancara dan optimalkan rekrutmen dengan AI. Dapatkan feedback instan untuk karier dan kandidat impianmu." />
+    <meta property="og:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}" />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="{{ request.url }}" />
     <meta property="twitter:title" content="FLUENT - {% block twitter_title %}Halaman{% endblock %}" />
-    <meta property="twitter:description" content="Latih wawancara Anda dengan AI dan dapatkan feedback instan untuk karier impianmu." />
+    <meta property="twitter:description" content="Latih wawancara dan optimalkan rekrutmen dengan AI. Dapatkan feedback instan untuk karier dan kandidat impianmu." />
     <meta property="twitter:image" content="{{ url_for('static', filename='images/fluent-og-image.png', _external=True) }}" />
-
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/fluent-logo.png') }}" />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -58,6 +56,11 @@
                         <li class="nav-item">
                             <a class="nav-link {% if request.endpoint == 'web.features_route' %}active{% endif %}" href="{{ url_for('web.features_route') }}">
                                 <i class="fas fa-star me-2"></i><span class="lang-id">Fitur</span><span class="lang-en">Features</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'web.subscription_route' %}active{% endif %}" href="{{ url_for('web.subscription_route') }}">
+                                <i class="fas fa-briefcase me-2"></i><span class="lang-id">Paket Langganan</span><span class="lang-en">Subscription Plans</span>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -142,8 +145,8 @@
                 <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                     <h5 class="fw-semibold">FLUENT</h5>
                     <p class="small text-muted">
-                        <span class="lang-id">Merevolusi persiapan wawancara dengan analisis bertenaga AI.</span>
-                        <span class="lang-en">Revolutionizing interview preparation with AI-powered analysis.</span>
+                        <span class="lang-id">Platform rekrutmen & persiapan wawancara dengan analisis bertenaga AI.</span>
+                        <span class="lang-en">Recruitment & interview preparation platform with AI-powered analysis.</span>
                     </p>
                 </div>
                 <div class="col-lg-2 col-6">
@@ -159,6 +162,11 @@
                         <li>
                             <a href="{{ url_for('web.features_route') }}" class="text-decoration-none text-muted small footer-link">
                                 <span class="lang-id">Fitur</span><span class="lang-en">Features</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('web.subscription_route') }}" class="text-decoration-none text-muted small footer-link">
+                                <span class="lang-id">Paket Langganan</span><span class="lang-en">Subscription Plans</span>
                             </a>
                         </li>
                         <li>
@@ -224,5 +232,4 @@
 
     {% block scripts_extra %}{% endblock %}
 </body>
-
 </html>

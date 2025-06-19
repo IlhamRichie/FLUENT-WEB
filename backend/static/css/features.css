@@ -1,9 +1,11 @@
 /* ======================================================= */
-/* === STYLING GLOBAL (Disalin dari home.html untuk konsistensi) === */
+/* === STYLING GLOBAL (Konsisten dengan tema) === */
 /* ======================================================= */
 :root {
     --fluent-red-primary: #FF416C;
     --fluent-red-secondary: #FF4B2B;
+    --fluent-blue-primary: #007bff;
+    --fluent-blue-secondary: #0056b3;
     --fluent-primary-rgb: 255, 65, 108;
     --fluent-text-dark: #212529;
     --fluent-text-muted: #6c757d;
@@ -12,7 +14,6 @@
     --fluent-border-color: #dee2e6;
 }
 
-/* Efek Gradasi Teks Merah */
 .gradient-text {
     background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
     -webkit-background-clip: text;
@@ -21,66 +22,209 @@
     display: inline-block;
 }
 
-/* Base untuk section dengan blur */
 .section-with-blur {
     position: relative;
     overflow: hidden;
 }
 
-/* Template untuk bentuk blur abstrak */
 .abstract-blur {
     content: '';
     position: absolute;
     border-radius: 50%;
     filter: blur(100px);
     z-index: 0;
-    background: radial-gradient(circle, rgba(255, 82, 82, 0.15) 0%, rgba(255, 128, 128, 0) 70%);
+    background: radial-gradient(circle, rgba(var(--fluent-primary-rgb), 0.15) 0%, rgba(var(--fluent-primary-rgb), 0) 70%);
+}
+
+.section-heading {
+    font-weight: 700;
+    color: var(--fluent-text-dark);
+    font-size: clamp(1.8rem, 5vw, 2.5rem); /* Ukuran font disesuaikan */
 }
 
 /* ======================================================= */
-/* === HERO SECTION (Mirip dengan home.html)          === */
+/* === HERO SECTION === */
 /* ======================================================= */
 .hero-section-styled {
     background-color: var(--fluent-bg-white);
-    padding: 8rem 0;
-    text-align: center;
-}
-.hero-section-styled .abstract-blur {
-    width: 600px; height: 600px; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
+    padding: 6rem 0; 
+    margin-top: -70px; 
+    padding-top: 140px; 
 }
 .hero-content { position: relative; z-index: 1; }
-.hero-title { font-size: clamp(2.8rem, 8vw, 5.5rem); font-weight: 800; line-height: 1.2; color: var(--fluent-text-dark); }
-.hero-title .fa-star { font-size: 0.8em; vertical-align: middle; color: #ffc107; margin: 0 0.25em; } /* Ikon bintang kuning */
+.hero-title { font-size: clamp(2.8rem, 8vw, 4.5rem); font-weight: 800; line-height: 1.2; color: var(--fluent-text-dark); }
+.hero-title .fa-star { font-size: 0.8em; vertical-align: middle; color: #ffc107; margin: 0 0.25em; }
 .hero-subtitle { font-size: 1.1rem; color: var(--fluent-text-muted); max-width: 700px; margin: 1.5rem auto 0; }
-.cta-buttons { margin-top: 2rem; }
-.btn-gradient-red { background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary)); border: none; color: white; transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; }
-.btn-gradient-red:hover { color: white; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 65, 108, 0.3); }
 
-/* PERBAIKAN: Menghapus <br> dan menggunakan padding yang benar */
-.page-content-container {
-    padding-top: 120px; /* Sesuaikan dengan tinggi navbar */
+
+/* ======================================================= */
+/* === Two Solutions Section (BAGIAN BARU) === */
+/* ======================================================= */
+.two-solutions-section {
+    background-color: var(--fluent-bg-white);
+    padding-bottom: 4rem; /* Menambah spasi bawah */
 }
 
-/* Styling spesifik untuk daftar fitur */
-.features-list {
+.solution-card {
+    border-radius: 1rem;
+    border: 1px solid var(--fluent-border-color);
+    background-color: var(--fluent-bg-white);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    display: flex; /* Menggunakan flexbox untuk layout */
+    flex-direction: column; /* Konten ditumpuk secara vertikal */
+}
+
+.solution-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+.solution-icon-header {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    flex-shrink: 0; /* Mencegah header menyusut */
+}
+.solution-icon-header.icon-job-seeker {
+    background: linear-gradient(135deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+}
+.solution-icon-header.icon-recruiter {
+    background: linear-gradient(135deg, var(--fluent-blue-primary), var(--fluent-blue-secondary));
+}
+
+.solution-card .card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Membuat body kartu mengisi ruang yang tersisa */
+}
+
+.solution-card .card-title {
+    font-weight: 700;
+}
+
+.solution-card .features-list {
+    margin-top: auto; /* Mendorong daftar fitur ke bawah */
+}
+
+
+/* ======================================================= */
+/* === Interactive Features Section === */
+/* ======================================================= */
+.interactive-features-section {
+    background-color: var(--fluent-bg-light);
+    padding-top: 4rem; /* Menambah spasi atas */
+}
+
+.feature-nav-wrapper {
+    position: sticky;
+    top: 100px; 
+}
+
+.feature-nav .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
     background-color: var(--fluent-bg-white);
 }
-.feature-item .h1 {
+
+.feature-nav .nav-link .nav-icon-box {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    background-color: var(--fluent-bg-light);
+    border-radius: 0.5rem;
+    display: grid;
+    place-items: center;
+    font-size: 1.5rem;
+    color: var(--fluent-text-muted);
+    margin-right: 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-nav .nav-link .nav-link-title {
+    font-weight: 600;
+    color: var(--fluent-text-dark);
+}
+
+.feature-nav .nav-link small {
+    color: var(--fluent-text-muted);
+}
+
+.feature-nav .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.feature-nav .nav-link.active {
+    background-color: var(--fluent-bg-white);
+    border-color: var(--fluent-border-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.feature-nav .nav-link.active .nav-icon-box {
+    background: linear-gradient(90deg, var(--fluent-red-secondary), var(--fluent-red-primary));
+    color: white;
+}
+
+.feature-content {
+    display: none;
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: var(--fluent-bg-white);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.feature-content.active {
+    display: block;
+}
+
+.feature-content .h1 {
     color: var(--fluent-text-dark);
     font-weight: 700;
 }
-.feature-item .text-primary {
-    color: var(--fluent-red-primary) !important;
-}
-.feature-item .text-success {
-    color: #198754 !important; /* Bootstrap success color */
-}
-.feature-item img {
-    max-width: 450px; /* Atur ulang ukuran gambar agar lebih pas */
+.feature-content .text-primary { color: var(--fluent-red-primary) !important; }
+.feature-content .text-success { color: #198754 !important; }
+.feature-content .feature-image {
+    width: 100%; /* Mengubah dari max-width ke width */
+    height: 300px;
+    object-fit: cover;
     border-radius: 1rem;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
-.cta-section {
-    background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary));
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 991.98px) {
+    .feature-nav-wrapper {
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+    }
+    .feature-nav {
+        flex-direction: row !important;
+        flex-wrap: nowrap; /* Mencegah wrap agar sejajar */
+        overflow-x: auto; /* Memungkinkan scroll horizontal */
+        padding-bottom: 1rem; /* Spasi untuk scrollbar */
+        gap: 0.5rem;
+    }
+    .feature-nav .nav-item { 
+        flex-shrink: 0; /* Mencegah item menyusut */
+    }
+}
+
+/* ======================================================= */
+/* === CTA Section === */
+/* ======================================================= */
+.cta-section { background: linear-gradient(90deg, var(--fluent-red-primary), var(--fluent-red-secondary)); }
+.cta-section .btn-light { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.cta-section .btn-light:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }

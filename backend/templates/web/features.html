@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Features{% endblock %}
+{% block title %}Fitur Unggulan{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/features.css') }}">
 {% endblock %}
 
 {% block content_hero %}
-<section class="hero-section-styled section-with-blur page-content-container">
+<section class="hero-section-styled section-with-blur">
     <div class="abstract-blur"></div>
-    <div class="container hero-content">
+    <div class="container hero-content text-center">
         <div class="row">
             <div class="col-12">
                 <h1 class="hero-title">
@@ -16,19 +16,19 @@
                         <span class="gradient-text">Fitur Unggulan</span>
                         <i class="fas fa-star text-warning"></i> Untuk
                         <br>
-                        Karier Impianmu!
+                        Karier & Rekrutmen
                     </span>
                     <span class="lang-en d-block">
                         <span class="gradient-text">Features</span>
                         <i class="fas fa-star text-warning"></i> For
                         <br>
-                        Your Dream Career!
+                        Career & Recruitment
                     </span>
                 </h1>
                 
                 <p class="lead hero-subtitle">
-                    <span class="lang-id d-block">FLUENT menyediakan serangkaian analisis komprehensif berbasis AI untuk membantumu menguasai setiap aspek penting dalam sebuah wawancara kerja.</span>
-                    <span class="lang-en d-block">FLUENT provides a comprehensive suite of AI-driven analyses to help you master every crucial aspect of a job interview.</span>
+                    <span class="lang-id d-block">Alat canggih berbasis AI untuk memberdayakan pencari kerja dan merevolusi proses rekrutmen bagi perusahaan.</span>
+                    <span class="lang-en d-block">AI-powered tools to empower job seekers and revolutionize the recruitment process for companies.</span>
                 </p>
             </div>
         </div>
@@ -38,99 +38,160 @@
 
 
 {% block content %}
-<section class="features-list py-5">
+
+<section class="two-solutions-section py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-heading">
+                <span class="lang-id">Dua Solusi untuk Satu Tujuan</span>
+                <span class="lang-en">Two Solutions, One Goal</span>
+            </h2>
+            <p class="lead text-muted">
+                <span class="lang-id">Menciptakan kecocokan yang sempurna antara talenta dan peluang.</span>
+                <span class="lang-en">Creating the perfect match between talent and opportunity.</span>
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="solution-card h-100">
+                    <div class="solution-icon-header icon-job-seeker">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="card-body p-4">
+                        <h3 class="card-title">
+                            <span class="lang-id">Untuk Pencari Kerja</span>
+                            <span class="lang-en">For Job Seekers</span>
+                        </h3>
+                        <p class="card-text text-muted">
+                            [cite_start]<span class="lang-id">Berfungsi sebagai pelatih wawancara pribadi berbasis AI, membantu Anda membangun kepercayaan diri dan menguasai setiap wawancara[cite: 58, 89].</span>
+                            [cite_start]<span class="lang-en">Acts as a personal AI-powered interview coach, helping you build confidence and master every interview[cite: 58, 89].</span>
+                        </p>
+                        <ul class="list-unstyled mt-3">
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Berlatih wawancara kapan saja, 24/7 [cite: 60][cite_start].</span><span class="lang-en">Practice interviews anytime, 24/7[cite: 60].</span></li>
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Dapatkan feedback objektif, bukan subjektif [cite: 61, 65][cite_start].</span><span class="lang-en">Get objective, not subjective, feedback[cite: 61, 65].</span></li>
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Identifikasi kelemahan non-verbal yang tak disadari [cite: 64][cite_start].</span><span class="lang-en">Identify unconscious non-verbal weaknesses[cite: 64].</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="solution-card h-100">
+                     <div class="solution-icon-header icon-recruiter">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="card-body p-4">
+                        <h3 class="card-title">
+                            <span class="lang-id">Untuk Perekrut</span>
+                            <span class="lang-en">For Recruiters</span>
+                        </h3>
+                        <p class="card-text text-muted">
+                            [cite_start]<span class="lang-id">Hadir sebagai AI Co-pilot bagi tim HRD untuk mengotomatisasi penyaringan dan menemukan talenta terbaik secara efisien[cite: 3, 35].</span>
+                            [cite_start]<span class="lang-en">Acts as an AI Co-pilot for HR teams to automate screening and efficiently find the best talent[cite: 3, 35].</span>
+                        </p>
+                         <ul class="list-unstyled mt-3">
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Atasi volume pelamar yang tinggi dengan cepat [cite: 6][cite_start].</span><span class="lang-en">Quickly handle high volumes of applicants[cite: 6].</span></li>
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Minimalkan bias dan subjektivitas dalam penilaian [cite: 7][cite_start].</span><span class="lang-en">Minimize bias and subjectivity in assessments[cite: 7].</span></li>
+                            [cite_start]<li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="lang-id">Analisis soft skills yang sulit diukur dari CV [cite: 8][cite_start].</span><span class="lang-en">Analyze soft skills that are hard to measure from a CV[cite: 8].</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="interactive-features-section py-5 bg-light">
   <div class="container">
-    <div class="row feature-item align-items-center mb-5 pb-lg-5">
-      <div class="col-lg-6 text-center">
-        <img
-          src="{{ url_for('static', filename='images/features/emotion-analysis.png') }}" {# Ganti path gambar jika perlu #}
-          alt="Emotion Analysis"
-          class="img-fluid"
-        />
-      </div>
-      <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
-        <h2 class="h1 mb-3">
-          <i class="fas fa-smile-beam text-primary me-2"></i><span class="lang-id">Deteksi Emosi</span><span class="lang-en">Emotion Detection</span>
+    <div class="text-center mb-5">
+        <h2 class="section-heading">
+            <span class="lang-id">Ditenagai oleh Analisis Komprehensif</span>
+            <span class="lang-en">Powered by Comprehensive Analysis</span>
         </h2>
-        <p class="text-muted mb-4">
-          <span class="lang-id">AI canggih kami mendeteksi kondisi emosionalmu selama wawancara, membantumu menjaga tingkat kepercayaan diri dan ketenangan yang tepat untuk komunikasi yang berdampak.</span>
-          <span class="lang-en">Our advanced AI detects your emotional state during the interview, helping you maintain the right level of confidence and composure for impactful communication.</span>
+        <p class="lead text-muted">
+            <span class="lang-id">Setiap interaksi dianalisis melalui berbagai metrik untuk memberikan feedback yang akurat.</span>
+            <span class="lang-en">Every interaction is analyzed across multiple metrics to provide accurate feedback.</span>
         </p>
-        <ul class="list-unstyled">
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Pelacakan emosi real-time</span><span class="lang-en">Real-time emotion tracking</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Deteksi kegugupan & feedback</span><span class="lang-en">Nervousness detection & feedback</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Analisis tingkat kepercayaan diri</span><span class="lang-en">Confidence level analysis</span>
-          </li>
-        </ul>
-      </div>
     </div>
-
-    <hr class="my-5 d-lg-none" />
-
-    <div class="row feature-item align-items-center mb-5 pb-lg-5">
-      <div class="col-lg-6 order-lg-2 text-center">
-        <img
-          src="{{ url_for('static', filename='images/features/speech-analysis.png') }}" {# Ganti path gambar jika perlu #}
-          alt="Speech Analysis"
-          class="img-fluid"
-        />
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="feature-nav-wrapper">
+          <ul class="nav flex-column feature-nav">
+            <li class="nav-item">
+              <a class="nav-link active" href="#" data-feature="emotion">
+                <div class="nav-icon-box"><i class="fas fa-smile-beam"></i></div>
+                <div>
+                  <span class="nav-link-title lang-id">Deteksi Emosi</span>
+                  <span class="nav-link-title lang-en">Emotion Detection</span>
+                  <small class="d-block lang-id">Analisis kepercayaan diri & ketenangan.</small>
+                  <small class="d-block lang-en">Analyze confidence & composure.</small>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-feature="speech">
+                <div class="nav-icon-box"><i class="fas fa-microphone-alt"></i></div>
+                <div>
+                  <span class="nav-link-title lang-id">Analisis Ucapan</span>
+                  <span class="nav-link-title lang-en">Speech Analysis</span>
+                  <small class="d-block lang-id">Lacak kecepatan & kejelasan bicara.</small>
+                  <small class="d-block lang-en">Track pace & clarity.</small>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" data-feature="body">
+                <div class="nav-icon-box"><i class="fas fa-user-tie"></i></div>
+                <div>
+                   <span class="nav-link-title lang-id">Analisis Bahasa Tubuh</span>
+                   <span class="nav-link-title lang-en">Body Language Analysis</span>
+                   <small class="d-block lang-id">Tingkatkan postur & kontak mata.</small>
+                   <small class="d-block lang-en">Improve posture & eye contact.</small>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="col-lg-6 order-lg-1 pe-lg-5 mt-4 mt-lg-0">
-        <h2 class="h1 mb-3">
-          <i class="fas fa-microphone-alt text-primary me-2"></i><span class="lang-id">Analisis Ucapan</span><span class="lang-en">Speech Analysis</span>
-        </h2>
-        <p class="text-muted mb-4">
-          <span class="lang-id">Dapatkan feedback detail tentang pola bicaramu, termasuk kecepatan, kejelasan, dan penggunaan kata pengisi, memastikan pesanmu tersampaikan dengan efektif.</span>
-          <span class="lang-en">Get detailed feedback on your speech patterns, including pace, clarity, and filler word usage, ensuring your message is delivered effectively.</span>
-        </p>
-        <ul class="list-unstyled">
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Pelacakan kata-per-menit</span><span class="lang-en">Words-per-minute tracking</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Deteksi kata pengisi & tips pengurangan</span><span class="lang-en">Filler word detection & reduction tips</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Penilaian kejelasan dan keringkasan</span><span class="lang-en">Clarity and conciseness scoring</span>
-          </li>
-        </ul>
-      </div>
-    </div>
 
-    <hr class="my-5 d-lg-none" />
-
-    <div class="row feature-item align-items-center">
-      <div class="col-lg-6 text-center">
-        <img
-          src="{{ url_for('static', filename='images/features/body-language.png') }}" {# Ganti path gambar jika perlu #}
-          alt="Pose Analysis"
-          class="img-fluid"
-        />
-      </div>
-      <div class="col-lg-6 ps-lg-5 mt-4 mt-lg-0">
-        <h2 class="h1 mb-3">
-          <i class="fas fa-user-tie text-primary me-2"></i><span class="lang-id">Analisis Bahasa Tubuh</span><span class="lang-en">Body Language Analysis</span>
-        </h2>
-        <p class="text-muted mb-4">
-          <span class="lang-id">Tingkatkan komunikasi nonverbalmu dengan analisis postur dan gestur kami. Buat kehadiranmu terasa positif dan meyakinkan.</span>
-          <span class="lang-en">Improve your nonverbal communication with our posture and gesture analysis. Make your presence felt positively and convincingly.</span>
-        </p>
-        <ul class="list-unstyled">
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Evaluasi postur (tegak, membungkuk)</span><span class="lang-en">Posture evaluation (upright, slouching)</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Gerakan kepala dan isyarat keterlibatan</span><span class="lang-en">Head movement and engagement cues</span>
-          </li>
-          <li class="mb-2">
-            <i class="fas fa-check-circle text-success me-2"></i> <span class="lang-id">Pemantauan kontak mata (simulasi)</span><span class="lang-en">Eye contact monitoring (simulated)</span>
-          </li>
-        </ul>
+      <div class="col-lg-8">
+        <div class="feature-content-wrapper">
+          <div class="feature-content active" id="feature-emotion">
+            <div class="text-center mb-4">
+              <img src="https://images.unsplash.com/photo-1593349328403-178b61555a6a?q=80&w=1770&auto=format&fit=crop" alt="Emotion Analysis" class="img-fluid feature-image"/>
+            </div>
+            <h2 class="h1 mb-3">
+              <i class="fas fa-smile-beam text-primary me-2"></i><span class="lang-id">Analisis Ekspresi Wajah Dominan</span><span class="lang-en">Dominant Facial Expression Analysis</span>
+            </h2>
+            <p class="text-muted mb-4">
+              [cite_start]<span class="lang-id">AI mengidentifikasi emosi yang paling sering ditampilkan (misal: Senang, Gugup, Netral) untuk membantu Anda memproyeksikan citra yang tepat[cite: 113].</span>
+              [cite_start]<span class="lang-en">The AI identifies the most frequently displayed emotions (e.g., Happy, Nervous, Neutral) to help you project the right image[cite: 113].</span>
+            </p>
+          </div>
+          <div class="feature-content" id="feature-speech">
+            <div class="text-center mb-4">
+              <img src="https://images.unsplash.com/photo-1592210454359-9043f067919b?q=80&w=1770&auto=format&fit=crop" alt="Speech Analysis" class="img-fluid feature-image"/>
+            </div>
+            <h2 class="h1 mb-3">
+              <i class="fas fa-microphone-alt text-primary me-2"></i><span class="lang-id">Analisis Konten & Verbal</span><span class="lang-en">Content & Verbal Analysis</span>
+            </h2>
+            <p class="text-muted mb-4">
+              [cite_start]<span class="lang-id">Dapatkan metrik Kata per Menit (WPM), deteksi kata pengisi seperti "umm" atau "eee", dan analisis sentimen untuk memastikan pesan Anda jelas dan positif[cite: 108, 109, 110].</span>
+              [cite_start]<span class="lang-en">Get Words Per Minute (WPM) metrics, detection of filler words like "umm" or "uhh", and sentiment analysis to ensure your message is clear and positive[cite: 108, 109, 110].</span>
+            </p>
+          </div>
+          <div class="feature-content" id="feature-body">
+            <div class="text-center mb-4">
+              <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1770&auto=format&fit=crop" alt="Pose Analysis" class="img-fluid feature-image"/>
+            </div>
+            <h2 class="h1 mb-3">
+              <i class="fas fa-user-tie text-primary me-2"></i><span class="lang-id">Analisis Bahasa Tubuh & Non-Verbal</span><span class="lang-en">Body Language & Non-Verbal Analysis</span>
+            </h2>
+            <p class="text-muted mb-4">
+              [cite_start]<span class="lang-id">Tingkatkan komunikasi non-verbal Anda dengan analisis kontak mata dan deteksi postur, apakah Anda cenderung tegak (percaya diri) atau membungkuk[cite: 111, 112].</span>
+              [cite_start]<span class="lang-en">Improve your non-verbal communication with eye contact analysis and posture detection, whether you tend to be upright (confident) or slouching[cite: 111, 112].</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -139,26 +200,26 @@
 <section class="cta-section py-5 text-white text-center">
   <div class="container">
     <h2 class="fw-bold h1 mb-3">
-        <span class="lang-id">Siap Ubah Skill Wawancaramu?</span>
-        <span class="lang-en">Ready to Transform Your Interview Skills?</span>
+        <span class="lang-id">Siap Mengambil Langkah Berikutnya?</span>
+        <span class="lang-en">Ready to Take the Next Step?</span>
     </h2>
     <p class="lead mb-4 col-lg-8 mx-auto">
-      <span class="lang-id">Bergabunglah dengan ribuan pengguna yang telah membuka potensi mereka dan sukses wawancara dengan FLUENT.</span>
-      <span class="lang-en">Join thousands of users who have unlocked their potential and aced their interviews with FLUENT.</span>
+      <span class="lang-id">Baik Anda mencari pekerjaan atau mencari talenta, mulailah perjalanan Anda dengan FLUENT hari ini.</span>
+      <span class="lang-en">Whether you're finding a job or finding talent, start your journey with FLUENT today.</span>
     </p>
     {% if not session.is_web_user and not session.is_admin %}
-    <a
-      href="{{ url_for('web.web_register_page_route') }}"
-      class="btn btn-light btn-lg px-5 text-primary fw-semibold"
-      ><span class="lang-id">Mulai Perjalananmu</span><span class="lang-en">Start Your Journey</span></a
-    >
+    <a href="{{ url_for('web.web_register_page_route') }}" class="btn btn-light btn-lg px-5 text-primary fw-semibold">
+      <span class="lang-id">Mulai Gratis</span><span class="lang-en">Get Started for Free</span>
+    </a>
     {% else %}
-    <a
-      href="{{ url_for('web.web_profile_route') }}"
-      class="btn btn-light btn-lg px-5 text-primary fw-semibold"
-      ><span class="lang-id">Lihat Profilmu</span><span class="lang-en">View Your Profile</span></a
-    >
+    <a href="{{ url_for('web.web_profile_route') }}" class="btn btn-light btn-lg px-5 text-primary fw-semibold">
+      <span class="lang-id">Buka Dasbor</span><span class="lang-en">Go to Dashboard</span>
+    </a>
     {% endif %}
   </div>
 </section>
+{% endblock %}
+
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/features.js') }}" defer></script>
 {% endblock %}
