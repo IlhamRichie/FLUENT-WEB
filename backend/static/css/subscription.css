@@ -1,0 +1,160 @@
+:root {
+    --fluent-primary: #FF416C;
+    --fluent-secondary: #007bff;
+    --fluent-dark: #212529;
+    --fluent-light: #f8f9fa;
+    --fluent-border: #dee2e6;
+    --fluent-popular-glow: rgba(255, 65, 108, 0.3);
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, var(--fluent-primary), var(--fluent-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ... (Kode CSS .hero-section-styled, .hero-title, dll. tetap sama) ... */
+.hero-section-styled {
+    background-color: var(--fluent-light);
+    padding: 6rem 0; 
+}
+.hero-content { 
+    position: relative; 
+    z-index: 1; 
+}
+.hero-title { 
+    font-size: clamp(2.8rem, 8vw, 4.5rem); 
+    font-weight: 800; 
+    line-height: 1.2; 
+    color: var(--fluent-dark); 
+}
+.hero-subtitle { 
+    font-size: 1.1rem; 
+    color: #6c757d; 
+    max-width: 700px; 
+    margin: 1.5rem auto 0; 
+}
+
+/* ======================================================= */
+/* === PERBAIKAN UNTUK TOGGLE BULANAN / TAHUNAN === */
+/* ======================================================= */
+.pricing-toggle-container {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e9ecef;
+    padding: 0.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
+}
+.pricing-toggle-container.yearly-active {
+    background-color: #d1ecf1; /* Warna latar berubah saat tahunan aktif */
+}
+.form-check.form-switch {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0; /* Menghapus margin bawah default */
+}
+.form-check-input {
+    width: 3.5em;
+    height: 1.8em;
+    cursor: pointer;
+    background-color: var(--fluent-secondary);
+    border-color: var(--fluent-secondary);
+    transition: background-position .15s ease-in-out, background-color .3s ease, border-color .3s ease;
+}
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+.form-check-input:checked {
+    background-color: var(--fluent-primary);
+    border-color: var(--fluent-primary);
+}
+.save-badge {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.pricing-toggle-container.yearly-active .save-badge {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+/* ... (Kode CSS .pricing-cards-section, .pricing-card, dll. tetap sama) ... */
+.pricing-cards-section {
+    background-color: #fff;
+    padding-top: 0;
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+}
+.pricing-card {
+    border: 1px solid var(--fluent-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+.pricing-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+.pricing-card .card-header {
+    border-bottom: 1px solid var(--fluent-border);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    background-color: transparent;
+}
+.pricing-card .card-header h3 {
+    font-weight: 700;
+    color: var(--fluent-dark);
+    margin-bottom: 0.25rem;
+}
+.pricing-card .price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--fluent-primary);
+    margin-bottom: 1.5rem;
+}
+.pricing-card .price-currency, .pricing-card .price-period {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+}
+.pricing-card .features-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-bottom: 2rem;
+}
+.pricing-card .features-list li {
+    margin-bottom: 0.75rem;
+    color: var(--fluent-dark);
+}
+.pricing-card .features-list .fa-check { color: #198754; }
+.pricing-card .features-list .fa-times { color: #dc3545; }
+.pricing-card .btn {
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-radius: 50px;
+}
+.pricing-card.popular {
+    border-color: var(--fluent-primary);
+    box-shadow: 0 0 30px var(--fluent-popular-glow);
+}
+.popular-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: -2rem;
+    background: var(--fluent-primary);
+    color: white;
+    padding: 0.3rem 2rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transform: rotate(45deg);
+}

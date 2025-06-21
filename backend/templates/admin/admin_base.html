@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    {# Tambahkan CSS khusus admin jika ada #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block body_content %}
+<div class="admin-panel-wrapper">
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <a class="navbar-brand" href="{{ url_for('web.index_route') }}"><img src="{{ url_for('static', filename='images/fluent-logo.png') }}" height="30" class="me-2"><span>FLUENT</span></a>
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="list-unstyled">
+                <li><a href="{{ url_for('admin.admin_dashboard_route') }}" class="nav-link"><i class="bi bi-grid-1x2-fill"></i><span>Dasbor</span></a></li>
+                <li><a href="{{ url_for('admin.admin_users_list_route') }}" class="nav-link"><i class="bi bi-people-fill"></i><span>Pengguna</span></a></li>
+                <li><a href="{{ url_for('admin.admin_sessions_route') }}" class="nav-link"><i class="bi bi-camera-video-fill"></i><span>Sesi</span></a></li>
+                <li><a href="{{ url_for('admin.admin_blog_list_route') }}" class="nav-link"><i class="bi bi-file-post-fill"></i><span>Blog</span></a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer p-3">
+             <a href="{{ url_for('admin.admin_logout_route') }}" class="btn btn-sm btn-outline-danger w-100"><i class="bi bi-box-arrow-left me-2"></i><span>Keluar</span></a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container-fluid pt-4 px-lg-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block admin_content %}{% endblock %}
+    </main>
+</div>
+{% endblock body_content %}
+
+{% block scripts_extra %}
+    {# Skrip utama untuk website (main.js) mungkin tidak diperlukan di admin #}
+    {# Skrip admin bisa ditambahkan di sini jika dibutuhkan di semua halaman admin #}
+    {% block page_scripts %}{% endblock %}
+{% endblock %}

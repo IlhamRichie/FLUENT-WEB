@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "admin/admin_base.html" %}
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block head_extra %}
@@ -6,205 +6,113 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
 
-{% block content %}
-<div class="admin-content-page container-fluid py-4 px-lg-4">
+{% block admin_content %}
+<div class="admin-content-page">
     <div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h2 fw-bold mb-0">
-                <span class="lang-id">Dasbor Admin</span><span class="lang-en">Admin Dashboard</span>
-            </h1>
-            <p class="text-muted small mb-0">
-                <span class="lang-id">Selamat datang kembali, Administrator!</span><span class="lang-en">Welcome back, Administrator!</span>
-            </p>
-        </div>
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm fluent-dashboard-card">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h3 class="h6 text-muted mb-1 text-uppercase small">
-                                <span class="lang-id">Total Pengguna</span><span class="lang-en">Total Users</span>
-                            </h3>
-                            <h2 class="fw-bolder display-5 mb-0">{{ user_count }}</h2>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 p-3 rounded-3">
-                            <i class="bi bi-people-fill text-primary fs-2"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3 pt-2 border-top border-light">
-                        <a href="{{ url_for('admin.admin_users_list_route') }}" class="text-primary small text-decoration-none fw-medium">
-                            <span class="lang-id">Lihat Semua Pengguna</span><span class="lang-en">View All Users</span> <i class="bi bi-arrow-right-short"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm fluent-dashboard-card">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h3 class="h6 text-muted mb-1 text-uppercase small">
-                                <span class="lang-id">Sesi Hari Ini</span><span class="lang-en">Today's Sessions</span>
-                            </h3>
-                            <h2 class="fw-bolder display-5 mb-0">{{ today_sessions }}</h2>
-                        </div>
-                        <div class="bg-info bg-opacity-10 p-3 rounded-3">
-                            <i class="bi bi-activity text-info fs-2"></i>
-                        </div>
-                    </div>
-                    <div class="mt-3 pt-2 border-top border-light">
-                        <a href="{{ url_for('admin.admin_sessions_route') }}" class="text-info small text-decoration-none fw-medium">
-                            <span class="lang-id">Lihat Sesi</span><span class="lang-en">View Sessions</span> <i class="bi bi-arrow-right-short"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm fluent-dashboard-card">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h3 class="h6 text-muted mb-1 text-uppercase small">
-                                <span class="lang-id">Status Sistem</span><span class="lang-en">System Status</span>
-                            </h3>
-                            <h2 class="fw-bolder display-5 mb-0 text-success">
-                                <span class="lang-id">Aktif</span><span class="lang-en">Active</span>
-                            </h2>
-                             <small class="text-success">
-                                <span class="lang-id">Semua layanan beroperasi</span><span class="lang-en">All services operational</span>
-                            </small>
-                        </div>
-                        <div class="bg-success bg-opacity-10 p-3 rounded-3">
-                            <i class="bi bi-check-circle-fill text-success fs-2"></i>
-                        </div>
-                    </div>
-                     <div class="mt-3 pt-2 border-top border-light">
-                        <span class="text-success small fw-medium">
-                            <i class="bi bi-shield-check me-1"></i> <span class="lang-id">Semua Sistem Beroperasi</span><span class="lang-en">All Systems Operational</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
+            <h1 class="h2 fw-bold mb-0">Dasbor</h1>
+            <p class="text-muted small mb-0">Ringkasan aktivitas platform FLUENT.</p>
         </div>
     </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-lg-7">
-            <div class="card border-0 shadow-sm h-100 fluent-dashboard-card">
-                <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0">
-                    <h3 class="h5 mb-0 fw-semibold">
-                        <span class="lang-id">Tren Registrasi Pengguna</span><span class="lang-en">User Registration Trend</span>
-                    </h3>
-                    <small class="text-muted"><span class="lang-id">30 hari terakhir</span><span class="lang-en">Last 30 days</span></small>
-                </div>
-                <div class="card-body p-3 d-flex align-items-center justify-content-center">
-                    <div id="registrationChart" style="height: 300px; width:100%;">
-                        {{ registration_chart|safe if registration_chart else "<div class='text-center text-muted small p-5'><i class='bi bi-bar-chart-line fs-1 d-block mb-2'></i><span class='lang-id'>Tidak ada data registrasi untuk ditampilkan.</span><span class='lang-en'>No registration data to display.</span></div>"|safe }}
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 border-0 fluent-dashboard-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <i class="bi bi-people-fill text-primary fs-1"></i>
+                        <div class="text-end">
+                            <h3 class="h6 text-muted mb-1 text-uppercase small">Total Pengguna</h3>
+                            <h2 class="fw-bolder fs-1 mb-0">{{ user_count }}</h2>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-5">
-            <div class="card border-0 shadow-sm h-100 fluent-dashboard-card">
-                <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0">
-                    <h3 class="h5 mb-0 fw-semibold">
-                        <span class="lang-id">Demografi Pengguna</span><span class="lang-en">User Demographics</span>
-                    </h3>
-                </div>
-                <div class="card-body p-3 d-flex flex-column justify-content-around">
-                    <div id="genderChart" style="height: 140px; width:100%;" class="mb-2 d-flex align-items-center justify-content-center">
-                        {{ gender_chart|safe if gender_chart else "<div class='text-center text-muted small p-3'><i class='bi bi-pie-chart fs-2 d-block mb-1'></i><span class='lang-id'>Tidak ada data gender.</span><span class='lang-en'>No gender data.</span></div>"|safe }}
+        <div class="col-md-6 col-xl-3">
+             <div class="card h-100 border-0 fluent-dashboard-card">
+                <div class="card-body p-4">
+                     <div class="d-flex justify-content-between align-items-center">
+                        <i class="bi bi-activity text-info fs-1"></i>
+                        <div class="text-end">
+                            <h3 class="h6 text-muted mb-1 text-uppercase small">Sesi Hari Ini</h3>
+                            <h2 class="fw-bolder fs-1 mb-0">{{ today_sessions }}</h2>
+                        </div>
                     </div>
-                    <hr class="my-1">
-                    <div id="occupationChart" style="height: 140px; width:100%;" class="mt-2 d-flex align-items-center justify-content-center">
-                        {{ occupation_chart|safe if occupation_chart else "<div class='text-center text-muted small p-3'><i class='bi bi-pie-chart-fill fs-2 d-block mb-1'></i><span class='lang-id'>Tidak ada data pekerjaan.</span><span class='lang-en'>No occupation data.</span></div>"|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+             <div class="card h-100 border-0 fluent-dashboard-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <i class="bi bi-check2-circle text-success fs-1"></i>
+                        <div class="text-end">
+                            <h3 class="h6 text-muted mb-1 text-uppercase small">Sesi Selesai</h3>
+                            <h2 class="fw-bolder fs-1 mb-0">{{ completed_sessions_count }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+             <div class="card h-100 border-0 fluent-dashboard-card">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <i class="bi bi-person-badge-fill text-danger fs-1"></i>
+                        <div class="text-end">
+                            <h3 class="h6 text-muted mb-1 text-uppercase small">Total Admin</h3>
+                            <h2 class="fw-bolder fs-1 mb-0">{{ admin_count }}</h2>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row g-4 mb-4">
-         <div class="col-12">
-            <div class="card border-0 shadow-sm fluent-dashboard-card">
-                <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h3 class="h5 mb-0 fw-semibold">
-                            <span class="lang-id">Sesi Wawancara Harian</span><span class="lang-en">Daily Interview Sessions</span>
-                        </h3>
-                        <small class="text-muted"><span class="lang-id">30 hari terakhir</span><span class="lang-en">Last 30 days</span></small>
-                    </div>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card border-0 h-100 fluent-dashboard-card">
+                 <div class="card-header">
+                    <h5 class="card-title fw-semibold mb-0">Tren Registrasi Pengguna</h5>
                 </div>
-                <div class="card-body p-3 d-flex align-items-center justify-content-center">
-                    <div id="activityChart" style="height: 320px; width:100%;">
-                        {{ activity_chart|safe if activity_chart else "<div class='text-center text-muted small p-5'><i class='bi bi-graph-up fs-1 d-block mb-2'></i><span class='lang-id'>Tidak ada data aktivitas untuk ditampilkan.</span><span class='lang-en'>No activity data to display.</span></div>"|safe }}
-                    </div>
+                <div class="card-body d-flex align-items-center justify-content-center p-3">
+                    {{ registration_chart|safe if registration_chart else "<div class='text-center text-muted small p-5'><i class='bi bi-bar-chart-line fs-1 d-block mb-2'></i>Tidak ada data.</div>"|safe }}
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="card border-0 shadow-sm fluent-dashboard-card" id="users-table-overview">
-        <div class="card-header bg-transparent border-bottom-0 pt-3 px-4 pb-0 d-flex flex-wrap justify-content-between align-items-center">
-            <div>
-                <h3 class="h5 mb-0 fw-semibold">
-                    <span class="lang-id">Pengguna Baru Terdaftar</span><span class="lang-en">Recently Registered Users</span>
-                </h3>
-            </div>
-            <a href="{{ url_for('admin.admin_users_list_route') }}" class="btn btn-sm btn-outline-primary mt-2 mt-md-0">
-                <span class="lang-id">Kelola Semua Pengguna</span><span class="lang-en">Manage All Users</span> <i class="bi bi-arrow-right-short ms-1"></i>
-            </a>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 admin-table">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4 py-3"><span class="lang-id">Pengguna</span><span class="lang-en">User</span></th>
-                            <th class="py-3">Email</th>
-                            <th class="py-3">Status</th>
-                            <th class="pe-4 py-3"><span class="lang-id">Terdaftar</span><span class="lang-en">Registered</span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if all_users and all_users|length > 0 %}
-                        {% for user in all_users[:5] %}
-                        <tr>
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar-sm me-3">
-                                        <div class="avatar-title bg-{{ 'danger' if user.is_admin else 'primary' }}-subtle text-{{ 'danger' if user.is_admin else 'primary' }} rounded-circle fw-semibold d-flex align-items-center justify-content-center">
-                                            {{ user.username[0]|upper if user.username else 'U' }}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="fw-medium">{{ user.username }}</div>
-                                        <small class="text-muted">{% if user.is_admin %}Admin{% else %}<span class="lang-id">Pengguna</span><span class="lang-en">User</span>{% endif %}</small>
+        <div class="col-lg-4">
+            <div class="card border-0 h-100 fluent-dashboard-card">
+                 <div class="card-header">
+                    <h5 class="card-title fw-semibold mb-0">Pengguna Terbaru</h5>
+                </div>
+                <div class="card-body p-2">
+                    <ul class="list-group list-group-flush">
+                        {% for user in all_users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm me-3">
+                                    <div class="avatar-title bg-primary-subtle text-primary rounded-circle fw-semibold d-flex align-items-center justify-content-center">
+                                        {{ user.username[0]|upper if user.username else 'U' }}
                                     </div>
                                 </div>
-                            </td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                <span class="badge rounded-pill fs-xs fw-semibold bg-{{ 'success' if user.is_active else 'warning' }}-subtle text-{{ 'success' if user.is_active else 'warning' }}-emphasis">
-                                    {% if user.is_active %}<span class="lang-id">Aktif</span><span class="lang-en">Active</span>{% else %}<span class="lang-id">Tidak Aktif</span><span class="lang-en">Inactive</span>{% endif %}
-                                </span>
-                            </td>
-                            <td class="pe-4">
-                                {{ user.created_at | to_wib }}
-                            </td>
-                        </tr>
-                        {% endfor %}
+                                <div>
+                                    <div class="fw-medium">{{ user.username }}</div>
+                                    <small class="text-muted">{{ user.email }}</small>
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ user.created_at | to_wib_timesince }}</small>
+                        </li>
                         {% else %}
-                        <tr><td colspan="4" class="text-center text-muted p-4"><small><span class="lang-id">Tidak ada pengguna baru untuk ditampilkan.</span><span class="lang-en">No recent users to display.</span></small></td></tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                        <li class="list-group-item text-center text-muted border-0">Tidak ada pengguna baru.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                 <div class="card-footer text-center">
+                    <a href="{{ url_for('admin.admin_users_list_route') }}" class="text-primary small text-decoration-none fw-medium">
+                        Lihat Semua Pengguna <i class="bi bi-arrow-right-short"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

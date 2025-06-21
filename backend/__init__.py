@@ -7,6 +7,8 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_swagger_ui import get_swaggerui_blueprint
 
+from backend.utils.template_filters import format_to_wib, format_to_wib_timesince
+
 from .config import Config
 from .database import init_db, get_questions_collection
 
@@ -63,7 +65,8 @@ def create_app(config_class=Config):
         wib_dt = utc_dt.astimezone(wib_tz)
         return wib_dt.strftime('%d %b %Y, %H:%M:%S WIB')
 
-    app.jinja_env.filters['to_wib'] = format_datetime_to_wib
+    app.jinja_env.filters['to_wib'] = format_to_wib
+    app.jinja_env.filters['to_wib_timesince'] = format_to_wib_timesince
 
     @app.context_processor
     def inject_now():

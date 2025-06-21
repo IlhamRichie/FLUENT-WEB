@@ -1,29 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Detail Artikel Blog{% endblock %}
+{# 'post' adalah variabel yang dikirim dari route Flask #}
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
 {% endblock %}
 
-{% block content_hero %}
-{% endblock %}
+{% block content_hero %}{% endblock %}
 
 
 {% block content %}
 <div class="page-content-container">
     <header class="post-header">
         <div class="container">
-            <p class="post-category gradient-text"><span class="lang-id">Tips Wawancara</span><span class="lang-en">Interview Tips</span></p>
-            <h1 class="post-title"><span class="lang-id">5 Kesalahan Umum Bahasa Tubuh Saat Wawancara</span><span class="lang-en">5 Common Body Language Mistakes During Interviews</span></h1>
-            <p class="post-meta">
-                <span class="lang-id">Oleh Tim FLUENT</span><span class="lang-en">By The FLUENT Team</span> &bull; 
-                <time datetime="2025-06-16">16 Juni 2025</time>
-            </p>
+            {# Tampilkan kategori dari database #}
+            <p class="post-category gradient-text">{{ post.category }}</p>
+            {# Tampilkan judul dari database #}
+            <h1 class="post-title">{{ post.title }}</h1>
+            {# Tampilkan metadata dari database #}
+            <div class="post-meta">
+                <span><i class="fas fa-user-edit"></i> {{ post.author_name or 'Tim FLUENT' }}</span>
+                <span class="meta-divider">&bull;</span>
+                <time datetime="{{ post.created_at.isoformat() }}"><i class="fas fa-calendar-alt"></i> {{ post.created_at | to_wib }}</time>
+            </div>
         </div>
     </header>
 
     <div class="container">
-         <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1770" class="post-featured-image" alt="Tips Wawancara">
+        {# Tampilkan gambar unggulan dari database #}
+        <img src="{{ post.featured_image_url or 'https://images.unsplash.com/photo-1499750310107-5fef28a66643' }}" class="post-featured-image" alt="{{ post.title }}">
     </div>
 
     <section class="post-content-section">
@@ -31,43 +36,20 @@
             <div class="row gx-lg-5">
                 <div class="col-lg-8">
                     <article class="post-content">
-                        <p>
-                            <span class="lang-id">Saat mempersiapkan wawancara, banyak kandidat fokus pada apa yang akan mereka katakan, namun seringkali melupakan bagaimana mereka menyampaikannya. Bahasa tubuh Anda adalah cerminan langsung dari kepercayaan diri dan ketenangan Anda. Menghindari kesalahan umum bisa menjadi pembeda antara diterima atau ditolak.</span>
-                            <span class="lang-en">When preparing for an interview, many candidates focus on what they will say, often forgetting how they say it. Your body language is a direct reflection of your confidence and composure. Avoiding common mistakes can be the difference between getting hired or rejected.</span>
-                        </p>
-                        
-                        <h3>1. Postur yang Membungkuk</h3>
-                        <p>
-                            <span class="lang-id">Duduk membungkuk mengirimkan sinyal kurangnya kepercayaan diri dan minat. Selalu duduk tegak dengan bahu rileks ke belakang. Ini tidak hanya membuat Anda terlihat lebih percaya diri tetapi juga membantu Anda bernapas lebih baik dan berpikir lebih jernih.</span>
-                            <span class="lang-en">Slouching sends signals of low confidence and lack of interest. Always sit up straight with your shoulders relaxed and back. This not only makes you look more confident but also helps you breathe better and think more clearly.</span>
-                        </p>
-
-                        <blockquote>
-                            <span class="lang-id">"Kepercayaan diri Anda tercermin dari tulang punggung Anda. Jaga agar tetap tegak."</span>
-                            <span class="lang-en">"Your confidence is reflected in your spine. Keep it straight."</span>
-                        </blockquote>
-
-                        <p>...</p>
-                        <p>...</p>
+                        {# --- INI BAGIAN PALING PENTING --- #}
+                        {# Render konten HTML dari database. Filter |safe wajib ada. #}
+                        {{ post.content | safe }}
                     </article>
-                </div>
+                    
+                    </div>
                 <div class="col-lg-4">
                     <aside class="sidebar">
                         <div class="widget">
-                            <h3 class="widget-title"><span class="lang-id">Artikel Terbaru</span><span class="lang-en">Recent Posts</span></h3>
+                            <h3 class="widget-title">Artikel Lainnya</h3>
+                            {# Anda bisa mengirim 'recent_posts' dari Flask #}
                             <ul class="list-unstyled">
-                                <li class="mb-2"><a href="#"><span class="lang-id">Cara Menjawab "Kelemahan Terbesarmu?"</span><span class="lang-en">How to Answer "Your Weakness?"</span></a></li>
-                                <li class="mb-2"><a href="#"><span class="lang-id">Di Balik Layar: AI FLUENT Bekerja</span><span class="lang-en">Behind the Scenes: FLUENT's AI</span></a></li>
-                                <li class="mb-2"><a href="#"><span class="lang-id">Pentingnya Kontak Mata</span><span class="lang-en">The Importance of Eye Contact</span></a></li>
-                            </ul>
-                        </div>
-                        <div class="widget">
-                            <h3 class="widget-title"><span class="lang-id">Kategori</span><span class="lang-en">Categories</span></h3>
-                             <ul class="list-unstyled">
-                                <li class="mb-2"><a href="#">Tips Wawancara</a></li>
-                                <li class="mb-2"><a href="#">Persiapan Karier</a></li>
-                                <li class="mb-2"><a href="#">Teknologi AI</a></li>
-                                <li class="mb-2"><a href="#">Bahasa Tubuh</a></li>
+                                <li><a href="#">Contoh Artikel Lain 1</a></li>
+                                <li><a href="#">Contoh Artikel Lain 2</a></li>
                             </ul>
                         </div>
                     </aside>

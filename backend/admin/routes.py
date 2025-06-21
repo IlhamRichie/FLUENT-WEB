@@ -11,6 +11,18 @@ from .services import (
     toggle_admin_privilege_service,
     get_paginated_sessions_service
 )
+
+from .blog_services import (
+    generate_blog_post_with_gemini_service,
+    get_all_posts_for_admin_service,
+    get_post_by_id_service,
+    create_post_service,
+    update_post_service,
+    delete_post_service
+)
+
+from flask import jsonify # Tambahkan ini juga
+
 from datetime import datetime, timezone # Pindahkan impor ini ke atas untuk konsistensi
 
 admin_bp = Blueprint('admin', __name__, template_folder='../templates/admin')
@@ -118,3 +130,83 @@ def admin_logout_route():
     session.modified = True
     flash('You have been logged out from the admin panel.', 'success')
     return redirect(url_for('admin.admin_login_route'))
+
+@admin_bp.route('/blog')
+@admin_required
+def admin_blog_list_route():
+    posts = get_all_posts_for_admin_service()
+    return render_template('admin_blog_list.html', posts=posts)
+
+@admin_bp.route('/blog/new', methods=['GET', 'POST'])
+@admin_required
+def admin_blog_new_route():
+    if request.method == 'POST':
+        post_data = {
+            "title": request.form.get('title'),
+            "content": request.form.get('content'),
+            "category": request.form.get('category'),
+            "status": request.form.get('status'),
+            "excerpt": request.form.get('excerpt'),
+            "featured_image_url": request.form.get('featured_image_url')
+        }
+        create_post_service(post_data)
+        flash('Blog post created successfully!', 'success')
+        return redirect(url_for('admin.admin_blog_list_route'))
+    return render_template('admin_blog_form.html', form_action='new', post={})
+
+@admin_bp.route('/blog/edit/<post_id>', methods=['GET', 'POST'])
+@admin_required
+def admin_blog_edit_route(post_id):
+    post = get_post_by_id_service(post_id)
+    if not post:
+        flash('Post not found!', 'danger')
+        return redirect(url_for('admin.admin_blog_list_route'))
+
+    if request.method == 'POST':
+        post_data = {
+            "title": request.form.get('title'),
+            "content": request.form.get('content'),
+            "category": request.form.get('category'),
+            "status": request.form.get('status'),
+            "excerpt": request.form.get('excerpt'),
+            "featured_image_url": request.form.get('featured_image_url')
+        }
+        update_post_service(post_id, post_data)
+        flash('Blog post updated successfully!', 'success')
+        return redirect(url_for('admin.admin_blog_list_route'))
+    
+    return render_template('admin_blog_form.html', form_action='edit', post=post)
+
+@admin_bp.route('/blog/delete/<post_id>', methods=['POST'])
+@admin_required
+def admin_blog_delete_route(post_id):
+    delete_post_service(post_id)
+    flash('Blog post deleted successfully!', 'success')
+    return redirect(url_for('admin.admin_blog_list_route'))
+
+@admin_bp.route('/blog/generate-content', methods=['POST'])
+@admin_required
+def admin_blog_generate_content_route():
+    data = request.get_json()
+    title = data.get('title')
+    category = data.get('category')
+
+    if not title:
+        return jsonify({"status": "error", "message": "Judul tidak boleh kosong."}), 400
+
+    try:
+        generated_data = generate_blog_post_with_gemini_service(title, category)
+        
+        # PENGECEKAN EKSPLISIT JIKA GAGAL PARSING
+        if generated_data:
+            return jsonify({"status": "success", "data": generated_data})
+        else:
+            # Ini akan dieksekusi jika Gemini gagal atau mengembalikan format aneh
+            return jsonify({
+                "status": "error", 
+                "message": "Gagal membuat konten. Respons dari AI tidak dapat diproses. Silakan coba lagi atau ubah judul."
+            }), 500 # Gunakan status 500 agar frontend tahu ada error server
+            
+    except Exception as e:
+        current_app.logger.error(f"Error in generate content route: {e}")
+        return jsonify({"status": "error", "message": f"Terjadi kesalahan server: {str(e)}"}), 500

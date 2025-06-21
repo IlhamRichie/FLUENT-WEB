@@ -8,6 +8,7 @@ import uuid # <-- TAMBAHKAN
 from ua_parser import user_agent_parser
 from backend.auth.services import get_user_by_id, generate_jwt_tokens
 import jwt
+from bson.json_util import dumps, loads
 
 
 from backend.auth.services import (
@@ -23,6 +24,9 @@ from backend.auth.services import (
 )
 from backend.database import get_users_collection
 from backend.utils.decorators import web_login_required
+
+from backend.admin.blog_services import get_all_published_posts_service, get_post_by_slug_service
+
 # Placeholder JWT (jika belum ada, untuk API)
 def create_access_token(identity):
     """Membuat Access Token JWT yang valid."""
@@ -60,6 +64,32 @@ def create_refresh_token(identity_id):
         current_app.logger.error(f"Error creating refresh token: {e}")
         return None
 
+def create_access_token(identity):
+    """Membuat Access Token JWT yang valid."""
+    try:
+        payload = {
+            'exp': datetime.now(timezone.utc) + current_app.config.get('JWT_ACCESS_TOKEN_EXPIRES', timedelta(minutes=15)),
+            'iat': datetime.now(timezone.utc),
+            'identity': identity
+        }
+        token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
+        return token
+    except Exception as e:
+        current_app.logger.error(f"Error creating access token: {e}")
+        return None
+def create_refresh_token(identity_id):
+    """Membuat Refresh Token JWT yang valid."""
+    try:
+        payload = {
+            'exp': datetime.now(timezone.utc) + current_app.config.get('JWT_REFRESH_TOKEN_EXPIRES', timedelta(days=30)),
+            'iat': datetime.now(timezone.utc),
+            'identity': {'id': identity_id}
+        }
+        token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
+        return token
+    except Exception as e:
+        current_app.logger.error(f"Error creating refresh token: {e}")
+        return None
 
 web_bp = Blueprint('web', __name__, template_folder='../templates')
 
@@ -72,21 +102,29 @@ def index_route():
 def features_route():
     return render_template('web/features.html')
 
+@web_bp.route('/subscription', methods=['GET'], endpoint='subscription_route')
+def for_recruiters_page():
+    """
+    Menampilkan halaman landing khusus untuk perekrut.
+    """
+    return render_template('web/subscription.html')
+
 @web_bp.route('/api-docs-page')
 def api_docs_page_route():
     return render_template('web/api_docs.html')
 
 @web_bp.route('/blog')
 def blog_index_route():
-    # Di sini Anda akan mengambil semua artikel dari database Anda
-    # Untuk sekarang, kita hanya render template-nya
-    return render_template('web/blog_index.html')
+    # Ambil data post dari database untuk ditampilkan di web
+    posts, _ = get_all_published_posts_service()
+    return render_template('web/blog_index.html', posts=posts)
 
-@web_bp.route('/blog/artikel/<string:slug>') # <slug> adalah ID unik artikel
+@web_bp.route('/blog/artikel/<string:slug>')
 def blog_post_route(slug):
-    # Di sini Anda akan mengambil satu artikel spesifik dari database berdasarkan slug
-    # Untuk sekarang, kita hanya render template-nya
-    return render_template('web/blog_post_detail.html')
+    post = get_post_by_slug_service(slug)
+    if not post:
+        return "Post not found", 404
+    return render_template('web/blog_post_detail.html', post=post)
 
 # --- WEB AUTHENTICATION ---
 
@@ -926,6 +964,41 @@ def web_reset_password_submit_route(token):
     )
     flash('Password Anda berhasil direset. Silakan login dengan password baru Anda.', 'success')
     return redirect(url_for('web.web_login_page_route'))
+
+# =======================================================
+# === BAGIAN BARU: BLOG API ENDPOINTS (UNTUK MOBILE) ===
+# =======================================================
+@web_bp.route('/api/v1/blog/posts', methods=['GET'])
+def get_posts_api():
+    """Endpoint untuk mendapatkan daftar artikel blog dalam format JSON."""
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    
+    posts, total_pages = get_all_published_posts_service(page, per_page)
+    
+    # Konversi list dari BSON ke format JSON yang benar
+    posts_json = loads(dumps(posts))
+
+    return jsonify({
+        "status": "success",
+        "data": posts_json,
+        "pagination": {
+            "page": page,
+            "per_page": per_page,
+            "total_pages": total_pages
+        }
+    })
+
+@web_bp.route('/api/v1/blog/posts/<slug>', methods=['GET'])
+def get_single_post_api(slug):
+    """Endpoint untuk mendapatkan detail satu artikel blog berdasarkan slug."""
+    post = get_post_by_slug_service(slug)
+    if post:
+        # Konversi dokumen BSON ke format JSON yang benar
+        post_json = loads(dumps(post))
+        return jsonify({"status": "success", "data": post_json})
+    else:
+        return jsonify({"status": "error", "message": "Post not found"}), 404
 
 @web_bp.route('/profile')
 @web_login_required 
